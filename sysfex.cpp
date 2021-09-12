@@ -70,7 +70,7 @@ int main(int argc, const char* argv[])
         // They are self-explanatory, I guess
         
         if(!(strcmp(argv[i],"--noascii")))
-            conf["show_ascii"] = "0";
+            conf["ascii"] = "0";
 
         if(!(strcmp(argv[i], "--ascii-dir")))
         {
