@@ -213,6 +213,11 @@ void pkgs()
 void resolution()
 {
     Display* disp = XOpenDisplay(NULL);
+    if(!disp) {
+	std::cout<<std::endl;	
+	return;
+    }
+
     Screen*  scrn = DefaultScreenOfDisplay(disp);
     int height = scrn->height;
     int width  = scrn->width;
