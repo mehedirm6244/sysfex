@@ -17,7 +17,12 @@ void title()
     infile.close();
 
     cout<<string(stoi(conf["pregap"]), ' ');
-    cout<<BOLD<<"  "<<user<<UBOLD<<" on   "<<BOLD<<host<<UBOLD<<endl;
+    cout<<BOLD;
+    if(conf["icons"]!="0") cout<<"  ";
+    cout<<user<<UBOLD;
+    cout<<" on ";
+    if(conf["icons"]!="0") cout<<"  ";
+    cout<<BOLD<<host<<UBOLD<<endl;
 }
 
 

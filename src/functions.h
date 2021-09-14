@@ -19,7 +19,8 @@ void print(string icon, string key, auto value)
         icon_gap = stoi(conf["icon_gap"]);
 
     cout<<string(pregap, ' ')<<BOLD;
-    cout<<icon<<string(icon_gap + (icon==""), ' ');
+    if(conf["icons"]!="0")
+        cout<<icon<<string(icon_gap + (icon==""), ' ');
     cout<<key<<UBOLD<<string(remaining_space, ' ')<<value<<endl;
 }
 
@@ -34,8 +35,10 @@ void init_config()
     conf["icon_gap"] = "3";
     conf["ascii"] = "1";
     conf["ascii_dir"] = "/opt/sysfex/ascii/tux.txt";
+    conf["icons"] = "0";
 
-    // If there's a custom config file, then use that
+
+    // If there's a config file on /opt/sysfex/config, then use that
     if(std::filesystem::exists("/opt/sysfex/config"))
     {
         std::ifstream config;

@@ -58,6 +58,13 @@ int main(int argc, const char* argv[])
     if(uname(&uname_info))
         throw std::runtime_error("Failed to access utsname.h :(");
 
+    // Do this when an arguement for a flag is not provided
+    #define _ARGUEMENT_NOT_PROVIDED_ \
+    { \
+        cout<<"You must provide an arguement!"<<endl; \
+        return 1; \
+    }
+
     // Flags
     for(int i=1; i<argc; i++)
     {
@@ -69,18 +76,34 @@ int main(int argc, const char* argv[])
 
         // They are self-explanatory, I guess
         
-        if(!(strcmp(argv[i],"--noascii")))
-            conf["ascii"] = "0";
+        else if(!(strcmp(argv[i],"--ascii")))
+        {
+            if(i!=argc-1)
+                conf["ascii"] = argv[++i];
+            else
+                _ARGUEMENT_NOT_PROVIDED_
+        }
 
-        if(!(strcmp(argv[i], "--ascii-dir")))
+        else if(!(strcmp(argv[i], "--ascii-dir")))
         {
             if(i!=argc-1)
                 conf["ascii_dir"] = argv[++i];
             else
-            {
-                cout<<"You must provide an arguement!"<<endl;
-                return 1;
-            }
+                _ARGUEMENT_NOT_PROVIDED_
+        }
+
+        else if(!(strcmp(argv[i], "--icons")))
+        {
+            if(i!=argc-1)
+                conf["icons"] = argv[++i];
+            else
+                _ARGUEMENT_NOT_PROVIDED_
+        }
+
+        else
+        {
+            cout<<"Incorrect command"<<endl;
+            return 1;
         }
     }
 
@@ -90,7 +113,7 @@ int main(int argc, const char* argv[])
     // The number of functions to be printed
     int func_size = sizeof(funcs)/sizeof(funcs[0]);
 
-    if(conf["ascii"]=="1")
+    if(conf["ascii"]!="0")
     {
         /*
             If the program is said to print both the ascii text and

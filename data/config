@@ -11,9 +11,12 @@ gap = 13
 ; The gap between the icon and the text
 icon_gap = 3
 
-; ascii = 1 means the ascii art will be displayed
+; ascii = 0 means the ascii art won't be displayed, else it'll be displayed
 ascii = 1
 
 ; The ascii art directory, specify one. Else the default one will be used
 ; The default one is /opt/sysfex/ascii/tux.txt
 ascii_dir = /opt/sysfex/ascii/tux.txt
+
+; Choose whether font icons will be showed. Disabled by default. Any value except 0 means font icons will be showed
+icons = 0
