@@ -15,7 +15,7 @@ sudo ./install.sh
 You may see a warning or two, ignore them. You may wish to install the ``font-awesome`` and [``nerd-fonts``](https://github.com/ryanoasis/nerd-fonts) package for displaying font-icons properly else they'll probably look like boxes
 
 ## Usage
-* ``sysfex --help`` : Print available commands (still WIP)
+* ``sysfex --help`` : Print available commands
 * ``sysfex --ascii <value>`` : If value = 0, the ascii art won't be shown (``sysfex --ascii 0``). Else it'll be shown (``sysfex --ascii 1``)
 * ``sysfex --ascii-dir <path_to_ascii>`` : Show an ascii image from anywhere of your computer on output
 * ``sysfex --icons <value>`` : If value = 0, no font-icons will be shown, else they'll be.
