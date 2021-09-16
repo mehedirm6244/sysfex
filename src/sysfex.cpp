@@ -117,24 +117,7 @@ int main(int argc, const char* argv[])
 
     if(conf["ascii"]!="0")
     {
-        /*
-            If the program is said to print both the ascii text and
-            system informations, it'll do so.
-
-            In the i-th line of output, it'll first print the i-th
-            line of the ascii text (if there's any), then print necessary
-            amount of whitespaces and then print the i-th system information
-            defined in void(*funcs[])()) on the 34th line
-        */
-
-        /*
-            The directory from where it'll print the ascii word from
-            By default, there are 26 txt files, named from a-z (.txt)
-            By default, sysfex will print the first character of the
-            username.
-            Example: it'll print c for cakemeow
-        */
-
+        // The file from where it'll print the ascii word from
         string ascii_dir = conf["ascii_dir"];
 
         // Open the file
@@ -188,7 +171,7 @@ int main(int argc, const char* argv[])
             cout<<"ASCII file directory not found.\n\n";
     }
 
-    // If reading the file is over but there are still infos to print
+    // If reading the file is over but there are still info to print
     if(current_func<func_size)
         for(int i=current_func; i<func_size; i++)
         {
