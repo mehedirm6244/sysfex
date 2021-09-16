@@ -157,6 +157,17 @@ void uptime()
 }
 
 
+// Desktop environment / Window manager /  Whatever
+void de()
+{
+    const char* desktop_session;
+    if((desktop_session = std::getenv("XDG_CURRENT_DESKTOP")) or (desktop_session = std::getenv("DESKTOP_SESSION")))
+        print("", "DE/WM", desktop_session);
+    else
+        cout<<endl;
+}
+
+
 //Package manager stuffs
 int Pacman(string path)
 {
@@ -218,10 +229,8 @@ void pkgs()
 void resolution()
 {
     Display* disp = XOpenDisplay(NULL);
-    if(!disp) {
-	std::cout<<std::endl;	
-	return;
-    }
+    if(!disp)
+        __ABORT__
 
     Screen*  scrn = DefaultScreenOfDisplay(disp);
     int height = scrn->height;
@@ -259,4 +268,26 @@ void cpu()
     cpu = cpu.substr(modelname.length(), cpu.length()-(modelname.length()));
 
     print("", "CPU", cpu);
+}
+
+
+
+// Print color bars
+void colors_1()
+{
+    string s;
+
+    for(int i = 30; i < 38; i++)
+        s = s+"\e["+std::to_string(i)+"m⬤\e[0m ";
+
+    cout<<string(stoi(conf["pregap"]), ' ')<<s<<endl;
+}
+void colors_2()
+{
+    string s;
+
+    for(int i = 90; i < 98; i++)
+        s = s+"\e["+std::to_string(i)+"m⬤\e[0m ";
+
+    cout<<string(stoi(conf["pregap"]), ' ')<<s<<endl;
 }

@@ -26,9 +26,6 @@ using std::string;
 #include "fetch_functions.h"
 
 
-void newline() { cout<<endl; }
-
-
 int main(int argc, const char* argv[])
 {
     // Read the configurations
@@ -45,12 +42,16 @@ int main(int argc, const char* argv[])
         *(newline),
         *(pkgs),
         *(shell),
+        *(de),
         *(newline),
         *(ram),
         *(uptime),
         *(resolution),
         *(newline),
-        *(cpu)
+        *(cpu),
+        *(newline),
+        *(colors_1),
+        *(colors_2)
     };
     int current_func = 0;
 
@@ -59,7 +60,7 @@ int main(int argc, const char* argv[])
         throw std::runtime_error("Failed to access utsname.h :(");
 
     // Do this when an arguement for a flag is not provided
-    #define _ARGUEMENT_NOT_PROVIDED_ \
+    #define __ARGUEMENT_NOT_PROVIDED__ \
     { \
         cout<<"You must provide an arguement!"<<endl; \
         return 1; \
@@ -81,7 +82,7 @@ int main(int argc, const char* argv[])
             if(i!=argc-1)
                 conf["ascii"] = argv[++i];
             else
-                _ARGUEMENT_NOT_PROVIDED_
+                __ARGUEMENT_NOT_PROVIDED__
         }
 
         else if(!(strcmp(argv[i], "--ascii-dir")))
@@ -89,7 +90,7 @@ int main(int argc, const char* argv[])
             if(i!=argc-1)
                 conf["ascii_dir"] = argv[++i];
             else
-                _ARGUEMENT_NOT_PROVIDED_
+                __ARGUEMENT_NOT_PROVIDED__
         }
 
         else if(!(strcmp(argv[i], "--icons")))
@@ -97,12 +98,13 @@ int main(int argc, const char* argv[])
             if(i!=argc-1)
                 conf["icons"] = argv[++i];
             else
-                _ARGUEMENT_NOT_PROVIDED_
+                __ARGUEMENT_NOT_PROVIDED__
         }
 
         else
         {
             cout<<"Incorrect command"<<endl;
+            help();
             return 1;
         }
     }
@@ -159,6 +161,9 @@ int main(int argc, const char* argv[])
                 // Get the length of the current line
                 // Don't use curr_line.size() for the sake of humanity
                 // As there can be unicode characters in the line too
+
+                // A bit help here too, this thing does not work with 
+                // Chinease characters, probably of many more languages
                 int curr_line_len = 0;
                 for(auto ch:curr_line)
                     curr_line_len+=((ch & 0xc0)!=0x80);

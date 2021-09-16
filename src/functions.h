@@ -6,6 +6,10 @@
 std::map<string, string> conf;
 
 
+// Print line break
+void newline() { cout<<endl; }
+
+
 // Printing stuffs
 void print(string icon, string key, auto value)
 {
@@ -69,7 +73,13 @@ void init_config()
 // The help message
 void help()
 {
-    cout<<"Helppppppppp us to write documentation and help function for this tool UwU"<<endl;
+    cout<<BOLD<<"Sysfex"<<UBOLD<<" - another fetch tool written in mostly C++"<<endl;
+    cout<<endl;
+    cout<<BOLD<<"Available commands:"<<UBOLD<<endl;
+    print("", "sysfex --help", "Print this screen");
+    print("", "sysfex --ascii <value>", "If value == 0, don't print the ascii art, else do");
+    print("", "sysfex --ascii-dir <path-to-ascii>", "Specify the file which you want to be shown as ascii-art");
+    print("", "sysfex --icons <value>", "If value == 0, don't print font-icons beside informations, else do");
 }
 
 

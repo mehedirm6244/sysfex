@@ -6,7 +6,7 @@ pregap = 6
 
 ; The gap between the information_key and the information_value
 ; Shell: zsh -> Here "Shell" is key and "zsh" is value :)
-gap = 13
+gap = 10
 
 ; The gap between the icon and the text
 icon_gap = 3
