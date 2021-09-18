@@ -2,7 +2,7 @@
 
 if [ ${UID} -eq 0 ]; then
     echo "Compiling sysfex..."
-    if g++ src/sysfex.cpp -o sysfex -lX11; then
+    if g++ src/sysfex.cpp -o sysfex -std=c++17 -lX11 -lstdc++fs; then
         CONF="/opt/sysfex"
         DIR="/usr/bin"
 
