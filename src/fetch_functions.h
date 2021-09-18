@@ -204,6 +204,10 @@ void pkgs()
     // Arch / Pacman
     if(std::filesystem::exists("/etc/pacman.d"))
         pkg = pkg + std::to_string(Pacman("/var/lib/pacman/local/")-1) + " (pacman) ";
+    
+    // Void / X Binary Package System (XBPS)
+    if(std::filesystem::exists("/etc/xbps.d"))
+        pkg = pkg + exec("xbps-query -l | wc -l") + " (xbps-query) ";
 
     // Debian / apt
     if(std::filesystem::exists("/etc/apt"))
