@@ -27,7 +27,6 @@ Interested to be a part of this project? Maybe issue a bug or two, or request fe
 
 ## Plans for the future
 - [ ] Add GPU information
-- [ ] Add support for Void Linux
 - [ ] Let the user decide which informations are to be shown through the config file
 - [ ] Add color support for ASCII outputs
 
@@ -35,5 +34,5 @@ And many more !
 
 ## Special thanks to
 * [neofetch](https://github.com/dylanaraps/neofetch), [paleofetch](https://github.com/ss7m/paleofetch) and [yafetch](https://github.com/paranoidcat/yafetch) for inspiration
-* [mdgaziur](https://github.com/mdgaziur) senpai
+* The contributors, testers and those who gave me ideas / suggestions
 * You, for being interested in this project
