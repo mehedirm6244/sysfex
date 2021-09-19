@@ -3,16 +3,17 @@ Another [neofetch](https://github.com/dylanaraps/neofetch)-like system informati
 
 ![](https://raw.githubusercontent.com/mebesus/sysfex/main/ss.png)
 
-Font-icons are disabled by default from [this commit](https://github.com/mebesus/sysfex/commit/17655c2b724344be16fd31e28c40595b054bef88). If you wish to use it, edit the config file for sysfex on ``/opt/sysfex/config`` or use ``sysfex --icons 1`` command.
+Font-icons are disabled by default from [this commit](https://github.com/mebesus/sysfex/commit/17655c2b724344be16fd31e28c40595b054bef88). If you wish to use this feature, edit the config file for sysfex on ``/opt/sysfex/config`` or use ``sysfex --icons 1`` command.
 
 ## Installation
-g++ is used in the installation script for compiling this program. To install this program, simply
+``g++`` is used in the installation script for compiling this program. To install this program, simply
 ```
 git clone https://github.com/mebesus/sysfex
 cd sysfex
 sudo ./install.sh
 ```
-You may see a warning or two, ignore them. You may wish to install the ``font-awesome`` and [``nerd-fonts``](https://github.com/ryanoasis/nerd-fonts) package for displaying font-icons properly else they'll probably look like boxes
+You may see a warning or two, ignore them. Install ``libx11`` or ``libx11-dev`` (whatever name your package manager uses) if you see this error: ``<X11/Xlib.h> header file is not found``.<br>
+You may wish to install the ``font-awesome`` and [``nerd-fonts``](https://github.com/ryanoasis/nerd-fonts) package for displaying font-icons properly else they'll probably look like boxes
 
 ## Usage
 * ``sysfex --help`` : Print available commands
@@ -26,13 +27,12 @@ A config file is automatically created by the installation script which is locat
 Interested to be a part of this project? Maybe issue a bug or two, or request features. I'll be very happy to see your PR with description.
 
 ## Plans for the future
-- [ ] Add GPU information
 - [ ] Let the user decide which informations are to be shown through the config file
 - [ ] Add color support for ASCII outputs
 
 And many more !
 
 ## Special thanks to
-* [neofetch](https://github.com/dylanaraps/neofetch), [paleofetch](https://github.com/ss7m/paleofetch) and [yafetch](https://github.com/paranoidcat/yafetch) for inspiration
+* Some cool fetch programs spreaded all over Github for inspiration and ideas.
 * The contributors, testers and those who gave me ideas / suggestions
 * You, for being interested in this project

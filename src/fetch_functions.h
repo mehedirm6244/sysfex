@@ -168,52 +168,16 @@ void de()
 }
 
 
-//Package manager stuffs
-int Pacman(string path)
-{
-    std::filesystem::path pkgfolder = path;
-    using std::filesystem::directory_iterator;
-    return std::distance(directory_iterator(pkgfolder), directory_iterator{});
-}
-
-int Portage(string path)
-{
-    std::filesystem::path pkgfolder = path;
-    uint totalSubdirs = 0;
-    using std::filesystem::recursive_directory_iterator;
-    for(auto i=recursive_directory_iterator(path); i!=recursive_directory_iterator(); ++i)
-        if(i.depth()==1)
-        {
-            i.disable_recursion_pending();
-            totalSubdirs++;
-        }
-        
-    return totalSubdirs;
-}
-
-
 // The number of packages installed in this sustem
 void pkgs()
 {
     string pkg;
 
-    // Gentoo / Portage
-    if(std::filesystem::exists("/etc/portage"))
-        pkg = pkg + std::to_string(Portage("/var/db/pkg")) + " (emerge) ";
+    // dpkg
+    if(std::filesystem::exists("/bin/dpkg"))
+        pkg = pkg + exec("dpkg --get-selections | wc -l") + " (dpkg) ";
 
-    // Arch / Pacman
-    if(std::filesystem::exists("/etc/pacman.d"))
-        pkg = pkg + std::to_string(Pacman("/var/lib/pacman/local/")-1) + " (pacman) ";
-    
-    // Void / X Binary Package System (XBPS)
-    if(std::filesystem::exists("/etc/xbps.d"))
-        pkg = pkg + exec("xbps-query -l | wc -l") + " (xbps-query) ";
-
-    // Debian / apt
-    if(std::filesystem::exists("/etc/apt"))
-        pkg = pkg + exec("dpkg --get-selections | wc -l 2>&1") + " (dpkg) ";
-
-    // NixOS / nix
+    // nix
     if(std::filesystem::exists("/nix"))
     {
         if(std::filesystem::exists("/etc/nix"))
@@ -223,6 +187,22 @@ void pkgs()
 
         pkg = pkg + " (nix) ";
     }
+
+    // pacman
+    if(std::filesystem::exists("/bin/pacman"))
+        pkg = pkg + exec("pacman -Qq | wc -l") + " (pacman) ";
+
+    // portage
+    if(std::filesystem::exists("/bin/emerge"))
+        pkg = pkg + exec("echo -n $(cd /var/db/pkg && ls -d */* | wc -l") + " (emerge) ";
+
+    // rpm
+    if(std::filesystem::exists("/var/lib/rpm"))
+        pkg = pkg + exec("rpm -qa | wc -l") + " (rpm) ";
+    
+    // XBPS
+    if(std::filesystem::exists("/bin/xbps-install"))
+        pkg = pkg + exec("xbps-query -l | wc -l") + " (xbps) ";
 
     print("", "Pkgs", pkg);
 }
@@ -286,6 +266,7 @@ void colors_1()
 
     cout<<string(stoi(conf["pregap"]), ' ')<<s<<endl;
 }
+
 void colors_2()
 {
     string s;

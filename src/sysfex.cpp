@@ -8,7 +8,6 @@
 #include <sstream>
 #include <filesystem>
 #include <algorithm>
-#include <filesystem>
 // For config stuffs
 #include <map>
 // For screen information
@@ -32,6 +31,7 @@ int main(int argc, const char* argv[])
     init_config();
 
     // The informations which will be displayed
+    // If you don't want any of these to be printed, simply comment it
     void(*funcs[])() =
     {
         *(title),
@@ -53,6 +53,7 @@ int main(int argc, const char* argv[])
         *(colors_1),
         *(colors_2)
     };
+
     int current_func = 0;
 
     // Abort the process if utsname.h doesn't exist
@@ -69,13 +70,13 @@ int main(int argc, const char* argv[])
     // Flags
     for(int i=1; i<argc; i++)
     {
+        // They are self-explanatory, I guess
+
         if(!(strcmp(argv[i],"--help")))
         {
             help();
             return 0;
         }
-
-        // They are self-explanatory, I guess
         
         else if(!(strcmp(argv[i],"--ascii")))
         {
@@ -111,9 +112,10 @@ int main(int argc, const char* argv[])
 
     cout<<endl;
 
-    int max_line_len = 0;
     // The number of functions to be printed
     int func_size = sizeof(funcs)/sizeof(funcs[0]);
+    // The length of the longest line of the ascii art
+    int max_line_len = 0;
 
     if(conf["ascii"]!="0")
     {
@@ -123,19 +125,20 @@ int main(int argc, const char* argv[])
         // Open the file
         std::ifstream infile;
         infile.open(ascii_dir);
-
-        /*
-            If the file is opened (which means the file exists), print
-            whatever's inside. Else, show an error message
-        */
-        
         if(infile.is_open())
         {
-            // The length of the biggest line of the file
-            // I need a bit help here... 
-            max_line_len = stoi(exec(("wc -L " + ascii_dir).c_str()));
+            // We'll store the ascii file inside a string[], line by line
+            int string_idx = 0;
+            // Who'd use an ascii file with more than 64lines right?
+            string ascii_art[64];
+            // The length of each lines of the string
+            int ascii_line_len[64];
 
-            while(infile.good())
+            /*
+                string_idx<64 is given because you may be naughty enough
+                to print a whole essay instead of an ascii art
+            */
+            while(infile.good() and string_idx<64)
             {
                 // Read the current line
                 string curr_line;
@@ -144,17 +147,26 @@ int main(int argc, const char* argv[])
                 // Get the length of the current line
                 // Don't use curr_line.size() for the sake of humanity
                 // As there can be unicode characters in the line too
-
-                // A bit help here too, this thing does not work with 
-                // Chinease characters, probably of many more languages
                 int curr_line_len = 0;
                 for(auto ch:curr_line)
                     curr_line_len+=((ch & 0xc0)!=0x80);
 
-                /*
-                    Print whitespaces after the line so that the texts
-                    after it look aligned
-                */
+                max_line_len = std::max(max_line_len, curr_line_len);
+                ascii_art[string_idx] = curr_line;
+                ascii_line_len[string_idx] = curr_line_len;
+                string_idx++;
+            }
+
+            infile.close();
+
+            /*
+                Now that we have the ascii art stored inside a string[]
+                variable, let's print it
+            */
+            for(int i=0; i<string_idx; i++)
+            {
+                int curr_line_len = ascii_line_len[i];
+                string curr_line = ascii_art[i];
                 cout<<string(3, ' ')<<BOLD<<curr_line<<UBOLD<<string(max_line_len-curr_line_len, ' ');
 
                 // Print an information
@@ -167,8 +179,6 @@ int main(int argc, const char* argv[])
                     cout<<endl;
             }
         }
-        else
-            cout<<"ASCII file directory not found.\n\n";
     }
 
     // If reading the file is over but there are still info to print
