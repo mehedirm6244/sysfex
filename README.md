@@ -18,8 +18,9 @@ You may wish to install the ``font-awesome`` and [``nerd-fonts``](https://github
 ## Usage
 * ``sysfex --help`` : Print available commands
 * ``sysfex --ascii <value>`` : If value = 0, the ascii art won't be shown (``sysfex --ascii 0``). Else it'll be shown (``sysfex --ascii 1``)
-* ``sysfex --ascii-dir <path_to_ascii>`` : Show an ascii image from anywhere of your computer on output
+* ``sysfex --ascii-dir <path-to-ascii>`` : Show an ascii image from anywhere of your computer on output
 * ``sysfex --icons <value>`` : If value = 0, no font-icons will be shown, else they'll be.
+* ``sysfex --config <path-to-config>`` : Specify the file which you want to be used as the config file
 
 A config file is automatically created by the installation script which is located at ``/opt/sysfex/config``. Find out what's inside and what you can do with it.
 

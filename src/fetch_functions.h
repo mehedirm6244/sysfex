@@ -8,7 +8,7 @@ struct utsname uname_info;
 void title()
 {
     string host, user;
-    user = getlogin();
+    user = std::getenv("USER");
 
     std::ifstream infile;
     infile.open("/proc/sys/kernel/hostname");
@@ -16,12 +16,12 @@ void title()
     infile>>host;
     infile.close();
 
-    cout<<string(stoi(conf["pregap"]), ' ');
+    cout<<string(stoi(config.getvalue("pregap")), ' ');
     cout<<BOLD;
-    if(conf["icons"]!="0") cout<<"  ";
+    if(config.getvalue("icons")!="0") cout<<"  ";
     cout<<user<<UBOLD;
     cout<<" on ";
-    if(conf["icons"]!="0") cout<<"  ";
+    if(config.getvalue("icons")!="0") cout<<"  ";
     cout<<BOLD<<host<<UBOLD<<endl;
 }
 
@@ -73,7 +73,7 @@ void kernel() { print("", "Kernel", uname_info.release); }
 
 
 // The shell name (bash, zsh, fish etc etc)
-void shell() { print("", "Shell", getpwuid(geteuid())->pw_shell); }
+void shell() { print("", "Shell", std::getenv("SHELL")); }
 
 
 // Available RAM
@@ -264,7 +264,7 @@ void colors_1()
     for(int i = 30; i < 38; i++)
         s = s+"\e["+std::to_string(i)+"m⬤\e[0m ";
 
-    cout<<string(stoi(conf["pregap"]), ' ')<<s<<endl;
+    cout<<string(stoi(config.getvalue("pregap")), ' ')<<s<<endl;
 }
 
 void colors_2()
@@ -274,5 +274,5 @@ void colors_2()
     for(int i = 90; i < 98; i++)
         s = s+"\e["+std::to_string(i)+"m⬤\e[0m ";
 
-    cout<<string(stoi(conf["pregap"]), ' ')<<s<<endl;
+    cout<<string(stoi(config.getvalue("pregap")), ' ')<<s<<endl;
 }
