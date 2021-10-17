@@ -19,6 +19,7 @@ if [ ${UID} -eq 0 ]; then
         mkdir "${CONF}"
         cp -r "data/ascii" "${CONF}/ascii"
         cp "data/config" "${CONF}"
+        cp "data/printables" "${CONF}"
         mv "sysfex" "${DIR}"
         
         echo "Sysfex is successfully installed! Enjoy :D \n"

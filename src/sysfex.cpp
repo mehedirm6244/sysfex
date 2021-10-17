@@ -16,8 +16,10 @@ using std::string;
 
 
 // All those functions and shits for this fetch
+#include "config.h"
 #include "functions.h"
-#include "fetch_functions.h"
+#include "modules.h"
+#include "printables.h"
 
 
 int main(int argc, const char* argv[])
@@ -31,6 +33,13 @@ int main(int argc, const char* argv[])
         "/opt/sysfex/config" as arguement in init_config()
     */
     init_config("/opt/sysfex/config");
+
+    /*
+        The informations which will be displayed
+        Requires "/opt/sysfex/printables" to exist
+        Else only the ascii art will be printed
+    */
+    init_printables("/opt/sysfex/printables");
 
     // Abort the process if utsname.h doesn't exist
     if(uname(&uname_info))
@@ -46,8 +55,6 @@ int main(int argc, const char* argv[])
     // Flags
     for(int i=1; i<argc; i++)
     {
-        // They are self-explanatory, I guess
-
         if(!(strcmp(argv[i],"--help")))
         {
             help();
@@ -56,35 +63,39 @@ int main(int argc, const char* argv[])
         
         else if(!(strcmp(argv[i],"--ascii")))
         {
-            if(i!=argc-1)
-                config.setvalue("ascii", argv[++i]);
-            else
-                __ARGUEMENT_NOT_PROVIDED__
+            if(i!=argc-1) config.setvalue("ascii", argv[++i]);
+            else __ARGUEMENT_NOT_PROVIDED__
         }
 
         else if(!(strcmp(argv[i], "--ascii-dir")))
         {
-            if(i!=argc-1)
-                config.setvalue("ascii_dir", argv[++i]);
-            else
-                __ARGUEMENT_NOT_PROVIDED__
+            if(i!=argc-1) config.setvalue("ascii_dir", argv[++i]);
+            else __ARGUEMENT_NOT_PROVIDED__
         }
 
         else if(!(strcmp(argv[i], "--icons")))
         {
-            if(i!=argc-1)
-                config.setvalue("icons", argv[++i]);
-            else
-                __ARGUEMENT_NOT_PROVIDED__
+            if(i!=argc-1) config.setvalue("icons", argv[++i]);
+            else __ARGUEMENT_NOT_PROVIDED__
         }
 
         else if(!(strcmp(argv[i], "--config")))
         {
-            if(i!=argc-1)
-                init_config(argv[++i]);
-            else
-                __ARGUEMENT_NOT_PROVIDED__
-        }        
+            if(i!=argc-1) init_config(argv[++i]);
+            else __ARGUEMENT_NOT_PROVIDED__
+        }
+
+        else if(!(strcmp(argv[i], "--printables")))
+        {
+            if(i!=argc-1) init_printables(argv[++i]);
+            else __ARGUEMENT_NOT_PROVIDED__
+        }
+
+        else if(!(strcmp(argv[i], "--ascii-beside-txt")))
+        {
+            if(i!=argc-1) config.setvalue("ascii_beside_text", argv[++i]);
+            else __ARGUEMENT_NOT_PROVIDED__
+        }
 
         else
         {
@@ -95,33 +106,6 @@ int main(int argc, const char* argv[])
     }
 
     cout<<endl;
-
-    // The informations which will be displayed
-    // If you don't want any of these to be printed, simply comment it
-    void(*funcs[])() =
-    {
-        *(title),
-        *(newline),
-        *(host),
-        *(os),
-        *(kernel),
-        *(newline),
-        *(pkgs),
-        *(shell),
-        *(de),
-        *(newline),
-        *(ram),
-        *(uptime),
-        *(resolution),
-        *(newline),
-        *(cpu),
-        *(newline),
-        *(colors_1),
-        *(colors_2)
-    };
-    int current_func = 0;
-    // The number of functions to be printed
-    int func_size = sizeof(funcs)/sizeof(funcs[0]);
 
     // The length of the longest line of the ascii art
     int max_line_len = 0;
@@ -157,6 +141,17 @@ int main(int argc, const char* argv[])
                 string curr_line;
                 std::getline(infile, curr_line);
 
+                /*
+                    If the user wants the ascii and the text not to be
+                    printed side-by-side, then just simply print the 
+                    ascii first
+                */
+                if(config.getvalue("ascii_beside_text")=="0")
+                {
+                    cout<<BOLD<<curr_line<<UBOLD<<endl;
+                    continue;
+                }
+
                 // Get the length of the current line
                 // Don't use curr_line.size() for the sake of humanity
                 // As there can be unicode characters in the line too
@@ -173,13 +168,17 @@ int main(int argc, const char* argv[])
 
             /*
                 Now that we have the ascii art stored inside a string[]
-                variable, let's print it
+                , let's print it
             */
+
             for(int i=0; i<string_idx; i++)
             {
                 int curr_line_len = ascii_art[i].curr_line_len;
                 string curr_line = ascii_art[i].curr_line;
-                cout<<string(3, ' ')<<BOLD<<curr_line<<UBOLD<<string(max_line_len-curr_line_len, ' ');
+
+                //Don't print the ascii stuff if it has been already printed
+                if(config.getvalue("ascii_beside_text")!="0")
+                    cout<<string(3, ' ')<<BOLD<<curr_line<<UBOLD<<string(max_line_len-curr_line_len, ' ');
 
                 // Print an information
                 if(current_func<func_size)

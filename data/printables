@@ -1,0 +1,20 @@
+; Available printables are: title newline host os kernel pkgs shell de ram uptime resolution cpu colors_1 colors_2
+
+title
+newline
+host
+os
+kernel
+newline
+pkgs
+shell
+de
+newline
+ram
+uptime
+resolution
+newline
+cpu
+newline
+colors_1
+colors_2

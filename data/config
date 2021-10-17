@@ -18,5 +18,8 @@ ascii = 1
 ; The default one is /opt/sysfex/ascii/tux.txt
 ascii_dir = /opt/sysfex/ascii/tux.txt
 
+; Choose whether ascii art and informations will be printed side-by-side or not. 0 = false , else true
+ascii_beside_text = 1
+
 ; Choose whether font icons will be showed. Disabled by default. Any value except 0 means font icons will be showed
 icons = 0
