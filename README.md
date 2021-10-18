@@ -1,7 +1,7 @@
 ## Sysfex
 Another [neofetch](https://github.com/dylanaraps/neofetch)-like system information fetching tool <b>for linux-based systems</b> written in C++. This is a hobby project, so bugs are to be expected. If you find one, please report it. Suggestions are highly appreciated. Your contribution will help Sysfex become better
 
-<p align="center"><img src="https://github.com/mebesus/sysfex-testing/blob/master/res/sysf_1.png"></p>
+<p align="center"><img src="https://github.com/mebesus/sysfex/blob/main/res/sysf_1.png"></p>
 
 ## Installation
 To install this program, simply
@@ -27,9 +27,9 @@ A config file is automatically created by the installation script which is locat
 Wait, that's not all. You can also decide which informations to be printed through a file which is located at ``opt/sysfex/printables``.
 
 ## Gallery
-<p align="center"><img src="https://github.com/mebesus/sysfex-testing/blob/master/res/sysf_2.png"></p>
-<p align="center"><img src="https://github.com/mebesus/sysfex-testing/blob/master/res/sysf_3.png"></p>
-<p align="center"><img src="https://github.com/mebesus/sysfex-testing/blob/master/res/sysf_4.png"></p>
+<p align="center"><img src="https://github.com/mebesus/sysfex/blob/main/res/sysf_2.png"></p>
+<p align="center"><img src="https://github.com/mebesus/sysfex/blob/main/res/sysf_3.png"></p>
+<p align="center"><img src="https://github.com/mebesus/sysfex/blob/main/res/sysf_4.png"></p>
 
 ## Contribute?
 Interested to be a part of this project? Maybe issue a bug or two, or request features. I'll be very happy to see your PR with description.
