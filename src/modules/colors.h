@@ -1,25 +1,21 @@
-// Print color bars
-
-void colors_1()
+void colors_dark()
 {
-    string s;
-
-    for(int i = 30; i < 38; i++)
-        s = s+"\e["+std::to_string(i)+"m⬤\e[0m ";
-
-    if(config.getvalue("ascii_beside_text")!="0")
+    if (config.getvalue("ascii_beside_text")!="0")
         cout<<string(stoi(config.getvalue("pregap")), ' ');
-    cout<<s<<endl;
+
+    for (int i = 30; i < 38; i++)
+        cout<<"\e["+std::to_string(i)+"m⬤\e[0m ";
+    
+    cout<<endl;
 }
 
-void colors_2()
+void colors_light()
 {
-    string s;
-
-    for(int i = 90; i < 98; i++)
-        s = s+"\e["+std::to_string(i)+"m⬤\e[0m ";
-
-    if(config.getvalue("ascii_beside_text")!="0")
+    if (config.getvalue("ascii_beside_text")!="0")
         cout<<string(stoi(config.getvalue("pregap")), ' ');
-    cout<<s<<endl;
+
+    for (int i = 90; i < 98; i++)
+        cout<<"\e["+std::to_string(i)+"m⬤\e[0m ";
+
+    cout<<endl;
 }

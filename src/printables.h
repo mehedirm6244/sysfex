@@ -1,4 +1,3 @@
-// Printables stuffs
 namespace Printable
 {
     struct pPair
@@ -23,8 +22,8 @@ namespace Printable
         { "uptime" , *(uptime) },
         { "resolution" , *(resolution) },
         { "cpu" , *(cpu) },
-        { "colors_1" , *(colors_1) },
-        { "colors_2" , *(colors_2) }
+        { "colors_dark" , *(colors_dark) },
+        { "colors_light" , *(colors_light) }
     };
 
     int find(string name)
@@ -47,7 +46,28 @@ namespace Printable
     }
 }
 
-void(*funcs[64])();
+void(*funcs[64])() =
+{
+    *(title),
+    *(newline),
+    *(host),
+    *(os),
+    *(kernel),
+    *(newline),
+    *(pkgs),
+    *(shell),
+    *(de),
+    *(newline),
+    *(ram),
+    *(uptime),
+    *(resolution),
+    *(newline),
+    *(cpu),
+    *(newline),
+    *(colors_dark),
+    *(colors_light)
+};
+
 int func_size = 0,
     current_func = 0;
 

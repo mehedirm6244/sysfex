@@ -1,4 +1,3 @@
-// Config stuffs
 struct Config
 {
     struct Pair { string key, value; };

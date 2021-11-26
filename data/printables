@@ -1,4 +1,4 @@
-; Available printables are: title newline host os kernel pkgs shell de ram uptime resolution cpu colors_1 colors_2
+; Available printables are: title newline host os kernel pkgs shell de ram uptime resolution cpu colors_dark colors_light
 
 title
 newline
@@ -16,5 +16,5 @@ resolution
 newline
 cpu
 newline
-colors_1
-colors_2
+colors_dark
+colors_light

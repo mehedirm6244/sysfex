@@ -1,5 +1,3 @@
-// CPU
-
 void cpu()
 {
     std::ifstream infile;
@@ -7,9 +5,10 @@ void cpu()
     string  modelname = "model name",
             cpu = "";
 
-    if(!(infile.is_open())) __ABORT__
+    if (!(infile.is_open()))
+        __ABORT__
 
-    while(infile.good() and cpu == "")
+    while (infile.good() and cpu == "")
     {
         string curr_line;
         std::getline(infile,curr_line);
@@ -19,6 +18,9 @@ void cpu()
     }
 
     infile.close();
+
+    if(cpu=="")
+        __ABORT__
 
     // Erase extra spaces
     cpu.erase(std::remove_if(cpu.begin(), cpu.end(), isspace), cpu.end());

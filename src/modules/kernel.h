@@ -1,5 +1,3 @@
-// Kernel
-
 struct utsname uname_info;
 
 void kernel()

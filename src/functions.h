@@ -2,7 +2,6 @@
 #define UBOLD   "\033[0m"
 
 
-// Line break
 void newline() { cout<<endl; }
 
 
@@ -21,14 +20,19 @@ void print(string icon, string key, auto value)
 
     if(config.getvalue("ascii_beside_text")!="0")
         cout<<string(pregap, ' ');
+
     cout<<BOLD;
+
     if(config.getvalue("icons")!="0")
         cout<<icon<<string(icon_gap + (icon==""), ' ');
-    cout<<key<<UBOLD<<string(remaining_space, ' ')<<value<<endl;
+
+    cout<<key<<UBOLD;
+    cout<<string(remaining_space, ' ');
+    cout<<value;
+    cout<<endl;
 }
 
 
-// The help message
 void help()
 {
     config.setvalue("pregap", "0");
