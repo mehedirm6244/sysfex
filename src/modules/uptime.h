@@ -1,4 +1,4 @@
-void uptime()
+string uptime()
 {
     string time;
     double uptime;
@@ -6,7 +6,8 @@ void uptime()
     std::ifstream infile;
     infile.open("/proc/uptime");
     if (!(infile.is_open()))
-        __ABORT__
+        return "";
+    
     infile>>uptime;
     infile.close();
 
@@ -46,5 +47,5 @@ void uptime()
         if (secs>1) time+="s";
     }
 
-    print("", "Uptime", time);
+    return time;
 }

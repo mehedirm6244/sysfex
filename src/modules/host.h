@@ -1,19 +1,13 @@
-void host()
+string host()
 {
-    string name, version;
-    std::ifstream infile;
-
-    infile.open("/sys/devices/virtual/dmi/id/product_name");
+	string host;
+	std::ifstream infile;
+    infile.open("/proc/sys/kernel/hostname");
     if (!(infile.is_open()))
-        __ABORT__
-    getline(infile, name);
+        return "";
+
+    infile>>host;
     infile.close();
 
-    infile.open("/sys/devices/virtual/dmi/id/product_version");
-    if (!(infile.is_open()))
-        __ABORT__
-    getline(infile, version);
-    infile.close();
-
-    print("", "Host", name+" "+version);
+    return host;
 }

@@ -1,25 +1,24 @@
-; This is the config file for sysfex
-; Lines starting with ';' mean that they're comments
+# Lines starting with '#' indicate that they're comments
 
-; The gap between the textart and the informations
-pregap = 6
+# The gap between the textart and the informations
+pregap = 3
 
-; The gap between the information_key and the information_value
-; Shell: zsh -> Here "Shell" is key and "zsh" is value :)
-gap = 10
+# The gap between key and value
+gap = 0
 
-; The gap between the icon and the text
-icon_gap = 3
+# Separator
+separator = →
 
-; ascii = 0 means the ascii art won't be displayed, else it'll be displayed
+# ascii = 1 means that ascii will be printed
 ascii = 1
-
-; The ascii art directory, specify one. Else the default one will be used
-; The default one is /opt/sysfex/ascii/tux.txt
-ascii_dir = /opt/sysfex/ascii/tux.txt
-
-; Choose whether ascii art and informations will be printed side-by-side or not. 0 = false , else true
+# Path to the ascii
+ascii_path = /opt/sysfex/ascii/tux.txt
+# Choose whether ascii and info will be printed side by side
 ascii_beside_text = 1
 
-; Choose whether font icons will be showed. Disabled by default. Any value except 0 means font icons will be showed
-icons = 0
+# Self-explanatory
+bold_text = 1
+bold_ascii = 1
+
+# The character/string/whatever which will be used to represent the color palette
+color_block = 

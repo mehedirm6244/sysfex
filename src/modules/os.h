@@ -1,4 +1,4 @@
-void os()
+string os()
 {
     string  name = "",
             prettyName = "PRETTY_NAME=\"";
@@ -6,7 +6,7 @@ void os()
     std::ifstream infile;
     infile.open("/etc/os-release");
     if (!(infile.is_open()))
-        __ABORT__
+        return "";
 
     while (infile.good())
     {
@@ -17,9 +17,13 @@ void os()
     infile.close();
 
     if(name=="")
-        __ABORT__
+        return "";
 
     // Remove "PRETTY_NAME" and stuffs from the string
-    name = name.substr(prettyName.length(), name.length()-(prettyName.length()+1));
-    print("", "OS", name+" "+uname_info.machine);
+    name = name.substr(
+            prettyName.length(),
+            name.length() - (prettyName.length()+1)
+            );
+
+    return name;
 }

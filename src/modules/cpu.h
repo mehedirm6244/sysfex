@@ -1,4 +1,4 @@
-void cpu()
+string cpu()
 {
     std::ifstream infile;
     infile.open("/proc/cpuinfo");
@@ -6,7 +6,7 @@ void cpu()
             cpu = "";
 
     if (!(infile.is_open()))
-        __ABORT__
+        return "";
 
     while (infile.good() and cpu == "")
     {
@@ -20,12 +20,18 @@ void cpu()
     infile.close();
 
     if(cpu=="")
-        __ABORT__
+        return "";
 
     // Erase extra spaces
     cpu.erase(std::remove_if(cpu.begin(), cpu.end(), isspace), cpu.end());
     // Erase the "model name" string before the line
     cpu = cpu.substr(modelname.length(), cpu.length()-(modelname.length()));
+    // Remove clock speed
+    if (
+        size_t pos = cpu.find('@');
+        pos != string::npos
+        )
+        cpu = cpu.substr(0, pos);
 
-    print("", "CPU", cpu);
+    return cpu;
 }

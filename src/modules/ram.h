@@ -1,4 +1,4 @@
-void ram()
+string ram()
 {
     int mem_free = 0,
         mem_total = 0;
@@ -6,7 +6,7 @@ void ram()
     std::ifstream infile;
     infile.open("/proc/meminfo");
     if (!(infile.is_open()))
-        __ABORT__
+        return "";
 
     while (infile.good() and !(mem_free and mem_total))
     {
@@ -24,5 +24,5 @@ void ram()
     string ram = std::to_string((mem_total - mem_free)/1024)
                  + "MiB /" + std::to_string(mem_total/1024) + "MiB";
 
-    print("", "Mem", ram);
+    return ram;
 }

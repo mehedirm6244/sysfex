@@ -1,4 +1,4 @@
-void shell()
+string shell()
 {
-	print("", "Shell", std::getenv("SHELL"));
+	return string(std::getenv("SHELL"));
 }

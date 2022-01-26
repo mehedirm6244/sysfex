@@ -4,6 +4,10 @@ readonly GCONF="/opt/sysfex" # Global config path
 readonly DIR="/usr/bin"
 readonly LCONF="/home/${USER}/.config/sysfex" # Local config path
 
+RED='\033[1;31m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
 function main()
 {
     if [ -d "${GCONF}" ]; then
@@ -14,7 +18,7 @@ function main()
             case $yn in
 
                 [Yy]* )
-                    echo "Removing old sysfex installation"
+                    printf "Removing old sysfex installation\n"
                     sudo rm -rf ${GCONF};
                     sudo rm "${DIR}/sysfex"
 
@@ -29,7 +33,7 @@ function main()
                     break;;
 
                 [Nn]* )
-                    echo "Rename or remove ${GCONF} before proceeding!"
+                    printf "${RED}Rename or remove ${GCONF} before proceeding!${NC}\n"
                     exit 1;;
 
             esac
@@ -40,40 +44,40 @@ function main()
 
     fi
 
-    echo "Compiling sysfex..."
+    printf "Compiling sysfex...\n"
 
-    if g++ src/sysfex.cpp -o sysfex -std=c++17 -lX11 -lstdc++fs; then
+    if g++ src/sysfex.cpp -o sysfex -std=c++17 -lX11 -lstdc++fs -fpermissive; then
 
-        echo "Compilation successful!"
+        printf "${GREEN}Compilation successful!${NC}\n"
 
-        echo "Copying files"
+        printf "Copying files... "
         if sudo cp -r "data/." "${GCONF}"; then
-            echo "Copied!"
+            printf "Copied!\n"
         else
-            echo "Something went wrong :("
+            printf "${RED}Something went wrong :(${NC}"
             exit 1
         fi
 
-        echo "Moving sysfex to ${DIR}"
+        printf "Moving sysfex to ${DIR}\n"
         sudo mv "sysfex" "${DIR}"
-        echo "chown ${USER} ${DIR}/sysfex"
+        printf "chown ${USER} ${DIR}/sysfex\n"
         chown ${USER} "${DIR}/sysfex"
 
         if [ -d "${LCONF}" ]; then
-            echo "${LCONF} exists"
+            printf "${LCONF} exists!\n"
 
         else
-            echo "Creating local config files for ${USER}"
+            printf "Creating local config files for ${USER}\n"
             mkdir -p "${LCONF}"
             cp -r "data/." "${LCONF}"
         fi
 
         
-        echo "Sysfex is successfully installed! Enjoy :D"
-        echo "sysfex --help for more information"
+        printf "${GREEN}Sysfex is successfully installed!${NC}\n"
+        printf "sysfex --help for more information\n"
 
     else
-        echo "An error occured. Failed to install sysfex"
+        printf "${RED}An error occured. Failed to install sysfex${NC}\n"
         exit 1
 
     fi

@@ -1,21 +1,21 @@
-void colors_dark()
+string colors_dark()
 {
-    if (config.getvalue("ascii_beside_text")!="0")
-        cout<<string(stoi(config.getvalue("pregap")), ' ');
+    string  s,
+            color_block = config["color_block"];
 
     for (int i = 30; i < 38; i++)
-        cout<<"\e["+std::to_string(i)+"m⬤\e[0m ";
+        s+="\e["+std::to_string(i)+"m"+color_block+"\e[0m ";
     
-    cout<<endl;
+    return s;
 }
 
-void colors_light()
+string colors_light()
 {
-    if (config.getvalue("ascii_beside_text")!="0")
-        cout<<string(stoi(config.getvalue("pregap")), ' ');
+    string  s,
+            color_block = config["color_block"];
 
     for (int i = 90; i < 98; i++)
-        cout<<"\e["+std::to_string(i)+"m⬤\e[0m ";
+        s+="\e["+std::to_string(i)+"m"+color_block+"\e[0m ";
 
-    cout<<endl;
+    return s;
 }

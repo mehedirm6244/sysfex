@@ -1,4 +1,4 @@
-void pkgs()
+string pkgs()
 {
     string pkg;
 
@@ -45,5 +45,5 @@ void pkgs()
     if (std::filesystem::exists("/bin/flatpak"))
         pkg = pkg + exec("flatpak list | wc -l") + " (flatpak) ";
 
-    print("", "Pkgs", pkg);
+    return pkg;
 }

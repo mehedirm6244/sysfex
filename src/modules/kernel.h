@@ -1,6 +1,11 @@
-struct utsname uname_info;
-
-void kernel()
+string kernel()
 {
-	print("", "Kernel", uname_info.release);
+	std::ifstream infile;
+	infile.open("/proc/sys/kernel/osrelease");
+    if (!(infile.is_open()))
+		return exec(string("uname -r").c_str());
+
+	string kernel;
+	infile>>kernel;
+	return kernel;
 }
