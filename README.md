@@ -1,5 +1,5 @@
 ## Sysfex
-Another [neofetch](https://github.com/dylanaraps/neofetch)-like system information fetching tool <b>for linux-based systems</b> written in C++
+Another [neofetch](https://github.com/dylanaraps/neofetch)-like system information fetching tool for <b>linux-based systems</b> written in C++
 <p align="center"><img src="https://github.com/mebesus/sysfex/blob/main/res/sysf_1.png"></p>
 
 ## Installation
@@ -11,32 +11,42 @@ cd sysfex
 ```
 The installer script uses ``g++`` for compiling sysfex and ``sudo`` for elevated permissions. If you don't have ``g++`` installed already, install it before running the script. You may see a warning or two, ignore them.
 
+## Uninstallation
+Run ``./installer.sh`` again. The script will first remove the existing Sysfex installation and then ask whether to reinstall this or not. Just say no
+<p align="center"><img src="https://user-images.githubusercontent.com/86041547/151667328-ad0c0e4a-b468-4076-b91b-04aae9c2c9bd.png"></p>
+Note that the local config files will remain untouched.
+
+Or if you want to remove Sysfex manually:
+```
+sudo rm /usr/bin/sysfex
+sudo rm -rf /opt/sysfex
+# Remove local configuration
+rm -rf ~/.config/sysfex
+```
+
 ## Usage
 | Flag | Description |
 | -----|-------------|
-| ``--help`` | Print available commands
-| ``--ascii <value>`` | If value = 0, the ascii art won't be shown (``sysfex --ascii 0``). Else it'll be shown (``sysfex --ascii 1``) |
-| ``--ascii-path <path-to-ascii>`` | Show an ascii image from anywhere of your computer on output |
-| ``--ascii-beside-txt <value>`` | Choose whether ascii art will be printed beside infos or not ( ASCII will be printed first, then info) |
-| ``--config <path-to-file>`` | Specify the file which you want to be used as the config file |
-| ``--info <path-to-file>`` | Specify the file which you want to be used as the info file |
+| ``--help`` | Print the help message
+| ``--ascii <value>`` | The ASCII art will or won't be shown depending on `<value>`. That is: `sysfex --ascii 0` will execute sysfex but without the ASCII art, whereas `sysfex --ascii 1` will execute sysfex with the ASCII art |
+| ``--ascii-path <path-to-ascii>`` | Use a specified path for the ASCII art  |
+| ``--ascii-beside-txt <value>`` | Choose whether ASCII art and system info will be printed side by side or not |
+| ``--config <path-to-file>`` | Use a specified configuration file |
+| ``--info <path-to-file>`` | Use a specified info file |
 
 ## Configuration
-Global config files can be found inside ``/opt/sysfex`` and local ones can be found in ``~/.config/sysfex``. Please note that global config files are used as fallback when local config files are absent, so modifying global config files are deprecated.
+Global config files can be found inside ``/opt/sysfex`` and the local ones can be found in ``~/.config/sysfex``. Please note that the global config files are used as fallback when the local ones are absent, so modifying global config files are deprecated.
 
 ## FAQ
 
-* ### I get the error ``<X11/Xlib.h> header file is not found``
-Install ``libx11`` or ``libx11-dev`` (whichever name your package manager uses) if you see this error
+* ### I get this error: ``<X11/Xlib.h> header file is not found``
+Install ``libx11`` or ``libx11-dev`` or whichever name your package manager uses for this package
 
-* ### The font icons doesn't look okay / looks like boxes
-Install any nerd-patched font (i.e. I use JetBrains Mono Nerd)
-
-## Contribute?
-Interested to be a part of this project? Just open a PR. You can help this project grow without even knowing to code by reporting a bug or two.
+* ### Some font icons don't look as they're supposed to
+Install any nerd-patched font (i.e. JetBrains Mono Nerd)
 
 ## Plans for the future
-- [ ] Add color support
+- [ ] Add support for colored output
 
 ## Special thanks to
 * Some cool fetch tools spread all over Github for inspiration and ideas.
