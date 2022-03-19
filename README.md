@@ -37,6 +37,11 @@ rm -rf ~/.config/sysfex
 ## Configuration
 Global config files can be found inside ``/opt/sysfex`` and the local ones can be found in ``~/.config/sysfex``. Please note that the global config files are used as fallback when the local ones are absent, so modifying global config files are deprecated.
 
+## Screenshots
+![](https://github.com/avishekdutta531/sysfex/blob/main/res/sysf_2.png?raw=true)  |  ![](https://github.com/avishekdutta531/sysfex/blob/main/res/sysf_3.png?raw=true)
+:-------------------------:|:-------------------------:
+![](https://github.com/avishekdutta531/sysfex/blob/main/res/sysf_4.png?raw=true)  |  ![](https://github.com/avishekdutta531/sysfex/blob/main/res/sysf_5.png?raw=true)
+
 ## FAQ
 
 * ### I get this error: ``<X11/Xlib.h> header file is not found``
@@ -46,7 +51,7 @@ Install ``libx11`` or ``libx11-dev`` or whichever name your package manager uses
 Install any nerd-patched font (i.e. JetBrains Mono Nerd)
 
 ## Plans for the future
-- [ ] Add support for colored output
+- [ ] Add support for colored outpu
 
 ## Special thanks to
 * Some cool fetch tools spread all over Github for inspiration and ideas.
