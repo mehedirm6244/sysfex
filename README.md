@@ -51,7 +51,7 @@ Install ``libx11`` or ``libx11-dev`` or whichever name your package manager uses
 Install any nerd-patched font (i.e. JetBrains Mono Nerd)
 
 ## Plans for the future
-- [ ] Add support for colored outpu
+- [ ] Add support for colored output
 
 ## Special thanks to
 * Some cool fetch tools spread all over Github for inspiration and ideas.
