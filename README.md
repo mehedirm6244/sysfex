@@ -37,6 +37,11 @@ rm -rf ~/.config/sysfex
 ## Configuration
 Global config files can be found inside ``/opt/sysfex`` and the local ones can be found in ``~/.config/sysfex``. Please note that the global config files are used as fallback when the local ones are absent, so modifying global config files are deprecated.
 
+## Screenshots
+Examples of custom config
+![](https://github.com/avishekdutta531/sysfex/blob/main/res/sysf_5.png?raw=true)  |  ![](https://github.com/avishekdutta531/sysfex/blob/main/res/sysf_6.png?raw=true)
+:-------------------------:|:-------------------------:
+
 ## FAQ
 
 * ### I get this error: ``<X11/Xlib.h> header file is not found``
