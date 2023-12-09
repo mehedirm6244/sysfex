@@ -21,7 +21,7 @@ separator = →
 ascii = 1
 
 # Path to the ascii
-ascii_dir = /opt/sysfex/ascii/tux.txt
+ascii_path = /opt/sysfex/ascii/tux.txt
 
 # Choose whether ascii and info should be shown side by side
 ascii_beside_text = 1
