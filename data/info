@@ -1,7 +1,14 @@
-# Lines starting with '#' indicate that they're comments
-# Available info: 	"host", "os", "kernel", "pkgs", "shell", "model",
-    				"user", "de", "ram", "uptime", "resolution",
-    				"cpu", "colors_dark", "colors_light"
+#######################################
+# CONFIGURATION FILE FOR SYSFEX 			#
+# This config file tells sysfex about #
+# "what" stuffs are to be shown				#
+#######################################
+
+# Lines starting with '#' are comments
+# Available options are:
+#				"host", "os", "kernel", "pkgs", "shell", "model",
+#    		"user", "de", "ram", "uptime", "resolution",
+#    		"cpu", "colors_dark", "colors_light"
 
 # You can print stuffs or print info, like this:
 # print "This is a text"

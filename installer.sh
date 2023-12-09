@@ -46,12 +46,16 @@ function main()
 
     printf "Compiling sysfex...\n"
 
-    if g++ src/sysfex.cpp -o sysfex -std=c++17 -lX11 -lstdc++fs -fpermissive; then
+    rm -rf build
+    mkdir build
+    cd build
+    cmake ..
+    if cmake --build . -j 4; then
 
         printf "${GREEN}Compilation successful!${NC}\n"
 
         printf "Copying files... "
-        if sudo cp -r "data/." "${GCONF}"; then
+        if sudo cp -r "../data" "${GCONF}" && sudo chmod -R 755 "${GCONF}"; then
             printf "Copied!\n"
         else
             printf "${RED}Something went wrong :(${NC}"
