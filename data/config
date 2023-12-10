@@ -1,19 +1,29 @@
-# Lines starting with '#' indicate that they're comments
+#######################################
+# CONFIGURATION FILE FOR SYSFEX 			#
+# This config file tells sysfex about #
+# "how" to represent stuffs						#
+#######################################
 
-# The gap between the textart and the informations
+# Lines starting with '#' are comments
+
+# Gap between textart/ascii and information
 pregap = 3
 
-# The gap between key and value
+# Gap between info key and value
+# For example: If gap equals 3, then
+#				key →   value
 gap = 0
 
-# Separator
+# Separator; in between info key and value
 separator = →
 
-# ascii = 1 means that ascii will be printed
+# ascii equals 1 means that ascii/textart will be shown
 ascii = 1
+
 # Path to the ascii
 ascii_path = /opt/sysfex/ascii/tux.txt
-# Choose whether ascii and info will be printed side by side
+
+# Choose whether ascii and info should be shown side by side
 ascii_beside_text = 1
 
 # Self-explanatory
