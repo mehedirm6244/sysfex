@@ -51,11 +51,11 @@ function main()
     cd build
     cmake ..
     if cmake --build . -j 4; then
-
+        cd ..
         printf "${GREEN}Compilation successful!${NC}\n"
 
         printf "Copying files... "
-        if sudo cp -r "../data" "${GCONF}" && sudo chmod -R 755 "${GCONF}"; then
+        if sudo cp -r "data/." "${GCONF}" && sudo chmod -R 755 "${GCONF}"; then
             printf "Copied!\n"
         else
             printf "${RED}Something went wrong :(${NC}"
@@ -63,7 +63,7 @@ function main()
         fi
 
         printf "Moving sysfex to ${DIR}\n"
-        sudo mv "sysfex" "${DIR}"
+        sudo mv "build/sysfex" "${DIR}"
         printf "chown ${USER} ${DIR}/sysfex\n"
         chown ${USER} "${DIR}/sysfex"
 
@@ -81,6 +81,7 @@ function main()
         printf "sysfex --help for more information\n"
 
     else
+        cd ..
         printf "${RED}An error occured. Failed to install sysfex${NC}\n"
         exit 1
 

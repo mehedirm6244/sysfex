@@ -25,18 +25,6 @@ std::string Config::getValue(std::string key) {
 }
 
 void Config::init(std::string dir) {
-    config = {
-            {"pregap",            "6"},
-            {"gap",               "10"},
-            {"ascii",             "1"},
-            {"ascii_path",        "/opt/sysfex/ascii/tux.txt"},
-            {"ascii_beside_text", "1"},
-            {"color_block",       "⬤"},
-            {"separator",         ":"},
-            {"bold_ascii",        "1"},
-            {"bold_text",         "1"}
-    };
-
     if (!std::filesystem::exists(dir)) {
         return;
     }
