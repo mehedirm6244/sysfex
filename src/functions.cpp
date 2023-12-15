@@ -8,7 +8,7 @@
 #include "shell_escape.hpp"
 
 void print(std::string key, std::string value) {
-    int keySize = get_line_width(key);
+    int keySize = getLineWidth(key);
 
     int gap, pregap, remainingSpace;
     gap = stoi(Config::the()->getValue("gap"));
@@ -83,7 +83,7 @@ std::string exec(const char *input) {
     return output;
 }
 
-size_t get_line_width(const std::string &line) {
+size_t getLineWidth(const std::string &line) {
     size_t length = 0;
     icu::UnicodeString us(line.c_str());
     const UChar *us_buf = us.getTerminatedBuffer();
