@@ -3,14 +3,41 @@
 #include <string>
 #include <map>
 
-void initInfo(std::string dir);
+#include "modules.hpp"
 
-const std::pair<std::string, std::string> *getInfos();
+const std::map<std::string, std::string(*)()> printables = {
+  {"host",         *(host)},
+  {"os",           *(os)},
+  {"kernel",       *(kernel)},
+  {"pkgs",         *(pkgs)},
+  {"shell",        *(shell)},
+  {"model",        *(model)},
+  {"user",         *(user)},
+  {"de",           *(de)},
+  {"ram",          *(ram)},
+  {"uptime",       *(uptime)},
+  {"resolution",   *(resolution)},
+  {"cpu",          *(cpu)},
+  {"colors_dark",  *(colors_dark)},
+  {"colors_light", *(colors_light)}
+};
 
-int getCurrentInfo();
+class Info {
+  std::pair<std::string, std::string> infos[64];
+  int infoSize, currentInfo;
 
-void setCurrentInfo(int new_currentInfo);
+public:
+  static Info *the();
 
-int getInfoSize();
+  void init(std::string dir);
 
-void setInfoSize(int new_infoSize);
+  const std::pair<std::string, std::string> *getInfos();
+
+  int getCurrentInfo();
+
+  void setCurrentInfo(int new_currentInfo);
+
+  int getInfoSize();
+
+  void setInfoSize(int new_infoSize);
+};

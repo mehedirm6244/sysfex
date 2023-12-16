@@ -3,96 +3,84 @@
 #include <fstream>
 #include <map>
 #include <string>
-#include "modules.hpp"
+#include "info.hpp"
 
-const std::map<std::string, std::string(*)()> printables = {
-        {"host",         *(host)},
-        {"os",           *(os)},
-        {"kernel",       *(kernel)},
-        {"pkgs",         *(pkgs)},
-        {"shell",        *(shell)},
-        {"model",        *(model)},
-        {"user",         *(user)},
-        {"de",           *(de)},
-        {"ram",          *(ram)},
-        {"uptime",       *(uptime)},
-        {"resolution",   *(resolution)},
-        {"cpu",          *(cpu)},
-        {"colors_dark",  *(colors_dark)},
-        {"colors_light", *(colors_light)}
-};
+Info sysfex_info;
 
-std::pair<std::string, std::string> infos[64];
-int infoSize, currentInfo;
-
-const std::pair<std::string, std::string> *getInfos() {
-    return infos;
+Info *Info::the() {
+  return &sysfex_info;
 }
 
-int getCurrentInfo() {
-    return currentInfo;
+const std::pair<std::string, std::string> *Info::getInfos() {
+  return infos;
 }
 
-void setCurrentInfo(int new_currentInfo) {
-    currentInfo = new_currentInfo;
+int Info::getCurrentInfo() {
+  return currentInfo;
 }
 
-int getInfoSize() {
-    return infoSize;
+void Info::setCurrentInfo(int new_currentInfo) {
+  currentInfo = new_currentInfo;
 }
 
-void setInfoSize(int new_infoSize) {
-    infoSize = new_infoSize;
+int Info::getInfoSize() {
+  return infoSize;
 }
 
-void initInfo(std::string dir) {
-    currentInfo = 0,
-            infoSize = 0;
+void Info::setInfoSize(int new_infoSize) {
+  infoSize = new_infoSize;
+}
 
-    if (!std::filesystem::exists(dir)) {
-        return;
+void Info::init(std::string dir) {
+  currentInfo = 0,
+  infoSize = 0;
+
+  if (!std::filesystem::exists(dir)) {
+    return;
+  }
+
+  std::ifstream infile;
+  infile.open(dir);
+  while (infile.good()) {
+    std::string type, currentLine;
+    infile >> type;
+    getline(infile, currentLine);
+
+    // Comment
+    if (type[0] == '#') {
+      continue;
     }
 
-    std::ifstream infile;
-    infile.open(dir);
-    while (infile.good()) {
-        std::string type, currentLine;
-        infile >> type;
-        getline(infile, currentLine);
+    int leftInvertedComma = currentLine.find('"'),
+        rightInvertedComma = currentLine.find_last_of('"');
 
-        // Comment
-        if (type[0] == '#') {
-            continue;
-        }
-
-        int leftInvertedComma = currentLine.find('"'),
-                rightInvertedComma = currentLine.find_last_of('"');
-
-        if (
-                leftInvertedComma == std::string::npos or
-                leftInvertedComma == rightInvertedComma
-                )
-            continue;
-
-        if (type == "info") {
-            std::string key = currentLine.substr(leftInvertedComma + 1, rightInvertedComma - (leftInvertedComma + 1)),
-                    info = currentLine.substr(rightInvertedComma + 1, currentLine.back());
-            // Erase extra spaces
-            info.erase(std::remove_if(info.begin(), info.end(), isspace), info.end());
-
-            if (printables.find(info) == printables.end())
-                continue;
-
-            infos[infoSize] = {key, (*printables.at(info))()};
-            infoSize++;
-        } else if (type == "print") {
-            currentLine = currentLine.substr(leftInvertedComma + 1, rightInvertedComma - (leftInvertedComma + 1));
-            infos[infoSize] = {currentLine, ""};
-            infoSize++;
-        }
-
-        if (infoSize >= 64) {
-            break;
-        }
+    if (leftInvertedComma == std::string::npos or
+        leftInvertedComma == rightInvertedComma
+        ) {
+      continue;
     }
+
+    if (type == "info") {
+      std::string key, info;
+      key = currentLine.substr(leftInvertedComma + 1, rightInvertedComma - (leftInvertedComma + 1));
+      info = currentLine.substr(rightInvertedComma + 1, currentLine.back());
+      /* Erase unnecessary whitespaces */
+      info.erase(std::remove_if(info.begin(), info.end(), isspace), info.end());
+
+      if (printables.find(info) == printables.end()) {
+        continue;
+      }
+
+      infos[infoSize] = {key, (*printables.at(info))()};
+      infoSize++;
+    } else if (type == "print") {
+      currentLine = currentLine.substr(leftInvertedComma + 1, rightInvertedComma - (leftInvertedComma + 1));
+      infos[infoSize] = {currentLine, ""};
+      infoSize++;
+    }
+
+    if (infoSize >= 64) {
+      break;
+    }
+  }
 }

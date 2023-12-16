@@ -54,7 +54,7 @@ int main(int argc, const char *argv[]) {
       } else if (!strcmp(argv[i], "--config")) {
         Config::the()->init(argv[++i]);
       } else if (!strcmp(argv[i], "--info")) {
-        initInfo(argv[++i]);
+        Info::the()->init(argv[++i]);
       } else if (!strcmp(argv[i], "--ascii-beside-txt")) {
         Config::the()->setValue("ascii_beside_text", argv[++i]);
       } else {
@@ -132,11 +132,11 @@ void importConfig() {
   /* If a local info file exists, then use that */
   std::string localConf = localConfDir + "info";
   if (std::filesystem::exists(localConf)) {
-    initInfo(localConf);
+    Info::the()->init(localConf);
   } else if (std::filesystem::exists(fallbackDir + "info")) {     /* Else copy the fallback info file to the path of
                                                                      the local info file and use the local one */
     std::filesystem::copy_file(fallbackDir + "info", localConf);
-    initInfo(localConf);
+    Info::the()->init(localConf);
   }
   /*
     NOTE THAT IF NEITHER ~/.config/sysfex/info NOR /opt/sysfex/info
@@ -202,9 +202,9 @@ void fetch() {
         }
 
         /* Print info as long as there's any */
-        if (getCurrentInfo() < getInfoSize()) {
-          print(getInfos()[getCurrentInfo()].first, getInfos()[getCurrentInfo()].second); /* print(key, info) */
-          setCurrentInfo(getCurrentInfo() + 1);
+        if (Info::the()->getCurrentInfo() < Info::the()->getInfoSize()) {
+          print(Info::the()->getInfos()[Info::the()->getCurrentInfo()].first, Info::the()->getInfos()[Info::the()->getCurrentInfo()].second); /* print(key, info) */
+          Info::the()->setCurrentInfo(Info::the()->getCurrentInfo() + 1);
         } else {
           std::cout << std::endl;
         }
@@ -213,11 +213,11 @@ void fetch() {
   }
 
   /* If reading the file is over but there are still info to print */
-  for (int i = getCurrentInfo(); i < getInfoSize(); i++) {
+  for (int i = Info::the()->getCurrentInfo(); i < Info::the()->getInfoSize(); i++) {
     if (Config::the()->getValue("ascii") != "0" and Config::the()->getValue("ascii_beside_text") != "0") {
       std::cout << std::string(maxLineLength, ' ');
     }
 
-    print(getInfos()[i].first, getInfos()[i].second); /* print(key, info) */
+    print(Info::the()->getInfos()[i].first, Info::the()->getInfos()[i].second); /* print(key, info) */
   }
 }

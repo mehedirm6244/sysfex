@@ -8,4 +8,4 @@ void help();
 
 std::string exec(const char *input);
 
-size_t get_line_width(const std::string &line);
+size_t getLineWidth(const std::string &line);
