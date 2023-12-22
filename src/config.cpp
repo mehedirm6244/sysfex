@@ -1,7 +1,11 @@
+/*************************************************/
+/* This file is a part of Sysfex                 */
+/* This file is for configuration related stuffs */
+/*************************************************/
+
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
-#include <string>
 #include "config.hpp"
 
 Config sysfex_config;
@@ -15,7 +19,6 @@ void Config::setValue(std::string key, std::string value) {
     config[key] = value;
   }
 }
-
 
 std::string Config::getValue(std::string key) {
   if (config.find(key) != config.end()) {

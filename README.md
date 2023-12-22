@@ -1,6 +1,6 @@
 # Sysfex
 Sysfex is just another system information fetching tool for <b>linux-based systems</b>, written in C++
-<p align="center"><img src="https://github.com/mebesus/sysfex/blob/main/res/sysf_1.png?raw=true"></p>
+<p align="center"><img src="https://github.com/mebesus/sysfex/blob/main/screenshots/ss.gif?raw=true"></p>
 
 ## Installation
 
@@ -34,7 +34,7 @@ cd ..
 ```
 Copy files to proper directories:
 ```
-sudo cp -r data/. /opt/sysfex
+sudo cp -r presets/. /opt/sysfex
 sudo chmod -R 755 /opt/sysfex
 sudo cp build/sysfex /usr/bin
 sudo chown ${USER} /usr/bin/sysfex
@@ -42,7 +42,7 @@ sudo chown ${USER} /usr/bin/sysfex
 Make local configuration file which can be modified further
 ```
 mkdir -p ${HOME}/.config/sysfex
-cp -r data/. ${HOME}/.config/sysfex
+cp -r presets/. ${HOME}/.config/sysfex
 ```
 
 ## Uninstallation

@@ -14,20 +14,20 @@
 # print "This is a text"
 # info "This is OS" os
 
-print "──────  Hardware Information ───────"
+print "──────────   Hardware ──────────"
 print ""
-info "  " model
-info " 塞" ram
+info "  " model
+info "  " ram
 info "  " cpu
-info "  " resolution
+info "  " resolution
 print ""
-print "──────  Software Information ───────"
+print "──────────   Software ──────────"
 print ""
-info "  " user
+info "  " user
 info "  " os
-info "  " kernel
+info "  " kernel
 info "  " de
-info "  " pkgs
+info "  " pkgs
 info "  " shell
 print ""
 info "" colors_dark

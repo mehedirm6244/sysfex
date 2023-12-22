@@ -1,11 +1,10 @@
 /**********************************************************************/
 /* Sysfex is just another system information fetching tool built for  */
 /* linux based distributions, licenced under the GNU GPL-3.0 license  */
-/* Github repository: https://github.com/mehedirm6244/sysfex          */
+/* GitHub repository: https://github.com/mehedirm6244/Sysfex          */
 /**********************************************************************/
 
 #include <iostream>
-#include <string>
 #include <cstring>
 #include <map>
 #include <fstream>
@@ -14,11 +13,11 @@
 
 /* Sysfex specific stuff */
 #include "config.hpp"
-#include "functions.hpp"
+#include "utils.hpp"
 #include "shell_escape.hpp"
 #include "info.hpp"
 
-void importConfig();            /* Look for existing configs for sysfex */
+void importConfig();            /* Look for existing configs for Sysfex */
 void fetch();                   /* The heart of this program */
 
 
@@ -33,7 +32,7 @@ int main(int argc, const char *argv[]) {
 
   /*
     Check for user flags
-    Flags are provided through the command line while running this program
+    which are provided through the command line while running this program
   */
   for (int i = 1; i < argc; i++) {
     if (!strcmp(argv[i], "--help")) {
@@ -43,28 +42,24 @@ int main(int argc, const char *argv[]) {
 
     if (i != argc - 1) {
       /*
-        The following flags need values to work with sysfex --flag what_user_wants
+        The following flags need values to work with Sysfex --flag what_user_wants
         Hence the current flag MUST NOT be the last string of argv[]
       */
 
-      if (!strcmp(argv[i], "--ascii")) {
-        Config::the()->setValue("ascii", argv[++i]);
-      } else if (!strcmp(argv[i], "--ascii-path")) {
+      if (!strcmp(argv[i], "--ascii-path")) {
         Config::the()->setValue("ascii_path", argv[++i]);
       } else if (!strcmp(argv[i], "--config")) {
         Config::the()->init(argv[++i]);
       } else if (!strcmp(argv[i], "--info")) {
         Info::the()->init(argv[++i]);
-      } else if (!strcmp(argv[i], "--ascii-beside-txt")) {
-        Config::the()->setValue("ascii_beside_text", argv[++i]);
       } else {
-        std::cout << "No matching flag found called " << argv[i] << " !"
-                  << "Run sysfex --help for listing all the available flags." << std::endl;
+        std::cout << RED << "No flag named " << argv[i] << " is available!" << RESET << std::endl
+                  << "Run `sysfex --help` for listing all the available flags." << std::endl;
         return 1;
       }
     } else {
-      std::cout << "Invalid command format!"
-                << "Run sysfex --help for listing all the available flags.";
+      std::cout << RED << "Invalid command format!" << RESET << std::endl
+                << "Run `sysfex --help` for listing all the available flags.";
       return 1;
     }
   }
@@ -75,7 +70,7 @@ int main(int argc, const char *argv[]) {
 
 
 /**************************************************************/
-/* This function looks for configuration files for sysfex     */
+/* This function looks for configuration files for Sysfex     */
 /* It will look into ${USER}/.config/sysfex first             */
 /* If not found, then /opt/sysfex will be searched for        */
 /* If still not found, then the hardcoded config will be used */
@@ -89,18 +84,18 @@ void importConfig() {
   fallbackDir = "/opt/sysfex/";                             /* To be searched for config if no local config exists */
 
   /*
-    There are two types of config files for sysfex:
-    config -> controls how stuffs will be shown i.e. gaps, bold text etc
+    There are two types of config files for Sysfex:
+    config -> controls how stuffs will be shown i.e. gaps, bold text etc.
     info -> controls what info to be shown i.e. OS Name, Screen resolution etc
   */
 
   /*
     If the directory for local config file itself doesn't exist,
     Then make that directory first. The fallback config will be
-    copied to that directory before sysfex runs. Then the user can
+    copied to that directory before Sysfex runs. Then the user can
     modify it according to their preference.
 
-    This scenario is for when sysfex is ran for the first time, or
+    This scenario is for when Sysfex is run for the first time, or
     your cat has messed up with your config files
   */
   if (!std::filesystem::exists(localConfDir)) {
@@ -173,7 +168,7 @@ void fetch() {
         size_t currentLineLength = getLineWidth(currentLine);
 
         if (Config::the()->getValue("bold_ascii") != "0") { /* Use bold font for showing ASCII unless forbidden */
-          currentLine = BOLD + currentLine + UBOLD;
+          currentLine = BOLD + currentLine + RESET;
         }
 
         maxLineLength = std::max(maxLineLength, currentLineLength);
@@ -203,7 +198,8 @@ void fetch() {
 
         /* Print info as long as there's any */
         if (Info::the()->getCurrentInfo() < Info::the()->getInfoSize()) {
-          print(Info::the()->getInfos()[Info::the()->getCurrentInfo()].first, Info::the()->getInfos()[Info::the()->getCurrentInfo()].second); /* print(key, info) */
+          print(Info::the()->getInfos()[Info::the()->getCurrentInfo()].first,
+                Info::the()->getInfos()[Info::the()->getCurrentInfo()].second); /* print(key, info) */
           Info::the()->setCurrentInfo(Info::the()->getCurrentInfo() + 1);
         } else {
           std::cout << std::endl;

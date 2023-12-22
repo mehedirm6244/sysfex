@@ -12,7 +12,7 @@ find_package(X11 REQUIRED)
 add_library(
         libsysfex
         src/config.cpp
-        src/functions.cpp
+        src/utils.cpp
         src/info.cpp
         src/modules/colors.cpp
         src/modules/cpu.cpp

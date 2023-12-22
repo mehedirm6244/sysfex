@@ -2,7 +2,6 @@
 #include <filesystem>
 #include <fstream>
 #include <map>
-#include <string>
 #include "info.hpp"
 
 Info sysfex_info;
@@ -55,8 +54,7 @@ void Info::init(std::string dir) {
         rightInvertedComma = currentLine.find_last_of('"');
 
     if (leftInvertedComma == std::string::npos or
-        leftInvertedComma == rightInvertedComma
-        ) {
+        leftInvertedComma == rightInvertedComma) {
       continue;
     }
 

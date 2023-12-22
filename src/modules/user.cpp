@@ -1,11 +1,12 @@
 /********************************************/
 /* This file is a part of Sysfex            */
 /* This function returns the username       */
-/* This is an useless function, but anyways */
+/* This is a useless function, but anyway   */
 /********************************************/
 
 #include "user.hpp"
 
 std::string user() {
-    return std::getenv("USER");
+  /* Return environment variable ${USER} */
+  return std::getenv("USER");
 }

@@ -7,14 +7,14 @@
 #include "host.hpp"
 
 std::string host() {
-    std::string host;
-    std::ifstream infile;
-    infile.open("/proc/sys/kernel/hostname");
-    if (!infile.is_open()) {
-        return "";
-    }
-    infile >> host;
-    infile.close();
+  std::string output;
+  std::ifstream infile;
+  infile.open("/proc/sys/kernel/hostname");
+  if (!infile.is_open()) {
+    return "";
+  }
+  infile >> output;
+  infile.close();
 
-    return host;
+  return output;
 }
