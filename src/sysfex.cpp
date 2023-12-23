@@ -10,6 +10,7 @@
 #include <fstream>
 #include <filesystem>
 #include <algorithm>
+#include <vector>
 
 /* Sysfex specific stuff */
 #include "config.hpp"
@@ -53,12 +54,12 @@ int main(int argc, const char *argv[]) {
       } else if (!strcmp(argv[i], "--info")) {
         Info::the()->init(argv[++i]);
       } else {
-        std::cout << RED << "No flag named " << argv[i] << " is available!" << RESET << std::endl
-                  << "Run `sysfex --help` for listing all the available flags." << std::endl;
+        std::cout << RED << "No flag named " << argv[i] << " is available!" << RESET << '\n'
+                  << "Run `sysfex --help` for listing all the available flags." << '\n';
         return 1;
       }
     } else {
-      std::cout << RED << "Invalid command format!" << RESET << std::endl
+      std::cout << RED << "Invalid command format!" << RESET << '\n'
                 << "Run `sysfex --help` for listing all the available flags.";
       return 1;
     }
@@ -157,29 +158,15 @@ void fetch() {
     std::ifstream infile;
     infile.open(asciiPath);
     if (infile.is_open()) {
-      std::pair<std::string, int> asciiArt[64]; /* asciiArt[i].first to store the i-th line of the ascii
-                                                   asciiArt[i].second to store the length of the i-th line */
-
-      int currentLineIndex = 0; /* Current line count of the ascii */
-
-      while (infile.good() and currentLineIndex < 64) { /* No sane person is having an ascii over 64 lines*/
+      while (infile.good()) {
         std::string currentLine;
         std::getline(infile, currentLine);
         size_t currentLineLength = getLineWidth(currentLine);
 
-        if (Config::the()->getValue("bold_ascii") != "0") { /* Use bold font for showing ASCII unless forbidden */
-          currentLine = BOLD + currentLine + RESET;
-        }
-
         maxLineLength = std::max(maxLineLength, currentLineLength);
-        asciiArt[currentLineIndex] = {currentLine, currentLineLength};
-        currentLineIndex++;
-
-        if (Config::the()->getValue("ascii_beside_text") == "0") { /* Print the ascii first if ascii_beside_text not equals 0
-                                                                      Thus ASCII will be printed first, then the info */
-          std::cout << process_escape(currentLine, false) << std::endl;
-          continue;
-        }
+        std::cout << "\033[" << starting_column << "C";
+        std::cout << process_escape(currentLine, false) << '\n';
+        lineCount++;
       }
 
       infile.close();
@@ -187,22 +174,18 @@ void fetch() {
       /****************/
       /* PRINT STUFFS */
       /****************/
-
-      for (int i = 0; i < currentLineIndex; i++) {
-        std::string currentLine = asciiArt[i].first;
-        int currentLineLength = asciiArt[i].second;
-
-        if (Config::the()->getValue("ascii_beside_text") != "0") { /* Do not print the ascii stuff if already done so */
-          std::cout << process_escape(currentLine, false) << std::string(maxLineLength - currentLineLength, ' ');
-        }
-
-        /* Print info as long as there's any */
-        if (Info::the()->getCurrentInfo() < Info::the()->getInfoSize()) {
-          print(Info::the()->getInfos()[Info::the()->getCurrentInfo()].first,
-                Info::the()->getInfos()[Info::the()->getCurrentInfo()].second); /* print(key, info) */
-          Info::the()->setCurrentInfo(Info::the()->getCurrentInfo() + 1);
-        } else {
-          std::cout << std::endl;
+      if (Config::the()->getValue("ascii_beside_text") != "0") {
+        std::cout << "\033[" << lineCount << "A";
+        for (int i = 0; i < lineCount; i++) {
+          std::cout << "\033[" << maxLineLength + starting_column << "C";
+          /* Print info as long as there's any */
+          if (Info::the()->getCurrentInfo() < Info::the()->getInfoSize()) {
+            print(Info::the()->getInfos()[Info::the()->getCurrentInfo()].first,
+                  Info::the()->getInfos()[Info::the()->getCurrentInfo()].second); /* print(key, info) */
+            Info::the()->setCurrentInfo(Info::the()->getCurrentInfo() + 1);
+          } else {
+            std::cout << '\n';
+          }
         }
       }
     }
