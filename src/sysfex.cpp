@@ -46,7 +46,6 @@ int main(int argc, const char *argv[]) {
         The following flags need values to work with Sysfex --flag what_user_wants
         Hence the current flag MUST NOT be the last string of argv[]
       */
-
       if (!strcmp(argv[i], "--ascii-path")) {
         Config::the()->setValue("ascii_path", argv[++i]);
       } else if (!strcmp(argv[i], "--config")) {
@@ -86,7 +85,7 @@ void importConfig() {
 
   /*
     There are two types of config files for Sysfex:
-    config -> controls how stuffs will be shown i.e. gaps, bold text etc.
+    config -> controls how stuffs will be shown i.e. gaps, separator etc.
     info -> controls what info to be shown i.e. OS Name, Screen resolution etc
   */
 
@@ -150,20 +149,20 @@ void importConfig() {
 /**************************************************/
 
 void fetch() {
-  size_t maxLineLength = 0; /* Length of the longest line of the ascii file */
-  size_t lineCount = 0;
-  size_t starting_line = 0;
-  size_t starting_column = 0;
+  size_t maxLineLength = 0, /* Length of the longest line of the ascii file */
+         lineCount = 0,
+         startingLine = 0,
+         startingColumn = 0;
 
   if (Config::the()->getValue("clear_screen") != "0") {
     std::cout << "\033[2J";
     try {
-      starting_line = std::stoi(Config::the()->getValue("starting_line"));
-      starting_column = std::stoi(Config::the()->getValue("starting_column"));
+      startingLine = std::stoi(Config::the()->getValue("starting_line"));
+      startingColumn = std::stoi(Config::the()->getValue("starting_column"));
     } catch(std::exception &e) {
-      // do nothing
+      /* Do nothing */
     }
-    std::cout << "\033[" << starting_line << ";" << "H";
+    std::cout << "\033[" << startingLine << ";H";
   }
 
   /* Print the ASCII text/image unless forbidden to do so */
@@ -179,7 +178,7 @@ void fetch() {
         size_t currentLineLength = getLineWidth(currentLine);
 
         maxLineLength = std::max(maxLineLength, currentLineLength);
-        std::cout << "\033[" << starting_column << "C";
+        std::cout << "\033[" << startingColumn << "C";
         std::cout << process_escape(currentLine, false) << '\n';
         lineCount++;
       }
@@ -192,7 +191,7 @@ void fetch() {
       if (Config::the()->getValue("ascii_beside_text") != "0") {
         std::cout << "\033[" << lineCount << "A";
         for (int i = 0; i < lineCount; i++) {
-          std::cout << "\033[" << maxLineLength + starting_column << "C";
+          std::cout << "\033[" << maxLineLength + startingColumn + 1 << "C";
           /* Print info as long as there's any */
           if (Info::the()->getCurrentInfo() < Info::the()->getInfoSize()) {
             print(Info::the()->getInfos()[Info::the()->getCurrentInfo()].first,
@@ -208,10 +207,12 @@ void fetch() {
 
   /* If reading the file is over but there are still info to print */
   for (int i = Info::the()->getCurrentInfo(); i < Info::the()->getInfoSize(); i++) {
-    if (Config::the()->getValue("ascii") != "0" and Config::the()->getValue("ascii_beside_text") != "0") {
+    if (Config::the()->getValue("ascii") != "0" and
+        Config::the()->getValue("ascii_beside_text") != "0") {
       std::cout << std::string(maxLineLength, ' ');
     }
 
-    print(Info::the()->getInfos()[i].first, Info::the()->getInfos()[i].second); /* print(key, info) */
+    print(Info::the()->getInfos()[i].first,
+          Info::the()->getInfos()[i].second); /* print(key, info) */
   }
 }

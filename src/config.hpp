@@ -17,15 +17,13 @@ class Config {
     {"ascii",               "1"                         },
     {"ascii_beside_text",   "1"                         },
     {"ascii_path",          "/opt/sysfex/ascii/tux.txt" },
-    {"bold_ascii",          "1"                         },
-    {"bold_text",           "1"                         },
     {"color_block",         "⬤"                         },
+    {"clear_screen",        "1"                         },
     {"gap",                 "10"                        },
     {"pregap",              "6"                         },
     {"separator",           ":"                         },
-    {"clear_screen",        "1"                         },
-    {"starting_line",       "0"                         },
     {"starting_column",     "0"                         },
+    {"starting_line",       "0"                         }
   };
 
 public:

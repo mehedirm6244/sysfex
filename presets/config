@@ -7,7 +7,7 @@
 # Lines starting with '#' are comments
 
 # Gap between textart/ascii and information
-pregap = 3
+pregap = 4
 
 # Gap between info key and value
 # For example: If gap equals 3, then
@@ -15,20 +15,21 @@ pregap = 3
 gap = 0
 
 # Separator; in between info key and value
-separator = →
+separator = 
 
 # ascii equals 1 means that ascii/textart will be shown
 ascii = 1
 
 # Path to the ascii
-ascii_path = /opt/sysfex/ascii/tux.txt
+ascii_path = /opt/sysfex/ascii/arch.txt
 
 # Choose whether ascii and info should be shown side by side
 ascii_beside_text = 1
 
-# Self-explanatory
-bold_text = 1
-bold_ascii = 1
-
 # The character/string/whatever which will be used to represent the color palette
-color_block = 
+color_block = ⬤
+
+clear_screen = 0
+# Only works when "clear_screen" = 1
+starting_line = 0
+starting_column = 0

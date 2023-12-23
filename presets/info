@@ -14,21 +14,21 @@
 # print "This is a text"
 # info "This is OS" os
 
-print "──────────   Hardware ──────────"
+info "\f_red\bold  \reset" user
+info "\f_green\bold  \reset" uptime
 print ""
-info "  " model
-info "  " ram
-info "  " cpu
-info "  " resolution
+print "⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ \underline  Hardware\reset ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅"
 print ""
-print "──────────   Software ──────────"
+info "\f_blue\bold  \reset" ram
+info "\f_yellow\bold  \reset" cpu
+info "\f_magenta\bold  \reset" resolution
 print ""
-info "  " user
-info "  " os
-info "  " kernel
-info "  " de
-info "  " pkgs
-info "  " shell
+print "⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ \underline  Software\reset ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅"
+print ""
+info "\f_cyan\bold  \reset" os
+info "\f_yellow\bold  \reset" kernel
+info "\f_red\bold  \reset" de
+info "\f_green\bold  \reset" pkgs
+info "\f_blue\bold  \reset" shell
 print ""
 info "" colors_dark
-info "" colors_light
