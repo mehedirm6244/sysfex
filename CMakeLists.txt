@@ -9,8 +9,9 @@ project(
 find_package(ICU COMPONENTS uc REQUIRED)
 find_package(X11 REQUIRED)
 
-add_library(
-        libsysfex
+include_directories(${X11_INCLUDE_DIR})
+add_executable(sysfex
+        src/sysfex.cpp
         src/config.cpp
         src/utils.cpp
         src/info.cpp
@@ -27,9 +28,26 @@ add_library(
         src/modules/shell.cpp
         src/modules/uptime.cpp
         src/modules/user.cpp
+        src/shell_escape.cpp
+        src/shell_escape.hpp
+        src/modules.hpp
+        src/info.hpp
+        src/config.hpp
+        src/modules/colors.hpp
+        src/modules/cpu.hpp
+        src/modules/de.hpp
+        src/modules/host.hpp
+        src/modules/kernel.hpp
+        src/modules/model.hpp
+        src/modules/os.hpp
+        src/modules/pkgs.hpp
+        src/modules/ram.hpp
+        src/modules/resolution.hpp
+        src/modules/shell.hpp
+        src/modules/uptime.hpp
+        src/modules/user.hpp
+        src/shell_escape.cpp
+        src/utils.hpp
 )
 
-include_directories(${X11_INCLUDE_DIR})
-add_executable(sysfex src/sysfex.cpp)
-
-target_link_libraries(sysfex PRIVATE libsysfex ${X11_LIBRARIES} ICU::uc)
+target_link_libraries(sysfex ${X11_LIBRARIES} ICU::uc)

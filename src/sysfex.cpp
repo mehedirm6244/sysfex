@@ -177,7 +177,7 @@ void fetch() {
 
         if (Config::the()->getValue("ascii_beside_text") == "0") { /* Print the ascii first if ascii_beside_text not equals 0
                                                                       Thus ASCII will be printed first, then the info */
-          std::cout << currentLine << std::endl;
+          std::cout << process_escape(currentLine, false) << std::endl;
           continue;
         }
       }
@@ -193,7 +193,7 @@ void fetch() {
         int currentLineLength = asciiArt[i].second;
 
         if (Config::the()->getValue("ascii_beside_text") != "0") { /* Do not print the ascii stuff if already done so */
-          std::cout << currentLine << std::string(maxLineLength - currentLineLength, ' ');
+          std::cout << process_escape(currentLine, false) << std::string(maxLineLength - currentLineLength, ' ');
         }
 
         /* Print info as long as there's any */
