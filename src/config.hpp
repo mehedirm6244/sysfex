@@ -22,7 +22,10 @@ class Config {
     {"color_block",         "⬤"                         },
     {"gap",                 "10"                        },
     {"pregap",              "6"                         },
-    {"separator",           ":"                         }
+    {"separator",           ":"                         },
+    {"clear_screen",        "1"                         },
+    {"starting_line",       "0"                         },
+    {"starting_column",     "0"                         },
   };
 
 public:

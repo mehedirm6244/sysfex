@@ -151,6 +151,21 @@ void importConfig() {
 
 void fetch() {
   size_t maxLineLength = 0; /* Length of the longest line of the ascii file */
+  size_t lineCount = 0;
+  size_t starting_line = 0;
+  size_t starting_column = 0;
+
+  if (Config::the()->getValue("clear_screen") != "0") {
+    std::cout << "\033[2J";
+    try {
+      starting_line = std::stoi(Config::the()->getValue("starting_line"));
+      starting_column = std::stoi(Config::the()->getValue("starting_column"));
+    } catch(std::exception &e) {
+      // do nothing
+    }
+    std::cout << "\033[" << starting_line << ";" << "H";
+  }
+
   /* Print the ASCII text/image unless forbidden to do so */
   if (Config::the()->getValue("ascii") != "0") {
     std::string asciiPath = Config::the()->getValue("ascii_path");
