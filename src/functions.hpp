@@ -2,7 +2,7 @@
 
 #include <string>
 
-void print(std::string key, std::string value);
+void print(const std::string& key, const std::string& value);
 
 void help();
 

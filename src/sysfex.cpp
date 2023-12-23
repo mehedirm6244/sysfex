@@ -137,9 +137,7 @@ void importConfig() {
     std::string localConf = localConfDir + "info";
     if (std::filesystem::exists(localConf)) {
         initInfo(localConf);
-    }
-
-    if (std::filesystem::exists(fallbackDir + "info")) {     /* Else copy the fallback info file to the path of
+    } else if (std::filesystem::exists(fallbackDir + "info")) {     /* Else copy the fallback info file to the path of
                                                                      the local info file and use the local one */
         system(("cp " + fallbackDir + "info " + localConf).c_str());
         initInfo(localConf);
@@ -189,7 +187,7 @@ void fetch() {
 
                 if (Config::the()->getValue("ascii_beside_text") == "0") { /* Print the ascii first if ascii_beside_text not equals 0
                                                      Thus ASCII will be printed first, then the info */
-                    std::cout << currentLine << std::endl;
+                    std::cout << process_escape(currentLine, false) << std::endl;
                     continue;
                 }
             }
@@ -206,7 +204,7 @@ void fetch() {
 
                 if (Config::the()->getValue("ascii_beside_text") !=
                     "0") { // Do not print the ascii stuff if already done so
-                    std::cout << currentLine << std::string(maxLineLength - currentLineLength, ' ');
+                    std::cout << process_escape(currentLine, false) << std::string(maxLineLength - currentLineLength, ' ');
                 }
 
                 /* Print info as long as there's any */

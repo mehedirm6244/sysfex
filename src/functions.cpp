@@ -7,8 +7,8 @@
 #include "functions.hpp"
 #include "shell_escape.hpp"
 
-void print(std::string key, std::string value) {
-    int keySize = get_line_width(key);
+void print(const std::string& key, const std::string& value) {
+    int keySize = (int)get_line_width(key);
 
     int gap, pregap, remainingSpace;
     gap = stoi(Config::the()->getValue("gap"));
@@ -21,16 +21,16 @@ void print(std::string key, std::string value) {
     }
 
     if (Config::the()->getValue("bold_text") != "0") {
-        std::cout << BOLD << key << UBOLD;
+        std::cout << BOLD << process_escape(key, false) << UBOLD;
     } else {
-        std::cout << key;
+        std::cout << process_escape(key, false);
     }
 
-    if (value != "") {
-        if (key != "") {
-            std::cout << std::string(remainingSpace, ' ') << Config::the()->getValue("separator") << " ";
+    if (!value.empty()) {
+        if (!key.empty()) {
+            std::cout << std::string(remainingSpace, ' ') << process_escape(Config::the()->getValue("separator"), false) << " ";
         }
-        std::cout << value;
+        std::cout << process_escape(value, false);
     }
 
     std::cout << std::endl;
@@ -84,8 +84,9 @@ std::string exec(const char *input) {
 }
 
 size_t get_line_width(const std::string &line) {
+    std::string peeled_line = process_escape(line, true);
     size_t length = 0;
-    icu::UnicodeString us(line.c_str());
+    icu::UnicodeString us(peeled_line.c_str());
     const UChar *us_buf = us.getTerminatedBuffer();
     icu::UCharCharacterIterator it(us_buf, u_strlen(us_buf));
 
