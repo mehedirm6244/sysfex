@@ -33,7 +33,7 @@ void print(const std::string& key, const std::string& value) {
         std::cout << process_escape(value, false);
     }
 
-    std::cout << std::endl;
+    std::cout << '\n';
 }
 
 
@@ -41,8 +41,8 @@ void help() {
     Config::the()->setValue("pregap", "0");
     Config::the()->setValue("gap", "0");
 
-    std::cout << BOLD << "Sysfex" << UBOLD << " - another fetch tool written in C++\n" << std::endl;
-    std::cout << BOLD << "Flags:" << UBOLD << std::endl;
+    std::cout << BOLD << "Sysfex" << UBOLD << " - another fetch tool written in C++\n" << '\n';
+    std::cout << BOLD << "Flags:" << UBOLD << '\n';
     print("--help", "Print this screen");
     print("--ascii <value>", "If value == 0, don't print the ascii art, else do");
     print("--ascii-path <path-to-ascii>", "Specify the directory from where the ascii will be printed");

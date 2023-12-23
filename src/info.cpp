@@ -76,9 +76,5 @@ void Info::init(std::string dir) {
       infos[infoSize] = {currentLine, ""};
       infoSize++;
     }
-
-    if (infoSize >= 64) {
-      break;
-    }
   }
 }
