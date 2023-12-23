@@ -13,7 +13,7 @@ include_directories(${X11_INCLUDE_DIR})
 add_executable(sysfex
         src/sysfex.cpp
         src/config.cpp
-        src/functions.cpp
+        src/utils.cpp
         src/info.cpp
         src/modules/colors.cpp
         src/modules/cpu.cpp
@@ -32,7 +32,6 @@ add_executable(sysfex
         src/shell_escape.hpp
         src/modules.hpp
         src/info.hpp
-        src/functions.hpp
         src/config.hpp
         src/modules/colors.hpp
         src/modules/cpu.hpp
@@ -47,6 +46,8 @@ add_executable(sysfex
         src/modules/shell.hpp
         src/modules/uptime.hpp
         src/modules/user.hpp
+        src/shell_escape.cpp
+        src/utils.hpp
 )
 
 target_link_libraries(sysfex ${X11_LIBRARIES} ICU::uc)

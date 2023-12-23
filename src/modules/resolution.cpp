@@ -9,16 +9,18 @@
 #include "resolution.hpp"
 
 std::string resolution() {
-    Display *disp = XOpenDisplay(NULL);
-    if (!disp) /* Return nothing if no display is detected
-                to avoid possible segfaults */
-        return "";
+  Display *disp = XOpenDisplay(NULL);
+  if (!disp) {
+    /* Return nothing if no display is detected to avoid possible segfaults */
+    return "";
+  }
 
-    Screen *scrn = DefaultScreenOfDisplay(disp);
-    int height, width;
-    height = scrn->height;
-    width = scrn->width;
+  Screen *scrn = DefaultScreenOfDisplay(disp);
+  int height, width;
+  height = scrn->height;
+  width = scrn->width;
 
-    std::string res = std::to_string(width) + "x" + std::to_string(height); /* 1366x768 */
-    return res;
+  std::string output = std::to_string(width) + "x" + std::to_string(height); /* WIDTHxHEIGHT
+                                                                                Example: 1366x798 */
+  return output;
 }

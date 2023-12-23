@@ -4,11 +4,11 @@
 #include <unicode/uchriter.h>
 #include <unicode/uchar.h>
 #include "config.hpp"
-#include "functions.hpp"
+#include "utils.hpp"
 #include "shell_escape.hpp"
 
 void print(const std::string& key, const std::string& value) {
-    int keySize = (int)get_line_width(key);
+    int keySize = (int)getLineWidth(key);
 
     int gap, pregap, remainingSpace;
     gap = stoi(Config::the()->getValue("gap"));
@@ -55,7 +55,7 @@ void help() {
 
 // Something which lets one to get the output of a command as a std::string
 // I forgot where I collected this code from :( thanks anon
-std::string exec(const char *input) {
+std::string getOutputOf(const char *input) {
     std::unique_ptr<FILE, decltype(&pclose)> stream{popen(input, "r"), &pclose};
     std::string output;
     if (stream) {
@@ -83,7 +83,7 @@ std::string exec(const char *input) {
     return output;
 }
 
-size_t get_line_width(const std::string &line) {
+size_t getLineWidth(const std::string &line) {
     std::string peeled_line = process_escape(line, true);
     size_t length = 0;
     icu::UnicodeString us(peeled_line.c_str());

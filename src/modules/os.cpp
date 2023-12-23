@@ -7,26 +7,33 @@
 #include "os.hpp"
 
 std::string os() {
-    std::string name = "", prettyName = "PRETTY_NAME=\"";
+  std::string output = "", prettyName = "PRETTY_NAME=\"";
 
-    std::ifstream infile;
-    infile.open("/etc/os-release");
-    if (!infile.is_open())
-        return "";
+  std::ifstream infile;
+  infile.open("/etc/os-release");       /* /etc/os-release has stuffs about the distro that you're using */
+  if (!infile.is_open()) {
+    return "";
+  }
 
-    while (infile.good()) {
-        std::getline(infile, name);
-        if (name.find(prettyName) != std::string::npos) {
-            break;
-        }
+  /*
+    We'll search for the keyword "PRETTY_NAME" through the
+    /etc/os-release file. The line containing is keyword should
+    look like this:
+      PRETTY_NAME="Linux Distro"
+  */
+  while (infile.good()) {
+    std::getline(infile, output);
+    if (output.find(prettyName) != std::string::npos) {
+      break;
     }
-    infile.close();
+  }
+  infile.close();
 
-    if (name == "") {
-        return "";
-    }
+  if (output == "") {
+    return "";
+  }
 
-    /* Remove "PRETTY_NAME" and stuffs from the std::string */
-    name = name.substr(prettyName.length(), name.length() - (prettyName.length() + 1));
-    return name;
+  /* Remove "PRETTY_NAME" from output */
+  output = output.substr(prettyName.length(), output.length() - (prettyName.length() + 1));
+  return output;
 }

@@ -55,7 +55,7 @@ function main()
         printf "${GREEN}Compilation successful!${NC}\n"
 
         printf "Copying files... "
-        if sudo cp -r "data/." "${GCONF}" && sudo chmod -R 755 "${GCONF}"; then
+        if sudo cp -r "presets/." "${GCONF}" && sudo chmod -R 755 "${GCONF}"; then
             printf "Copied!\n"
         else
             printf "${RED}Something went wrong :(${NC}"
@@ -73,7 +73,7 @@ function main()
         else
             printf "Creating local config files for ${USER}\n"
             mkdir -p "${LCONF}"
-            cp -r "data/." "${LCONF}"
+            cp -r "presets/." "${LCONF}"
         fi
 
         

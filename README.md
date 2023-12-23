@@ -1,59 +1,79 @@
-## Sysfex
-Another [neofetch](https://github.com/dylanaraps/neofetch)-like system information fetching tool for <b>linux-based systems</b> written in C++
-<p align="center"><img src="https://github.com/mebesus/sysfex/blob/main/res/sysf_1.png"></p>
+# Sysfex
+Sysfex is just another system information fetching tool for <b>linux-based systems</b>, written in C++
+<p align="center"><img src="https://github.com/mebesus/sysfex/blob/main/screenshots/ss.gif?raw=true"></p>
 
 ## Installation
-Using the provided installer script:
+
+Required for installing Sysfex:
+- `CMake` : for compiling
+
+Required to make Sysfex work properly:
+- `libx11` (or `libx11-dev`) : for getting screen resolution on Xorg
+- Any nerd patched font : for displaying font icons properly
+
+### Cloning and compiling
+
+Clone Sysfex from it's GitHub repository using Git:
 ```
 git clone https://github.com/mehedirm6244/sysfex
 cd sysfex
-./installer.sh
 ```
-The installer script uses ``g++`` for compiling sysfex and ``sudo`` for elevated permissions. If you don't have ``g++`` installed already, install it before running the script. You may see a warning or two, ignore them.
+
+Compile Sysfex:
+```
+mkdir build && cd build
+cmake ..
+cmake --build . -j 4
+```
+
+### Installing Sysfex to system
+
+Make sure that the present working directory is `sysfex`
+```
+cd ..
+```
+Copy files to proper directories:
+```
+sudo cp -r presets/. /opt/sysfex
+sudo chmod -R 755 /opt/sysfex
+sudo cp build/sysfex /usr/bin
+sudo chown ${USER} /usr/bin/sysfex
+```
+Make local configuration file which can be modified further
+```
+mkdir -p ${HOME}/.config/sysfex
+cp -r presets/. ${HOME}/.config/sysfex
+```
 
 ## Uninstallation
-Run ``./installer.sh`` again. The script will first remove the existing Sysfex installation and then ask whether to reinstall this or not. Just say no
-<p align="center"><img src="https://user-images.githubusercontent.com/86041547/151667328-ad0c0e4a-b468-4076-b91b-04aae9c2c9bd.png"></p>
-Note that the local config files will remain untouched.
 
-Or if you want to remove Sysfex manually:
+Remove Sysfex from system:
 ```
 sudo rm /usr/bin/sysfex
 sudo rm -rf /opt/sysfex
-# Remove local configuration
-rm -rf ~/.config/sysfex
+```
+
+Remove local config:
+```
+rm -rf ${HOME}/.config/sysfex
 ```
 
 ## Usage
-| Flag | Description |
-| -----|-------------|
-| ``--help`` | Print the help message
-| ``--ascii <value>`` | The ASCII art will or won't be shown depending on `<value>`. That is: `sysfex --ascii 0` will execute sysfex but without the ASCII art, whereas `sysfex --ascii 1` will execute sysfex with the ASCII art |
-| ``--ascii-path <path-to-ascii>`` | Use a specified path for the ASCII art  |
-| ``--ascii-beside-txt <value>`` | Choose whether ASCII art and system info will be printed side by side or not |
-| ``--config <path-to-file>`` | Use a specified configuration file |
-| ``--info <path-to-file>`` | Use a specified info file |
+
+Use `sysfex --help` for listing all available flags
 
 ## Configuration
-Global config files can be found inside ``/opt/sysfex`` and the local ones can be found in ``~/.config/sysfex``. Please note that the global config files are used as fallback when the local ones are absent, so modifying global config files are deprecated.
 
-## Screenshots
-Examples of custom config
-![](https://github.com/avishekdutta531/sysfex/blob/main/res/sysf_5.png?raw=true)  |  ![](https://github.com/avishekdutta531/sysfex/blob/main/res/sysf_6.png?raw=true)
-:-------------------------:|:-------------------------:
+Sysfex supports global (for all user) as well as local configurations (for current user). Sysfex will initialize configurations from `${HOME}/.config/sysfex` if the directory exists, or from `/opt/sysfex` otherwise.
 
-## FAQ
-
-* ### I get this error: ``<X11/Xlib.h> header file is not found``
-Install ``libx11`` or ``libx11-dev`` or whichever name your package manager uses for this package
-
-* ### Some font icons don't look as they're supposed to
-Install any nerd-patched font (i.e. JetBrains Mono Nerd)
-
-## Plans for the future
-- [ ] Add support for colored output
+The configuration for Sysfex is split into two files
+| File name | Description |
+| ----------|-------------|
+| ``config`` | Stores instructions on how to print stuffs, such as: gaps, character used in color blocks, separator character, which ascii to print etc
+| ``info`` | Stores instructions on what to be printed, such as: model name, screen resolution, kernel version etc |
 
 ## Special thanks to
+
 * Some cool fetch tools spread all over Github for inspiration and ideas.
 * The contributors, testers and those who gave me ideas as well as helped this project spread
 * You, for being interested in this project

@@ -7,23 +7,25 @@
 #include "model.hpp"
 
 std::string model() {
-    std::string name, version;
-    std::ifstream infile;
+  std::string modelName, version;
+  std::ifstream infile;
 
-    infile.open("/sys/devices/virtual/dmi/id/product_name");
-    if (!infile.is_open()) {
-        return "";
-    }
-    getline(infile, name);
-    infile.close();
+  /* `/sys/devices/virtual/dmi/id/product_name` contains your device's name */
+  infile.open("/sys/devices/virtual/dmi/id/product_name");
+  if (!infile.is_open()) {
+    return "";
+  }
+  getline(infile, modelName);
+  infile.close();
 
-    infile.open("/sys/devices/virtual/dmi/id/product_version");
-    if (!infile.is_open()) {
-        return "";
-    }
-    getline(infile, version);
-    infile.close();
+  /* `/sys/devices/virtual/dmi/id/product_version` contains your device's version */
+  infile.open("/sys/devices/virtual/dmi/id/product_version");
+  if (!infile.is_open()) {
+    return "";
+  }
+  getline(infile, version);
+  infile.close();
 
-    std::string s = name + " " + version;
-    return s;
+  std::string output = modelName + " " + version;
+  return output;
 }

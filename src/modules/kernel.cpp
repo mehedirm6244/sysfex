@@ -4,18 +4,21 @@
 /********************************************/
 
 #include <fstream>
-#include "../functions.hpp"
+#include "../utils.hpp"
 #include "kernel.hpp"
 
 std::string kernel() {
-    std::ifstream infile;
-    infile.open("/proc/sys/kernel/osrelease");
-    if (!infile.is_open()) {
-        return exec(std::string("uname -r").c_str()); /* If there is no osrelease file,
-																								then return the output of `uname -r` */
-    }
+  std::ifstream infile;
+  infile.open("/proc/sys/kernel/osrelease");
+  if (!infile.is_open()) {
+    /*
+      If no `osrelease` file exists the return the output of `uname -r`
+      which outputs the kernel you're using
+    */
+    return getOutputOf(std::string("uname -r").c_str());
+  }
 
-    std::string kernel;
-    infile >> kernel;
-    return kernel;
+  std::string output;
+  infile >> output;
+  return output;
 }

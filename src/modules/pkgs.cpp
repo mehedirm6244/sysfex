@@ -6,80 +6,89 @@
 
 #include <cstring>
 #include <filesystem>
-#include "../functions.hpp"
+#include "../utils.hpp"
 #include "pkgs.hpp"
 
 std::string pkgs() {
-    std::string pkg;
+  std::string output;
 
-    /* Sorted alphabetically */
-    /*
-      Feel free to open a PR if you want to include a package manager
-      which you're using. I myself won't be adding anything here.
-    */
+  /* Sorted alphabetically */
+  /*
+    Feel free to open a PR if you want to include another
+    package manager not listed here
+    I won't be adding anything by myself
+  */
+  /*
+    Every package manager should have a CLI way to report how many
+    (or which) packages are currently installed on the system through it.
+    We'll be using that method if such exists
+    For example:
+      pacman -Q | wc -l     (Pacman Package Manager)
+      rpm -Qa  | wc -l      (RPM Package Manager)
+  */
 
-    /************************/
-    /* dpkg (Debian/Ubuntu) */
-    /************************/
-    if (std::filesystem::exists("/bin/dpkg")) {
-        pkg = exec("dpkg --get-selections | wc -l") + " (dpkg) ";
+  /************************/
+  /* dpkg (Debian/Ubuntu) */
+  /************************/
+  if (std::filesystem::exists("/bin/dpkg")) {
+    output = getOutputOf("dpkg --get-selections | wc -l") + " (dpkg) ";
+  }
+
+  /***********/
+  /* flatpak */
+  /***********/
+  if (std::filesystem::exists("/bin/flatpak")) {
+    output += getOutputOf("flatpak list | wc -l") + " (flatpak) ";
+  }
+
+  /***************/
+  /* nix (NixOS) */
+  /***************/
+  if (std::filesystem::exists("/nix")) {
+    if (std::filesystem::exists("/etc/nix")) {
+      output += getOutputOf("nix-store --query --requisites /run/current-system | wc -l");
+    } else {
+      output += getOutputOf("nix-env -q | wc -l");
     }
+    output += " (nix) ";
+  }
 
-    /***********/
-    /* flatpak */
-    /***********/
-    if (std::filesystem::exists("/bin/flatpak")) {
-        pkg = pkg + exec("flatpak list | wc -l") + " (flatpak) ";
-    }
+  /*************************/
+  /* pacman (Arch/Manjaro) */
+  /*************************/
+  if (std::filesystem::exists("/bin/pacman")) {
+    output += getOutputOf("pacman -Qq | wc -l") + " (pacman) ";
+  }
 
-    /***************/
-    /* nix (NixOS) */
-    /***************/
-    if (std::filesystem::exists("/nix")) {
-        if (std::filesystem::exists("/etc/nix")) {
-            pkg = pkg + exec("nix-store --query --requisites /run/current-system | wc -l");
-        } else {
-            pkg = pkg + exec("nix-env -q | wc -l");
-        }
-        pkg = pkg + " (nix) ";
-    }
+  /********************/
+  /* portage (Gentoo) */
+  /********************/
+  if (std::filesystem::exists("/bin/emerge")) {
+    output += getOutputOf("echo -n $(cd /var/db/pkg && ls -d */* | wc -l") + " (emerge) ";
+  }
 
-    /*************************/
-    /* pacman (Arch/Manjaro) */
-    /*************************/
-    if (std::filesystem::exists("/bin/pacman")) {
-        pkg = pkg + exec("pacman -Qq | wc -l") + " (pacman) ";
-    }
+  /******************/
+  /* rpm (OpenSUSE) */
+  /******************/
+  if (std::filesystem::exists("/var/lib/rpm")) {
+    output += getOutputOf("rpm -qa | wc -l") + " (rpm) ";
+  }
 
-    /********************/
-    /* portage (Gentoo) */
-    /********************/
-    if (std::filesystem::exists("/bin/emerge")) {
-        pkg = pkg + exec("echo -n $(cd /var/db/pkg && ls -d */* | wc -l") + " (emerge) ";
-    }
+  /********/
+  /* Snap */
+  /********/
+  if (std::filesystem::exists("/bin/snap")) {
+    int cnt;
+    cnt = stoi(getOutputOf("snap list | wc -l")) - 1;
+    output += std::to_string(cnt) + " (snap) ";
+  }
 
-    /******************/
-    /* rpm (OpenSUSE) */
-    /******************/
-    if (std::filesystem::exists("/var/lib/rpm")) {
-        pkg = pkg + exec("rpm -qa | wc -l") + " (rpm) ";
-    }
+  /*********************/
+  /* XBPS (Void Linux) */
+  /*********************/
+  if (std::filesystem::exists("/bin/xbps-install")) {
+    output += getOutputOf("xbps-query -l | wc -l") + " (xbps) ";
+  }
 
-    /********/
-    /* Snap */
-    /********/
-    if (std::filesystem::exists("/bin/snap")) {
-        int cnt;
-        cnt = stoi(exec("snap list | wc -l")) - 1;
-        pkg = pkg + std::to_string(cnt) + " (snap) ";
-    }
-
-    /*********************/
-    /* XBPS (Void Linux) */
-    /*********************/
-    if (std::filesystem::exists("/bin/xbps-install")) {
-        pkg = pkg + exec("xbps-query -l | wc -l") + " (xbps) ";
-    }
-
-    return pkg;
+  return output;
 }

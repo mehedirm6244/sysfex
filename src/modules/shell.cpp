@@ -6,5 +6,6 @@
 #include "shell.hpp"
 
 std::string shell() {
-    return std::string(std::getenv("SHELL"));
+  /* Return the environment variable ${SHELL} */
+  return std::string(std::getenv("SHELL"));
 }
