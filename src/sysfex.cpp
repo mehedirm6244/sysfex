@@ -10,7 +10,6 @@
 #include <fstream>
 #include <filesystem>
 #include <algorithm>
-#include <vector>
 
 /* Sysfex specific stuff */
 #include "config.hpp"
@@ -41,11 +40,12 @@ int main(int argc, const char *argv[]) {
       return 0;
     }
 
+    /*
+      The following flags need values to work with
+      Example: `sysfex --flag <value>`
+      Hence these flags MUST NOT be the last string of argv[]
+    */
     if (i != argc - 1) {
-      /*
-        The following flags need values to work with Sysfex --flag what_user_wants
-        Hence the current flag MUST NOT be the last string of argv[]
-      */
       if (!strcmp(argv[i], "--ascii-path")) {
         Config::the()->setValue("ascii_path", argv[++i]);
       } else if (!strcmp(argv[i], "--config")) {
@@ -95,8 +95,8 @@ void importConfig() {
     copied to that directory before Sysfex runs. Then the user can
     modify it according to their preference.
 
-    This scenario is for when Sysfex is run for the first time, or
-    your cat has messed up with your config files
+    This scenario is for when Sysfex is run for the first time,
+    or your cat has messed up with your config files
   */
   if (!std::filesystem::exists(localConfDir)) {
     std::filesystem::create_directories(localConfDir);
@@ -155,17 +155,19 @@ void fetch() {
          startingColumn = 0;
 
   if (Config::the()->getValue("clear_screen") != "0") {
-    std::cout << "\033[2J";
+    std::cout << "\033[2J";       /* Clear terminal window */
     try {
       startingLine = std::stoi(Config::the()->getValue("starting_line"));
       startingColumn = std::stoi(Config::the()->getValue("starting_column"));
     } catch(std::exception &e) {
       /* Do nothing */
     }
-    std::cout << "\033[" << startingLine << ";H";
+    std::cout << "\033[" << startingLine << ";H";       /* Move cursor to starting line */
   }
 
-  /* Print the ASCII text/image unless forbidden to do so */
+  /********************************/
+  /* PRINT ASCII IF NOT FORBIDDEN */
+  /********************************/
   if (Config::the()->getValue("ascii") != "0") {
     std::string asciiPath = Config::the()->getValue("ascii_path");
 
@@ -178,41 +180,81 @@ void fetch() {
         size_t currentLineLength = getLineWidth(currentLine);
 
         maxLineLength = std::max(maxLineLength, currentLineLength);
-        std::cout << "\033[" << startingColumn << "C";
+        std::cout << "\033[" << startingColumn << "C";        /* Bring cursor to starting column each time
+                                                                 before printing a line of the ASCII */
         std::cout << process_escape(currentLine, false) << '\n';
         lineCount++;
       }
 
       infile.close();
-
-      /****************/
-      /* PRINT STUFFS */
-      /****************/
-      if (Config::the()->getValue("ascii_beside_text") != "0") {
-        std::cout << "\033[" << lineCount << "A";
-        for (int i = 0; i < lineCount; i++) {
-          std::cout << "\033[" << maxLineLength + startingColumn + 1 << "C";
-          /* Print info as long as there's any */
-          if (Info::the()->getCurrentInfo() < Info::the()->getInfoSize()) {
-            print(Info::the()->getInfos()[Info::the()->getCurrentInfo()].first,
-                  Info::the()->getInfos()[Info::the()->getCurrentInfo()].second); /* print(key, info) */
-            Info::the()->setCurrentInfo(Info::the()->getCurrentInfo() + 1);
-          } else {
-            std::cout << '\n';
-          }
-        }
-      }
     }
+  } else {
+    Config::the()->setValue("text_beside_ascii", "0");        /* Useless to keep "text_beside_ascii" = 1
+                                                                 when "ascii" = 0 */
+    Config::the()->setValue("pregap", "0");                   /* Same for "pregap" */
   }
 
-  /* If reading the file is over but there are still info to print */
-  for (int i = Info::the()->getCurrentInfo(); i < Info::the()->getInfoSize(); i++) {
-    if (Config::the()->getValue("ascii") != "0" and
-        Config::the()->getValue("ascii_beside_text") != "0") {
-      std::cout << std::string(maxLineLength, ' ');
+  /****************/
+  /* PRINT STUFFS */
+  /****************/
+
+  /*
+    Move cursor to the first line if text_beside_ascii = 1
+    The cursor will later be moved in such a way that the following
+    outputs will be printed beside the ASCII without overlapping it
+  */
+  if (Config::the()->getValue("text_beside_ascii") == "1") {
+    std::cout << "\033[" << lineCount << "A";
+  }
+  
+  for (int i = 0; i < Info::the()->getInfoSize(); i++) {
+    /*
+      Move cursor in such a way such that
+      the following outputs don't overlap the ASCII
+    */
+    if (Config::the()->getValue("text_beside_ascii") == "1") {
+      int offset = maxLineLength + startingColumn +
+                   stoi(Config::the()->getValue("pregap"));       /* Initial cursor position while printing
+                                                                     information */
+      if (Config::the()->getValue("ascii") != "0") {
+        offset++;
+      }
+      std::cout << "\033[" << offset << "C";
     }
 
-    print(Info::the()->getInfos()[i].first,
-          Info::the()->getInfos()[i].second); /* print(key, info) */
+    /*
+      There can be two types of output according to the info file
+        info "key" "value"
+        print "string"
+
+      `print "string"` is equivalent to `info "key" ""`
+    */
+
+    /*
+      Info::the()->getInfos()[i].first = "key"
+      Info::the()->getInfos()[i].second = "value"
+    */
+
+    std::cout << process_escape(Info::the()->getInfos()[i].first, false);
+
+    if (!Info::the()->getInfos()[i].second.empty()) {
+      if (!Info::the()->getInfos()[i].first.empty()) {
+        std::cout << std::string(stoi(Config::the()->getValue("gap")), ' ');
+      }
+      std::cout << process_escape(Info::the()->getInfos()[i].second, false);
+    }
+
+    std::cout << '\n';
+  }
+
+  /*
+    If the ASCII contains more lines than what have already
+    been printed, then the ASCII will get cut off because of the
+    position of the cursor. To prevent that, shift the cursor
+    to a few cell bottom
+  */
+  if (lineCount > Info::the()->getInfoSize() and
+      Config::the()->getValue("text_beside_ascii") == "1") {
+    std::cout << "\033[" << lineCount - Info::the()->getInfoSize() - 1 << "B";
   }
 }

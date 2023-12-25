@@ -1,5 +1,4 @@
 #include <fstream>
-#include <iostream>
 #include <map>
 
 std::map<std::string, std::string> COLOR_VALUES = {
@@ -61,7 +60,7 @@ std::string process_escape(const std::string &source, bool peel) {
   std::string tmp_buf;
 
   for (auto ch: source) {
-    if (!tmp_buf.empty() && ch == '\\' && tmp_buf.back() != '\\') {
+    if (!tmp_buf.empty() and ch == '\\' and tmp_buf.back() != '\\') {
       processed_art += tmp_buf;
       tmp_buf = "";
     }
@@ -74,7 +73,7 @@ std::string process_escape(const std::string &source, bool peel) {
       tmp_buf = "";
     }
 
-    if (tmp_buf == "\\e" || tmp_buf == "\\033") {
+    if (tmp_buf == "\\e" or tmp_buf == "\\033") {
       processed_art += (char)27;
       tmp_buf = "";
     }

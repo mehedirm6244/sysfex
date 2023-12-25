@@ -7,47 +7,23 @@
 #include "utils.hpp"
 #include "shell_escape.hpp"
 
-void print(const std::string& key, const std::string& value) {
-  int keySize = (int)getLineWidth(key);
-
-  int gap, pregap, remainingSpace;
-  gap = stoi(Config::the()->getValue("gap"));
-  pregap = stoi(Config::the()->getValue("pregap"));
-  remainingSpace = std::max(1, gap - keySize);
-
-  if (Config::the()->getValue("ascii_beside_text") != "0" and
-      Config::the()->getValue("ascii") != "0") {
-    std::cout << std::string(pregap, ' ');
-  }
-
-  std::cout << process_escape(key, false);
-
-  if (!value.empty()) {
-    if (!key.empty()) {
-      std::cout << std::string(remainingSpace, ' ') << process_escape(Config::the()->getValue("separator"), false) << " ";
-    }
-    std::cout << process_escape(value, false);
-  }
-
-  std::cout << '\n';
-}
-
 
 void help() {
   Config::the()->setValue("pregap", "0");
   Config::the()->setValue("gap", "0");
 
+  /* TODO: Do something with this mess */
   std::cout << BOLD << "Sysfex" << UBOLD << " - another fetch tool written in C++\n" << '\n';
   std::cout << BOLD << "Flags:" << UBOLD << '\n';
-  print("--help", "Print this screen");
-  print("--ascii-path <path>", "Specify the directory from where the ascii will be printed");
-  print("--config <path>", "Specify the file which you want to be used as the config file");
-  print("--info <path>", "Specify the file from which info will be printed");
+  std::cout << BOLD << "\t--help " << UBOLD << "Print this page" << '\n';
+  std::cout << BOLD << "\t--ascii-path <path> " << UBOLD << "Specify the directory from where the ascii will be printed" << '\n';
+  std::cout << BOLD << "\t--config <path> " << UBOLD << "Specify the file which you want to be used as the config file" << '\n';
+  std::cout << BOLD << "\t--info <path> " << UBOLD << "Specify the file from which info will be printed" << '\n';
 }
 
 
 /*
-  Something which lets one to get the output of a command as a std::string
+  Something which lets one get the output of a command as a std::string
   I forgot where I collected this code from :( thanks anon
 */
 std::string getOutputOf(const char *input) {

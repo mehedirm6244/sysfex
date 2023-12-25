@@ -15,13 +15,12 @@ class Config {
   */
   std::map<std::string, std::string> config = {
     {"ascii",               "1"                         },
-    {"ascii_beside_text",   "1"                         },
+    {"text_beside_ascii",   "1"                         },
     {"ascii_path",          "/opt/sysfex/ascii/tux.txt" },
     {"color_block",         "⬤"                         },
     {"clear_screen",        "1"                         },
     {"gap",                 "10"                        },
     {"pregap",              "6"                         },
-    {"separator",           ":"                         },
     {"starting_column",     "0"                         },
     {"starting_line",       "0"                         }
   };

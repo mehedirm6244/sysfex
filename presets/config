@@ -14,22 +14,22 @@ pregap = 4
 #				key →   value
 gap = 0
 
-# Separator; in between info key and value
-separator = 
-
-# ascii equals 1 means that ascii/textart will be shown
+# Print ASCII?
 ascii = 1
 
-# Path to the ascii
+# Path to ASCII
 ascii_path = /opt/sysfex/ascii/arch.txt
 
-# Choose whether ascii and info should be shown side by side
-ascii_beside_text = 1
+# Print text and ASCII side by side?
+text_beside_ascii = 1
 
 # The character/string/whatever which will be used to represent the color palette
 color_block = ⬤
 
+# Clear terminal screen before executing Sysfex?
 clear_screen = 0
-# Only works when "clear_screen" = 1
+
+# Print stuffs from a specific line/column of the terminal window
+# Only works when "clear_screen" = 1, for now
 starting_line = 0
 starting_column = 0
