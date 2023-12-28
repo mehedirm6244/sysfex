@@ -6,7 +6,7 @@
 
 #include <cmath>
 #include <fstream>
-#include "uptime.hpp"
+#include <modules/uptime.hpp>
 
 std::string uptime() {
   std::string output;

@@ -4,7 +4,7 @@
 /************************************************/
 
 #include <fstream>
-#include "os.hpp"
+#include <modules/os.hpp>
 
 std::string os() {
   std::string output = "", prettyName = "PRETTY_NAME=\"";

@@ -3,7 +3,7 @@
 /* This function returns the shell used by the user */
 /****************************************************/
 
-#include "shell.hpp"
+#include <modules/shell.hpp>
 
 std::string shell() {
   /* Return the environment variable ${SHELL} */

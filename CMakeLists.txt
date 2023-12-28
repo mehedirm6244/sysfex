@@ -10,6 +10,7 @@ find_package(ICU COMPONENTS uc REQUIRED)
 find_package(X11 REQUIRED)
 
 include_directories(${X11_INCLUDE_DIR})
+include_directories(./include)
 add_executable(sysfex
         src/sysfex.cpp
         src/config.cpp
@@ -29,25 +30,24 @@ add_executable(sysfex
         src/modules/uptime.cpp
         src/modules/user.cpp
         src/shell_escape.cpp
-        src/shell_escape.hpp
-        src/modules.hpp
-        src/info.hpp
-        src/config.hpp
-        src/modules/colors.hpp
-        src/modules/cpu.hpp
-        src/modules/de.hpp
-        src/modules/host.hpp
-        src/modules/kernel.hpp
-        src/modules/model.hpp
-        src/modules/os.hpp
-        src/modules/pkgs.hpp
-        src/modules/ram.hpp
-        src/modules/resolution.hpp
-        src/modules/shell.hpp
-        src/modules/uptime.hpp
-        src/modules/user.hpp
-        src/shell_escape.cpp
-        src/utils.hpp
+        include/shell_escape.hpp
+        include/modules.hpp
+        include/info.hpp
+        include/config.hpp
+        include/modules/colors.hpp
+        include/modules/cpu.hpp
+        include/modules/de.hpp
+        include/modules/host.hpp
+        include/modules/kernel.hpp
+        include/modules/model.hpp
+        include/modules/os.hpp
+        include/modules/pkgs.hpp
+        include/modules/ram.hpp
+        include/modules/resolution.hpp
+        include/modules/shell.hpp
+        include/modules/uptime.hpp
+        include/modules/user.hpp
+        include/utils.hpp
 )
 
 target_link_libraries(sysfex ${X11_LIBRARIES} ICU::uc)

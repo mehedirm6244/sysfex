@@ -12,10 +12,10 @@
 #include <algorithm>
 
 /* Sysfex specific stuff */
-#include "config.hpp"
-#include "utils.hpp"
-#include "shell_escape.hpp"
-#include "info.hpp"
+#include <config.hpp>
+#include <utils.hpp>
+#include <shell_escape.hpp>
+#include <info.hpp>
 
 void importConfig();            /* Look for existing configs for Sysfex */
 void fetch();                   /* The heart of this program */

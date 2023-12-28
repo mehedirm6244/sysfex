@@ -3,9 +3,9 @@
 #include <memory>
 #include <unicode/uchriter.h>
 #include <unicode/uchar.h>
-#include "config.hpp"
-#include "utils.hpp"
-#include "shell_escape.hpp"
+#include <config.hpp>
+#include <utils.hpp>
+#include <shell_escape.hpp>
 
 
 void help() {

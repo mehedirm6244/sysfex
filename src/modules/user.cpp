@@ -4,7 +4,7 @@
 /* This is a useless function, but anyway   */
 /********************************************/
 
-#include "user.hpp"
+#include <modules/user.hpp>
 
 std::string user() {
   /* Return environment variable ${USER} */

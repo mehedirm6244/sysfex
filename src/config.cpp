@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
-#include "config.hpp"
+#include <config.hpp>
 
 Config sysfex_config;
 

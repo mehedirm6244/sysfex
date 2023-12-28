@@ -4,8 +4,8 @@
 /********************************************/
 
 #include <fstream>
-#include "../utils.hpp"
-#include "kernel.hpp"
+#include <utils.hpp>
+#include <modules/kernel.hpp>
 
 std::string kernel() {
   std::ifstream infile;

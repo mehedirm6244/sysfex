@@ -5,7 +5,7 @@
 
 #include <algorithm>
 #include <fstream>
-#include "cpu.hpp"
+#include <modules/cpu.hpp>
 
 std::string cpu() {
   std::string modelName = "model name", cpu = "";

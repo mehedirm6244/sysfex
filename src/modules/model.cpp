@@ -4,7 +4,7 @@
 /*************************************************/
 
 #include <fstream>
-#include "model.hpp"
+#include <modules/model.hpp>
 
 std::string model() {
   std::string modelName, version;

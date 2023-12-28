@@ -6,8 +6,8 @@
 
 #include <cstring>
 #include <filesystem>
-#include "../utils.hpp"
-#include "pkgs.hpp"
+#include <utils.hpp>
+#include <modules/pkgs.hpp>
 
 std::string pkgs() {
   std::string output;

@@ -4,7 +4,7 @@
 /**************************************************************/
 
 #include <fstream>
-#include "ram.hpp"
+#include <modules/ram.hpp>
 
 std::string ram() {
   int freeMemory = 0, totalMemory = 0, usedMemory, usedPerc;

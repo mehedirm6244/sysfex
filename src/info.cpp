@@ -2,7 +2,7 @@
 #include <filesystem>
 #include <fstream>
 #include <map>
-#include "info.hpp"
+#include <info.hpp>
 
 Info sysfex_info;
 

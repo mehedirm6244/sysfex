@@ -3,7 +3,7 @@
 /* This function returns the name of the desktop environment */
 /*************************************************************/
 
-#include "de.hpp"
+#include <modules/de.hpp>
 
 std::string de() {
   const char *desktop_session;

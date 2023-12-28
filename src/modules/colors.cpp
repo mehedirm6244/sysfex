@@ -3,8 +3,8 @@
 /* This function returns color blocks, that's it */
 /*************************************************/
 
-#include "../config.hpp"
-#include "colors.hpp"
+#include <config.hpp>
+#include <modules/colors.hpp>
 
 
 std::string colors_dark() {

@@ -6,7 +6,7 @@
 
 #include <X11/Xlib.h> /* For getting display info on X11
                          Will add a workaround for wayland too */
-#include "resolution.hpp"
+#include <modules/resolution.hpp>
 
 std::string resolution() {
   Display *disp = XOpenDisplay(NULL);
