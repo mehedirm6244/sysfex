@@ -6,10 +6,9 @@ Sysfex is just another system information fetching tool for <b>linux-based syste
 
 Required for installing Sysfex:
 - `CMake` : for compiling
-
-Required to make Sysfex work properly:
 - `libx11` (or `libx11-dev`) : for getting screen resolution on Xorg
-- Any nerd patched font : for displaying font icons properly
+- `viu` : backend for rendering image
+
 
 ### Cloning and compiling
 
@@ -75,5 +74,6 @@ The configuration for Sysfex is split into two files
 ## Special thanks to
 
 * Some cool fetch tools spread all over Github for inspiration and ideas.
+* This repo is nice https://github.com/nothings/stb
 * The contributors, testers and those who gave me ideas as well as helped this project spread
 * You, for being interested in this project
