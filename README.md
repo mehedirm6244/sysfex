@@ -1,6 +1,6 @@
 # Sysfex
 Sysfex is just another system information fetching tool for <b>linux-based systems</b>, written in C++
-<p align="center"><img src="https://github.com/mebesus/sysfex/blob/main/screenshots/ss.png?raw=true"></p>
+<p align="center"><img src="https://github.com/mebesus/sysfex/blob/main/screenshots/ss.gif?raw=true"></p>
 
 ## Installation
 
