@@ -11,11 +11,13 @@
 #include <filesystem>
 #include <algorithm>
 
-/* Sysfex specific stuff */
+/* Sysfex specific headers */
 #include <config.hpp>
 #include <utils.hpp>
 #include <shell_escape.hpp>
 #include <info.hpp>
+#include <image.hpp>
+
 
 void importConfig();            /* Look for existing configs for Sysfex */
 void fetch();                   /* The heart of this program */
@@ -155,7 +157,7 @@ void fetch() {
          startingColumn = 0;
 
   if (Config::the()->getValue("clear_screen") != "0") {
-    std::cout << "\033[2J";       /* Clear terminal window */
+    std::system("clear");       /* Clear terminal window */
     try {
       startingLine = std::stoi(Config::the()->getValue("starting_line"));
       startingColumn = std::stoi(Config::the()->getValue("starting_column"));
@@ -168,12 +170,26 @@ void fetch() {
   /********************************/
   /* PRINT ASCII IF NOT FORBIDDEN */
   /********************************/
+
+  /*
+    Check if the provided file exists
+    If not, then fallback to "ascii" = "0"
+  */
+  if (!std::filesystem::exists(Config::the()->getValue("ascii_path"))) {
+    Config::the()->setValue("ascii", "0");
+  }
+
   if (Config::the()->getValue("ascii") != "0") {
     std::string asciiPath = Config::the()->getValue("ascii_path");
 
-    std::ifstream infile;
-    infile.open(asciiPath);
-    if (infile.is_open()) {
+    /* Check if ASCII is a supported image */
+    if (isAnImage(asciiPath)) {
+      maxLineLength = std::stoi(Config::the()->getValue("image_width"));
+      lineCount = heightIfWidth(asciiPath, maxLineLength);
+      renderImage(asciiPath, maxLineLength);
+    } else {
+      std::ifstream infile;
+      infile.open(asciiPath);
       while (infile.good()) {
         std::string currentLine;
         std::getline(infile, currentLine);
@@ -185,7 +201,6 @@ void fetch() {
         std::cout << process_escape(currentLine, false) << '\n';
         lineCount++;
       }
-
       infile.close();
     }
   } else {
@@ -204,7 +219,9 @@ void fetch() {
     outputs will be printed beside the ASCII without overlapping it
   */
   if (Config::the()->getValue("text_beside_ascii") == "1") {
-    std::cout << "\033[" << lineCount << "A";
+    std::cout << "\033[" << lineCount << "A";       /* Move cursor to "linecount" cells above
+                                                       (top of the terminal window) to print info stuffs */
+    /* TO FIX: if the ASCII file is bigger than the terminal window, */
   }
   
   for (int i = 0; i < Info::the()->getInfoSize(); i++) {
@@ -214,20 +231,17 @@ void fetch() {
     */
     if (Config::the()->getValue("text_beside_ascii") == "1") {
       int offset = maxLineLength + startingColumn +
-                   stoi(Config::the()->getValue("pregap"));       /* Initial cursor position while printing
-                                                                     information */
+                   std::stoi(Config::the()->getValue("pregap"));       /* Position cursor before printing info */
       if (Config::the()->getValue("ascii") != "0") {
         offset++;
       }
-      std::cout << "\033[" << offset << "C";
+      std::cout << "\033[" << offset << "C";        /* Move cursor to "offset" cells left */
     }
 
     /*
       There can be two types of output according to the info file
-        info "key" "value"
-        print "string"
-
-      `print "string"` is equivalent to `info "key" ""`
+      - info "key" "value"
+      - print "string" which is equivalent to `info "key" ""`
     */
 
     /*
@@ -255,6 +269,7 @@ void fetch() {
   */
   if (lineCount > Info::the()->getInfoSize() and
       Config::the()->getValue("text_beside_ascii") == "1") {
-    std::cout << "\033[" << lineCount - Info::the()->getInfoSize() - 1 << "B";
+    int offset = lineCount - Info::the()->getInfoSize() - 1;
+    std::cout << "\033[" << offset << "B";        /* Move cursor to "offset" cells bottom */
   }
 }

@@ -35,9 +35,20 @@ std::string cpu() {
     return "";
   }
 
-  cpu.erase(std::remove_if(cpu.begin(), cpu.end(), isspace), cpu.end());          /* Erase unnecessary spaces from output */
-  cpu = cpu.substr(modelName.length(), cpu.length() - (modelName.length()));      /* Erase "model name" from output */
-  if (size_t pos = cpu.find('@'); pos != std::string::npos) {                     /* Remove clock speed from output */
+  /* Erase "model name" from output */
+  cpu = cpu.substr(modelName.length(), cpu.length() - (modelName.length()));
+
+  /* Remove leading spaces and separator from output */
+  int trimFrom = 0;
+  while (cpu[trimFrom] == ' ' or
+         cpu[trimFrom] == '\t' or
+         cpu[trimFrom] == ':') {
+    trimFrom++;
+  }
+  cpu = cpu.substr(trimFrom);
+
+  /* Remove clock speed from output */
+  if (size_t pos = cpu.find('@'); pos != std::string::npos) {
     cpu = cpu.substr(0, pos);
   }
 

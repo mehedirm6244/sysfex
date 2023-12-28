@@ -18,18 +18,21 @@ gap = 0
 ascii = 1
 
 # Path to ASCII
+# ascii_path may point to an image as well
+# Supported formats: 
+#     ".png", ".jpg", ".jpeg", ".bmp", ".webp"
+# "viu" is used as backend
 ascii_path = /opt/sysfex/ascii/arch.txt
+
+# For if ASCII is image
+# image_width = The number of cells occupied by the image in X axis
+image_width = 36
 
 # Print text and ASCII side by side?
 text_beside_ascii = 1
 
-# The character/string/whatever which will be used to represent the color palette
+# The character to represent the color palette
 color_block = ⬤
 
 # Clear terminal screen before executing Sysfex?
 clear_screen = 0
-
-# Print stuffs from a specific line/column of the terminal window
-# Only works when "clear_screen" = 1, for now
-starting_line = 0
-starting_column = 0
