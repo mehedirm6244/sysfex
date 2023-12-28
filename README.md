@@ -2,9 +2,16 @@
 Sysfex is just another system information fetching tool for <b>linux-based systems</b>, written in C++
 <p align="center"><img src="https://github.com/mebesus/sysfex/blob/main/screenshots/ss.gif?raw=true"></p>
 
+## Key Features
+- Print ASCII and information side by side, or top to bottom
+- Print output with custom formatting (colors, font formating etc) through escape sequences
+- Render image (.bmp, .jpg, .png, .webp) in place of ASCII using [viu](https://github.com/atanunq/viu) if requested
+- Customize output format without recompiling through dedicated configuration files
+
 ## Installation
 
 Required for installing Sysfex:
+- ANSI Escape Sequence supported terminal emulator
 - `CMake` : for compiling
 - `libx11` (or `libx11-dev`) : for getting screen resolution on Xorg
 - `viu` : backend for rendering image
@@ -71,9 +78,16 @@ The configuration for Sysfex is split into two files
 | ``config`` | Stores instructions on how to print stuffs, such as: gaps, character used in color blocks, separator character, which ascii to print etc
 | ``info`` | Stores instructions on what to be printed, such as: model name, screen resolution, kernel version etc |
 
+## To Do
+- [x] Add support for images
+- [x] Add support for colored output
+- [ ] Rewrite configuration file handling method
+- [ ] Use simpler and human method in source code where possible
+- [ ] Write documentation
+
 ## Special thanks to
 
 * Some cool fetch tools spread all over Github for inspiration and ideas.
-* This repo is nice https://github.com/nothings/stb
+* [nothings/stb](https://github.com/nothings/stb) for a nice image processing library
 * The contributors, testers and those who gave me ideas as well as helped this project spread
 * You, for being interested in this project
