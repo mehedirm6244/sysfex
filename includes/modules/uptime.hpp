@@ -2,4 +2,4 @@
 
 #include <string>
 
-std::string os();
+std::string uptime();

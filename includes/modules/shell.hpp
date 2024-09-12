@@ -2,4 +2,4 @@
 
 #include <string>
 
-std::string cpu();
+std::string shell();

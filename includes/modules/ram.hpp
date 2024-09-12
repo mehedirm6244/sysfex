@@ -2,4 +2,4 @@
 
 #include <string>
 
-std::string resolution();
+std::string ram();

@@ -2,4 +2,4 @@
 
 #include <string>
 
-std::string de();
+std::string host();

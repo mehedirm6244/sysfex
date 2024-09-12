@@ -2,4 +2,4 @@
 
 #include <string>
 
-std::string kernel();
+std::string pkgs();

@@ -1,7 +1,8 @@
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
-#include <map>
+
+/* Sysfex headers */
 #include <info.hpp>
 
 Info sysfex_info;
@@ -10,71 +11,47 @@ Info *Info::the() {
   return &sysfex_info;
 }
 
-const std::pair<std::string, std::string> *Info::getInfos() {
+const std::vector<std::string> Info::get_info() {
   return infos;
 }
 
-int Info::getCurrentInfo() {
-  return currentInfo;
+size_t Info::get_info_size() {
+  return infos.size();
 }
 
-void Info::setCurrentInfo(int new_currentInfo) {
-  currentInfo = new_currentInfo;
-}
-
-int Info::getInfoSize() {
-  return infoSize;
-}
-
-void Info::setInfoSize(int new_infoSize) {
-  infoSize = new_infoSize;
-}
-
-void Info::init(std::string dir) {
-  currentInfo = 0,
-  infoSize = 0;
-
+void Info::init(const std::string& dir) {
   if (!std::filesystem::exists(dir)) {
     return;
   }
 
-  std::ifstream infile;
-  infile.open(dir);
-  while (infile.good()) {
-    std::string type, currentLine;
-    infile >> type;
-    getline(infile, currentLine);
-
-    // Comment
-    if (type[0] == '#') {
+  std::ifstream infile(dir);
+  if (!infile.is_open()) {
+    return;
+  }
+  
+  std::string current_line;
+  while (std::getline(infile, current_line)) {
+    /* Ignore comments and empty lines */
+    if (current_line.empty() or current_line[0] == '#') {
       continue;
     }
 
-    int leftInvertedComma = currentLine.find('"'),
-        rightInvertedComma = currentLine.find_last_of('"');
-
-    if (leftInvertedComma == std::string::npos or
-        leftInvertedComma == rightInvertedComma) {
+    size_t left_quote = current_line.find('"');
+    size_t right_quote = current_line.find_last_of('"');
+    if (left_quote == std::string::npos or left_quote == right_quote) {
       continue;
     }
+    current_line = current_line.substr(left_quote + 1, right_quote - left_quote - 1);
 
-    if (type == "info") {
-      std::string key, info;
-      key = currentLine.substr(leftInvertedComma + 1, rightInvertedComma - (leftInvertedComma + 1));
-      info = currentLine.substr(rightInvertedComma + 1, currentLine.back());
-      /* Erase unnecessary whitespaces */
-      info.erase(std::remove_if(info.begin(), info.end(), isspace), info.end());
-
-      if (printables.find(info) == printables.end()) {
-        continue;
+    for (auto &pair : printables) {
+      std::string placeholder = "{" + pair.first + "}";
+      size_t pos = current_line.find(placeholder);
+      while (pos != std::string::npos) {
+        current_line.replace(pos, placeholder.length(), pair.second());
+        pos = current_line.find(placeholder, pos + pair.second().length());
       }
-
-      infos[infoSize] = {key, (*printables.at(info))()};
-      infoSize++;
-    } else if (type == "print") {
-      currentLine = currentLine.substr(leftInvertedComma + 1, rightInvertedComma - (leftInvertedComma + 1));
-      infos[infoSize] = {currentLine, ""};
-      infoSize++;
     }
+
+    infos.push_back(current_line);
   }
 }

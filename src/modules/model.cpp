@@ -1,31 +1,26 @@
-/*************************************************/
-/* This file is a part of Sysfex                 */
-/* This function returns the model of the device */
-/*************************************************/
-
 #include <fstream>
+
 #include <modules/model.hpp>
 
 std::string model() {
-  std::string modelName, version;
-  std::ifstream infile;
+  std::ifstream product_name("/sys/devices/virtual/dmi/id/product_name");
+  if (!product_name.is_open()) {
+    return "Unknown";
+  }
 
-  /* `/sys/devices/virtual/dmi/id/product_name` contains your device's name */
-  infile.open("/sys/devices/virtual/dmi/id/product_name");
-  if (!infile.is_open()) {
+  std::string model_name;
+  getline(product_name, model_name);
+  product_name.close();
+
+  std::ifstream product_version("/sys/devices/virtual/dmi/id/product_version");
+  if (!product_version.is_open()) {
     return "";
   }
-  getline(infile, modelName);
-  infile.close();
 
-  /* `/sys/devices/virtual/dmi/id/product_version` contains your device's version */
-  infile.open("/sys/devices/virtual/dmi/id/product_version");
-  if (!infile.is_open()) {
-    return "";
-  }
-  getline(infile, version);
-  infile.close();
+  std::string model_version;
+  getline(product_version, model_version);
+  product_version.close();
 
-  std::string output = modelName + " " + version;
+  std::string output = model_name + " " + model_version;
   return output;
 }

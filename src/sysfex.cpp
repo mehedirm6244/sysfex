@@ -1,275 +1,160 @@
-/**********************************************************************/
-/* Sysfex is just another system information fetching tool built for  */
-/* linux based distributions, licenced under the GNU GPL-3.0 license  */
-/* GitHub repository: https://github.com/mehedirm6244/Sysfex          */
-/**********************************************************************/
+/*
+  Sysfex is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  Sysfex is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with Sysfex. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #include <iostream>
 #include <cstring>
-#include <map>
 #include <fstream>
 #include <filesystem>
-#include <algorithm>
 
-/* Sysfex specific headers */
+/* Sysfex headers */
 #include <config.hpp>
 #include <utils.hpp>
 #include <shell_escape.hpp>
 #include <info.hpp>
 #include <image.hpp>
 
-
-void importConfig();            /* Look for existing configs for Sysfex */
-void fetch();                   /* The heart of this program */
-
-
-/************************************************/
-/* Main function                                */
-/* I don't think I need to write anything here  */
-/************************************************/
+bool import_config();
+void sysfex_run();
 
 int main(int argc, const char *argv[]) {
-  /* Initialize user configuration before proceeding */
-  importConfig();
+  /* Import config files from `~/.config/sysfex/` */
+  if (!import_config()) {
+    /* Exit with return code 1 if import fails */
+    std::cerr << "Failed to import configurations. Exiting\n";
+    return 1;
+  }
 
-  /*
-    Check for user flags
-    which are provided through the command line while running this program
-  */
+  /* Process command-line flags */
   for (int i = 1; i < argc; i++) {
-    if (!strcmp(argv[i], "--help")) {
-      help();
+    if (strcmp(argv[i], "--help") == 0) {
+      print_help();
       return 0;
     }
 
-    /*
-      The following flags need values to work with
-      Example: `sysfex --flag <value>`
-      Hence these flags MUST NOT be the last string of argv[]
-    */
+    /* Flags requiring values should not be the last argument */
     if (i != argc - 1) {
-      if (!strcmp(argv[i], "--ascii-path")) {
-        Config::the()->setValue("ascii_path", argv[++i]);
-      } else if (!strcmp(argv[i], "--config")) {
+      if (strcmp(argv[i], "--ascii") == 0) {
+        Config::the()->set_property("ascii", argv[++i]);
+      } else if (strcmp(argv[i], "--config") == 0) {
         Config::the()->init(argv[++i]);
-      } else if (!strcmp(argv[i], "--info")) {
+      } else if (strcmp(argv[i], "--info") == 0) {
         Info::the()->init(argv[++i]);
       } else {
-        std::cout << RED << "No flag named " << argv[i] << " is available!" << RESET << '\n'
-                  << "Run `sysfex --help` for listing all the available flags." << '\n';
+        std::cerr << RED << "Invalid flag: " << argv[i] << RESET << '\n';
         return 1;
       }
     } else {
-      std::cout << RED << "Invalid command format!" << RESET << '\n'
-                << "Run `sysfex --help` for listing all the available flags.";
+      std::cerr << RED << "Invalid command format!" << RESET << '\n';
+      std::cout << "Run `sysfex --help` for assistance.";
       return 1;
     }
   }
 
-  fetch();
+  sysfex_run();
   return 0;
 }
 
 
-/**************************************************************/
-/* This function looks for configuration files for Sysfex     */
-/* It will look into ${USER}/.config/sysfex first             */
-/* If not found, then /opt/sysfex will be searched for        */
-/* If still not found, then the hardcoded config will be used */
-/**************************************************************/
+/* Look for config files in `~/.config/sysfex/` */
+bool import_config() {
+  const std::string local_conf_dir = std::string("/home/") + std::getenv("USER") + "/.config/sysfex/";
 
-void importConfig() {
-  std::string user, localConfDir, fallbackDir;
-  user = std::getenv("USER");                               /* User of current session
-                                                               Needed for locating local config file */
-  localConfDir = "/home/" + user + "/.config/sysfex/";      /* Path to be searched for local config file */
-  fallbackDir = "/opt/sysfex/";                             /* To be searched for config if no local config exists */
-
-  /*
-    There are two types of config files for Sysfex:
-    config -> controls how stuffs will be shown i.e. gaps, separator etc.
-    info -> controls what info to be shown i.e. OS Name, Screen resolution etc
-  */
-
-  /*
-    If the directory for local config file itself doesn't exist,
-    Then make that directory first. The fallback config will be
-    copied to that directory before Sysfex runs. Then the user can
-    modify it according to their preference.
-
-    This scenario is for when Sysfex is run for the first time,
-    or your cat has messed up with your config files
-  */
-  if (!std::filesystem::exists(localConfDir)) {
-    std::filesystem::create_directories(localConfDir);
+  if (!std::filesystem::exists(local_conf_dir)) {
+    std::filesystem::create_directories(local_conf_dir);
   }
 
-  /***************/
-  /* CONFIG FILE */
-  /***************/
+  /* Handle config file */
+  const std::string local_config = local_conf_dir + "config";
 
-  /* If a local config file exists, then use that */
-  if (std::string localConf = localConfDir + "config"; std::filesystem::exists(localConf)) {
-    Config::the()->init(localConf);
-  } else if (std::filesystem::exists(fallbackDir + "config")) {   /* Else copy the fallback config file to the path of
-                                                                     the local config file and use the local one (it exists now) */
-    std::filesystem::copy_file(fallbackDir + "config", localConf);
-    Config::the()->init(localConf);
+  if (std::filesystem::exists(local_config)) {
+    Config::the()->init(local_config);
+  } else {
+    std::cerr << RED << "Required file does not exist: " << local_config << RESET << '\n';
+    return 0;
   }
-  /*
-    NOTE THAT IF THE LOCAL CONFIG FILE AS WELL AS THE ONES STORED INSIDE
-    /opt/sysfex IS MISSING, THEN IT'LL BE A TROUBLE. HOWEVER, THIS IS VERY
-    UNLIKELY TO HAPPEN
-  */
 
-  /*************/
-  /* INFO FILE */
-  /*************/
+  /* Handle info file */
+  const std::string local_info = local_conf_dir + "info";
 
-  /* If a local info file exists, then use that */
-  std::string localConf = localConfDir + "info";
-  if (std::filesystem::exists(localConf)) {
-    Info::the()->init(localConf);
-  } else if (std::filesystem::exists(fallbackDir + "info")) {     /* Else copy the fallback info file to the path of
-                                                                     the local info file and use the local one */
-    std::filesystem::copy_file(fallbackDir + "info", localConf);
-    Info::the()->init(localConf);
+  if (std::filesystem::exists(local_info)) {
+    Info::the()->init(local_info);
+  } else {
+    std::cerr << RED << "Required file does not exist: " << local_info << RESET << '\n';
+    return 0;
   }
-  /*
-    NOTE THAT IF NEITHER ~/.config/sysfex/info NOR /opt/sysfex/info
-    EXISTS, THEN NO INFORMATION WILL BE PRINTED, ONLY ASCII WILL BE
-    SHOWN. THIS IS UNLIKELY TO HAPPEN
-  */
+
+  return 1;
 }
 
 
-/**************************************************/
-/* This is the heart of this program              */
-/* As we now have our configuration files ready,  */
-/* we can now print them just like we want        */
-/* This function does exactly that                */
-/**************************************************/
+void sysfex_run() {
+  size_t longest_line_width = 0;
+  size_t line_count = 0;
 
-void fetch() {
-  size_t maxLineLength = 0, /* Length of the longest line of the ascii file */
-         lineCount = 0,
-         startingLine = 0,
-         startingColumn = 0;
-
-  if (Config::the()->getValue("clear_screen") != "0") {
-    std::system("clear");       /* Clear terminal window */
-    try {
-      startingLine = std::stoi(Config::the()->getValue("starting_line"));
-      startingColumn = std::stoi(Config::the()->getValue("starting_column"));
-    } catch(std::exception &e) {
-      /* Do nothing */
-    }
-    std::cout << "\033[" << startingLine << ";H";       /* Move cursor to starting line */
+  if (Config::the()->get_property("clear_screen") != "0") {
+    std::system("clear");
   }
 
-  /********************************/
-  /* PRINT ASCII IF NOT FORBIDDEN */
-  /********************************/
+  /* Print ASCII if it exists */
+  std::string ascii_path = Config::the()->get_property("ascii");
+  if (std::filesystem::exists(ascii_path)) {
+    if (is_supported_image(ascii_path)) {
+      longest_line_width = std::stoi(Config::the()->get_property("image_width"));
+      line_count = img_height_when_width(ascii_path, longest_line_width);
 
-  /*
-    Check if the provided file exists
-    If not, then fallback to "ascii" = "0"
-  */
-  if (!std::filesystem::exists(Config::the()->getValue("ascii_path"))) {
-    Config::the()->setValue("ascii", "0");
-  }
-
-  if (Config::the()->getValue("ascii") != "0") {
-    std::string asciiPath = Config::the()->getValue("ascii_path");
-
-    /* Check if ASCII is a supported image */
-    if (isAnImage(asciiPath)) {
-      maxLineLength = std::stoi(Config::the()->getValue("image_width"));
-      lineCount = heightIfWidth(asciiPath, maxLineLength);
-      renderImage(asciiPath, maxLineLength);
+      preview_image(ascii_path, longest_line_width);
     } else {
-      std::ifstream infile;
-      infile.open(asciiPath);
-      while (infile.good()) {
-        std::string currentLine;
-        std::getline(infile, currentLine);
-        size_t currentLineLength = getLineWidth(currentLine);
+      std::ifstream ascii_file(ascii_path);
+      std::string current_line;
 
-        maxLineLength = std::max(maxLineLength, currentLineLength);
-        std::cout << "\033[" << startingColumn << "C";        /* Bring cursor to starting column each time
-                                                                 before printing a line of the ASCII */
-        std::cout << process_escape(currentLine, false) << '\n';
-        lineCount++;
+      while (std::getline(ascii_file, current_line)) {
+        size_t current_line_width = get_string_display_width(current_line);
+        longest_line_width = std::max(longest_line_width, current_line_width);
+        std::cout << process_escape(current_line, false) << '\n';
+        line_count++;
       }
-      infile.close();
     }
   } else {
-    Config::the()->setValue("text_beside_ascii", "0");        /* Useless to keep "text_beside_ascii" = 1
-                                                                 when "ascii" = 0 */
-    Config::the()->setValue("pregap", "0");                   /* Same for "pregap" */
+    /* Useless to keep these true in this scenario */
+    Config::the()->set_property("info_beside_ascii", "0");
+    Config::the()->set_property("gap", "0");
   }
 
-  /****************/
-  /* PRINT STUFFS */
-  /****************/
+  /* Print information beside ASCII */
 
-  /*
-    Move cursor to the first line if text_beside_ascii = 1
-    The cursor will later be moved in such a way that the following
-    outputs will be printed beside the ASCII without overlapping it
-  */
-  if (Config::the()->getValue("text_beside_ascii") == "1") {
-    std::cout << "\033[" << lineCount << "A";       /* Move cursor to "linecount" cells above
-                                                       (top of the terminal window) to print info stuffs */
+  if (Config::the()->get_property("info_beside_ascii") == "1") {
     /* TO FIX: if the ASCII file is bigger than the terminal window, */
+    std::cout << "\033[" << line_count << "A";
   }
   
-  for (int i = 0; i < Info::the()->getInfoSize(); i++) {
-    /*
-      Move cursor in such a way such that
-      the following outputs don't overlap the ASCII
-    */
-    if (Config::the()->getValue("text_beside_ascii") == "1") {
-      int offset = maxLineLength + startingColumn +
-                   std::stoi(Config::the()->getValue("pregap"));       /* Position cursor before printing info */
-      if (Config::the()->getValue("ascii") != "0") {
+  for (int i = 0; i < Info::the()->get_info_size(); i++) {
+    if (Config::the()->get_property("info_beside_ascii") == "1") {
+      size_t offset = longest_line_width + stoi(Config::the()->get_property("gap"));
+      if (std::filesystem::exists(ascii_path)) {
         offset++;
       }
-      std::cout << "\033[" << offset << "C";        /* Move cursor to "offset" cells left */
+      std::cout << "\033[" << offset << "C";
     }
 
-    /*
-      There can be two types of output according to the info file
-      - info "key" "value"
-      - print "string" which is equivalent to `info "key" ""`
-    */
-
-    /*
-      Info::the()->getInfos()[i].first = "key"
-      Info::the()->getInfos()[i].second = "value"
-    */
-
-    std::cout << process_escape(Info::the()->getInfos()[i].first, false);
-
-    if (!Info::the()->getInfos()[i].second.empty()) {
-      if (!Info::the()->getInfos()[i].first.empty()) {
-        std::cout << std::string(stoi(Config::the()->getValue("gap")), ' ');
-      }
-      std::cout << process_escape(Info::the()->getInfos()[i].second, false);
-    }
-
-    std::cout << '\n';
+    const std::string current_info = Info::the()->get_info().at(i);
+    std::cout << process_escape(current_info, false) << '\n';
   }
 
-  /*
-    If the ASCII contains more lines than what have already
-    been printed, then the ASCII will get cut off because of the
-    position of the cursor. To prevent that, shift the cursor
-    to a few cell bottom
-  */
-  if (lineCount > Info::the()->getInfoSize() and
-      Config::the()->getValue("text_beside_ascii") == "1") {
-    int offset = lineCount - Info::the()->getInfoSize() - 1;
-    std::cout << "\033[" << offset << "B";        /* Move cursor to "offset" cells bottom */
+  if (line_count > Info::the()->get_info_size() and
+      Config::the()->get_property("info_beside_ascii") == "1") {
+    size_t offset = line_count - Info::the()->get_info_size() - 1;
+    std::cout << "\033[" << offset << "B";
   }
 }

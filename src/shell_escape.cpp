@@ -1,7 +1,7 @@
 #include <fstream>
-#include <map>
+#include <unordered_map>
 
-std::map<std::string, std::string> COLOR_VALUES = {
+std::unordered_map<std::string, std::string> COLOR_VALUES = {
   {"\\b_black",     "\033[40m"  },
   {"\\b_red",       "\033[41m"  },
   {"\\b_green",     "\033[42m"  },

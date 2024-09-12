@@ -2,4 +2,4 @@
 
 #include <string>
 
-std::string uptime();
+std::string user();

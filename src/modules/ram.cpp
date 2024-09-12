@@ -1,40 +1,38 @@
-/**************************************************************/
-/* This file is a part of Sysfex                              */
-/* This function returns used and total usable memory aka RAM */
-/**************************************************************/
-
 #include <fstream>
+#include <sstream>
+
 #include <modules/ram.hpp>
 
 std::string ram() {
-  int freeMemory = 0, totalMemory = 0, usedMemory, usedPerc;
+  int free_mem = 0;
+  int total_mem = 0;
+  int used_mem;
+  int used_mem_perc;
 
-  std::ifstream infile;
-  infile.open("/proc/meminfo");       /* /proc/meminfo has a lot of stuff about memory in it */
-  if (!infile.is_open()) {            /* Why wouldn't that exist anyway? */
-    return "";
+  std::ifstream meminfo("/proc/meminfo");
+  if (!meminfo.is_open()) {
+    return "Unknown";
   }
 
-  /* We need to go through the whole /proc/meminfo until we get what we want */
-  while (infile.good() and !(freeMemory and totalMemory)) {
-    std::string currentKey;
-    infile >> currentKey;
-
-    if (currentKey == "MemTotal:") {
-      infile >> totalMemory;
+  std::string key;
+  while (meminfo >> key) {
+    if (key == "MemTotal:") {
+      meminfo >> total_mem;
+    } else if (key == "MemAvailable:") {
+      meminfo >> free_mem;
     }
 
-    if (currentKey == "MemAvailable:") {
-      infile >> freeMemory;
+    if (free_mem and total_mem) {
+      break;
     }
   }
-  infile.close();
+  meminfo.close();
 
-  usedMemory = totalMemory - freeMemory;
-  usedPerc = (usedMemory * 100) / totalMemory;
+  used_mem = total_mem - free_mem;
+  used_mem_perc = (used_mem * 100) / total_mem;
 
-  std::string output = std::to_string((usedMemory) / 1024)
-                       + "MiB of " + std::to_string(totalMemory / 1024) + "MiB "
-                       + "(" + std::to_string(usedPerc) + "%)";
-  return output;
+  std::ostringstream output;
+
+  output << std::to_string((used_mem) / 1024) << "MiB used " << "(" << std::to_string(used_mem_perc) << "%)";
+  return output.str();
 }

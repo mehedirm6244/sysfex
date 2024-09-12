@@ -1,26 +1,24 @@
-/***********************************************/
-/* This file is a part of Sysfex               */
-/* This function returns the screen resolution */
-/* CURRENTLY THIS WORKS ON Xorg ONLY           */
-/***********************************************/
+#include <X11/Xlib.h> // TODO: Add support for Wayland
+#include <sstream>
 
-#include <X11/Xlib.h> /* For getting display info on X11
-                         Will add a workaround for wayland too */
 #include <modules/resolution.hpp>
 
 std::string resolution() {
-  Display *disp = XOpenDisplay(NULL);
+  Display *disp = XOpenDisplay(nullptr);
+  Screen *scrn = DefaultScreenOfDisplay(disp);
+
   if (!disp) {
-    /* Return nothing if no display is detected to avoid possible segfaults */
+    XCloseDisplay(disp);
     return "";
   }
 
-  Screen *scrn = DefaultScreenOfDisplay(disp);
-  int height, width;
-  height = scrn->height;
-  width = scrn->width;
+  int height = scrn->height;
+  int width = scrn->width;
 
-  std::string output = std::to_string(width) + "x" + std::to_string(height); /* WIDTHxHEIGHT
-                                                                                Example: 1366x798 */
-  return output;
+  XCloseDisplay(disp);
+
+  std::ostringstream output;
+  output << width << "x" << height;
+
+  return output.str();
 }

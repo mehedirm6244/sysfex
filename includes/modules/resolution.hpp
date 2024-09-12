@@ -2,4 +2,4 @@
 
 #include <string>
 
-std::string host();
+std::string resolution();

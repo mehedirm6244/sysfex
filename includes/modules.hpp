@@ -1,6 +1,5 @@
 #pragma once
 
-#include "modules/colors.hpp"
 #include "modules/cpu.hpp"
 #include "modules/de.hpp"
 #include "modules/host.hpp"

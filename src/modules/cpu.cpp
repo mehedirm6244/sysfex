@@ -1,56 +1,45 @@
-/****************************************************/
-/* This file is a part of Sysfex                    */
-/* This function returns the used CPU by percentage */
-/****************************************************/
-
 #include <algorithm>
 #include <fstream>
+#include <cctype> // for std::isspace
+
 #include <modules/cpu.hpp>
 
 std::string cpu() {
-  std::string modelName = "model name", cpu = "";
+  std::string model_name = "model name";
+  std::string output;
 
-  std::ifstream infile;
-  infile.open("/proc/cpuinfo");               /* `/proc/cpuinfo` has a lot of info about the CPU(s) of your device */
-  if (!infile.is_open()) {
-    return "";
+  std::ifstream cpu_info("/proc/cpuinfo");
+  if (!cpu_info.is_open()) {
+    return "Unknown";
   }
 
-  /* We need to go through `/proc/cpuinfo` until we get what we want */
-  while (infile.good() and cpu == "") {
-    std::string currentLine;
-    std::getline(infile, currentLine);
-    /*
-      The line containing the model of the CPU has the keyword "model name"
-      at it's beginning
-      So looking for that specific keyword is enough
-    */
-    if (currentLine.find(modelName) != std::string::npos) {
-      cpu = currentLine;
+  while (cpu_info.good()) {
+    std::string current_line;
+    std::getline(cpu_info, current_line);
+
+    if (current_line.find(model_name) != std::string::npos) {
+      output = current_line;
+      break;
     }
   }
-  infile.close();
+  cpu_info.close();
 
-  if (cpu == "") {
-    return "";
+  if (output.empty()) {
+    return "Unknown";
   }
 
   /* Erase "model name" from output */
-  cpu = cpu.substr(modelName.length(), cpu.length() - (modelName.length()));
+  output = output.substr(model_name.length());
 
-  /* Remove leading spaces and separator from output */
-  int trimFrom = 0;
-  while (cpu[trimFrom] == ' ' or
-         cpu[trimFrom] == '\t' or
-         cpu[trimFrom] == ':') {
-    trimFrom++;
-  }
-  cpu = cpu.substr(trimFrom);
+  /* Trim leading spaces and colon */
+  output.erase(output.begin(), std::find_if(output.begin(), output.end(), [](unsigned char ch) {
+    return !std::isspace(ch) && ch != ':';
+  }));
 
   /* Remove clock speed from output */
-  if (size_t pos = cpu.find('@'); pos != std::string::npos) {
-    cpu = cpu.substr(0, pos);
+  if (size_t pos = output.find('@'); pos != std::string::npos) {
+    output = output.substr(0, pos);
   }
 
-  return cpu;
+  return output;
 }
