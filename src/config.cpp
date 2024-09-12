@@ -24,6 +24,12 @@ std::string Config::get_property(const std::string& key) {
   return "";
 }
 
+void Config::generate_config_file(const std::string& path) {
+  std::ofstream generated_file(path);
+  generated_file << default_config;
+  generated_file.close();
+}
+
 void Config::init(const std::string& dir) {
   if (!std::filesystem::exists(dir)) {
     return;

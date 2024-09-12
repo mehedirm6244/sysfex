@@ -11,12 +11,18 @@ Info *Info::the() {
   return &sysfex_info;
 }
 
-const std::vector<std::string> Info::get_info() {
+const std::vector<std::string>& Info::get_info() {
   return infos;
 }
 
 size_t Info::get_info_size() {
   return infos.size();
+}
+
+void Info::generate_config_file(const std::string& path) {
+  std::ofstream generated_file(path);
+  generated_file << default_config;
+  generated_file.close();
 }
 
 void Info::init(const std::string& dir) {

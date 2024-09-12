@@ -25,16 +25,12 @@
 #include <info.hpp>
 #include <image.hpp>
 
-bool import_config();
+void import_config();
 void sysfex_run();
 
 int main(int argc, const char *argv[]) {
   /* Import config files from `~/.config/sysfex/` */
-  if (!import_config()) {
-    /* Exit with return code 1 if import fails */
-    std::cerr << "Failed to import configurations. Exiting\n";
-    return 1;
-  }
+  import_config();
 
   /* Process command-line flags */
   for (int i = 1; i < argc; i++) {
@@ -68,7 +64,7 @@ int main(int argc, const char *argv[]) {
 
 
 /* Look for config files in `~/.config/sysfex/` */
-bool import_config() {
+void import_config() {
   const std::string local_conf_dir = std::string("/home/") + std::getenv("USER") + "/.config/sysfex/";
 
   if (!std::filesystem::exists(local_conf_dir)) {
@@ -78,24 +74,20 @@ bool import_config() {
   /* Handle config file */
   const std::string local_config = local_conf_dir + "config";
 
-  if (std::filesystem::exists(local_config)) {
-    Config::the()->init(local_config);
-  } else {
-    std::cerr << RED << "Required file does not exist: " << local_config << RESET << '\n';
-    return 0;
+  if (!std::filesystem::exists(local_config)) {
+    Config::the()->generate_config_file(local_config);
   }
+  
+  Config::the()->init(local_config);
 
   /* Handle info file */
   const std::string local_info = local_conf_dir + "info";
 
-  if (std::filesystem::exists(local_info)) {
-    Info::the()->init(local_info);
-  } else {
-    std::cerr << RED << "Required file does not exist: " << local_info << RESET << '\n';
-    return 0;
+  if (!std::filesystem::exists(local_info)) {
+    Info::the()->generate_config_file(local_info);
   }
 
-  return 1;
+  Info::the()->init(local_info);
 }
 
 
@@ -139,7 +131,7 @@ void sysfex_run() {
     std::cout << "\033[" << line_count << "A";
   }
   
-  for (int i = 0; i < Info::the()->get_info_size(); i++) {
+  for (const auto& current_info : Info::the()->get_info()) {
     if (Config::the()->get_property("info_beside_ascii") == "1") {
       size_t offset = longest_line_width + stoi(Config::the()->get_property("gap"));
       if (std::filesystem::exists(ascii_path)) {
@@ -148,7 +140,6 @@ void sysfex_run() {
       std::cout << "\033[" << offset << "C";
     }
 
-    const std::string current_info = Info::the()->get_info().at(i);
     std::cout << process_escape(current_info, false) << '\n';
   }
 
