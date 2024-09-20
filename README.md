@@ -1,5 +1,5 @@
 # Sysfex
-Sysfex is just another system information fetching tool for <b>Linux-based systems</b>, written in C++
+Sysfex is a CLI system information fetching tool for <b>Linux-based systems</b>, written in C++
 <p align="center"><img src="screenshots/screenshot.png"></p>
 
 ## Key Features
@@ -70,7 +70,6 @@ Use `sysfex --help` for listing all valid flags
 
 
 ## To Do
-- [ ] Add support for Wayland
 - [ ] Rewrite configuration file handling method
 - [ ] Write detailed documentation
 
