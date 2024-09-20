@@ -12,7 +12,6 @@ Sysfex is just another system information fetching tool for <b>Linux-based syste
 ## Install
 
 Required for Sysfex to work properly:
-- `libx11` (or `libx11-dev`) : for getting screen resolution on Xorg (TODO: add workaround for Wayland)
 - `viu` (optional) : backend for rendering image
 
 

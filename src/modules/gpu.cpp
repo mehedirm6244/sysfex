@@ -17,39 +17,29 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#include "modules/cpu.hpp"
+#include "modules/gpu.hpp"
 
-std::string cpu() {
-  std::string model_name = "model name";
-  std::string output;
-
-  std::ifstream cpu_info("/proc/cpuinfo");
-  if (!cpu_info.is_open()) {
-    return "Unknown";
-  }
-
-  while (cpu_info.good()) {
-    std::string current_line;
-    std::getline(cpu_info, current_line);
-
-    if (current_line.find(model_name) != std::string::npos) {
-      output = current_line;
-      break;
+std::string gpu() {
+  /* I'm sorry */
+  std::string raw_command = R"(lspci -mm |
+    awk -F '\"|\" \"|\\(' \
+      '/"Display|"3D|"VGA/ {
+        a[$0] = $1 " " $3 " " ($(NF-1) ~ /^$|^Device [[:xdigit:]]+$/ ? $4 : $(NF-1))
+      }
+      END { for (i in a) {
+        if (!seen[a[i]]++) {
+          sub("^[^ ]+ ", "", a[i]);
+          print a[i]
+        }
+      }
     }
-  }
-  cpu_info.close();
+  ')";
 
-  if (output.empty()) {
-    return "Unknown";
-  }
-
-  /* Erase "model name" from output */
-  output = output.substr(model_name.length());
+  std::string output = sfUtils::get_output_of(raw_command.c_str());
 
   /*Remove unnecessary patterns from output */
   std::vector<std::string> removables = {
-    "(TM)", "(tm)", "(R)", "(r)", "CPU", "(Processor)", "Technologies, Inc",
-    "Core", "Dual-Core", "Quad-Core", "Six-Core", "Eight-Core"
+    "Integrated Graphics Controller", "Corporation"
   };
 
   for (auto removable : removables) {
@@ -59,12 +49,7 @@ std::string cpu() {
     }
   }
 
-  /* Trim leading spaces and colon */
-  output.erase(output.begin(), std::find_if(output.begin(), output.end(), [](unsigned char ch) {
-    return !std::isspace(ch) && ch != ':';
-  }));
-
-  /* Trim trailing and extra spaces */
+  /* Remove leading, trailing and extra spaces from output */
   output = sfUtils::trim_string_spaces(output);
 
   return output;

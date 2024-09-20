@@ -19,4 +19,24 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #pragma once
 
-std::string os();
+#include <iostream>
+#include <cstring>
+#include <fstream>
+#include <filesystem>
+
+#include "utils.hpp"
+#include "config.hpp"
+#include "info.hpp"
+#include "image.hpp"
+
+namespace Sysfex {
+
+  void about();
+
+  void import_config();
+
+  void help();
+
+  void run();
+
+}

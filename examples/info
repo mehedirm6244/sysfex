@@ -1,9 +1,3 @@
-# Comments start with '#'
-
-# Available variables:
-#   'HOST', 'OS', 'KERNEL', "PKGS', 'SHELL', 'MODEL',
-#   'USER', 'DE', 'RAM', 'UPTIME', 'RESOLUTION', 'CPU'
-
 "\f_red\bold  \reset {USER}"
 "\f_green\bold  \reset {UPTIME}"
 ""
@@ -15,7 +9,7 @@
 ""
 "⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ \underline  Software\reset ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅"
 ""
-"\f_cyan\bold  \reset {OS}"
+"\f_cyan\bold  \reset {DISTRO}"
 "\f_yellow\bold  \reset {KERNEL}"
 "\f_red\bold  \reset {DE}"
 "\f_green\bold  \reset {PKGS}"

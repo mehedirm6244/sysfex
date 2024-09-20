@@ -17,6 +17,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#pragma once
+#include <string>
+#include <vector>
 
-std::string os();
+#include "utils.hpp"
+
+std::string gpu();
