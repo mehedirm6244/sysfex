@@ -19,6 +19,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <string>
 #include <vector>
+#include <sstream>
+#include <regex>
 
 #include "utils.hpp"
 

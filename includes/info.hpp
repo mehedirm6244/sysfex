@@ -50,20 +50,22 @@ private:
   const std::string default_config = R"(# Comments start with '#'
 
 # Available variables:
-#   'CPU', 'DE', 'DISTRO', 'HOST', 'KERNEL', 'MODEL', 'OS',
-#   'PKGS', 'RAM', 'RESOLUTION', 'SHELL', 'UPTIME', 'USER'
+#   'CPU', 'DE', 'DISTRO', 'GPU', 'HOST', 'KERNEL', 'MODEL',
+#   'OS', 'PKGS', 'RAM', 'RESOLUTION', 'SHELL', 'UPTIME', 'USER'
 
 "\bold{USER}@{HOST}\reset"
 ""
+"\f_blue\boldModel    \reset {MODEL}"
 "\f_blue\boldDistro   \reset {DISTRO}"
 "\f_blue\boldKernel   \reset {KERNEL}"
-"\f_blue\boldDE       \reset {DE}"
 "\f_blue\boldUptime   \reset {UPTIME}"
-"\f_blue\boldMemory   \reset {RAM}"
-"\f_blue\boldCPU      \reset {CPU}"
-"\f_blue\boldDisplay  \reset {RESOLUTION}"
 "\f_blue\boldPackages \reset {PKGS}"
 "\f_blue\boldShell    \reset {SHELL}"
+"\f_blue\boldDisplay  \reset {RESOLUTION}"
+"\f_blue\boldDE       \reset {DE}"
+"\f_blue\boldCPU      \reset {CPU}"
+"\f_blue\boldGPU      \reset {GPU}"
+"\f_blue\boldMemory   \reset {RAM}"
 ""
 "\b_black  \b_red  \b_green  \b_yellow  \b_blue  \b_magenta  \b_cyan  \b_white  \reset"
 )";
