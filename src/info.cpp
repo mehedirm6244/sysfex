@@ -67,8 +67,10 @@ void Info::init(const std::string& dir) {
       std::string placeholder = "{" + pair.first + "}";
       size_t pos = current_line.find(placeholder);
       while (pos != std::string::npos) {
-        current_line.replace(pos, placeholder.length(), pair.second());
-        pos = current_line.find(placeholder, pos + pair.second().length());
+        std::string info = pair.second();
+        size_t info_length = info.length();
+        current_line.replace(pos, placeholder.length(), info);
+        pos = current_line.find(placeholder, pos + info_length);
       }
     }
 
