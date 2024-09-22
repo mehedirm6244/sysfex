@@ -1,43 +1,71 @@
+/*
+
+This file is from Sysfex, another system info fetching tool
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+*/
+
 #pragma once
 
 #include <vector>
 #include <string>
+#include <algorithm>
+#include <filesystem>
+#include <fstream>
 
 #include "modules.hpp"
 
 class Info {
+  
+private:
   const std::vector<std::pair<std::string, std::string(*)()>> printables = {
-    {"HOST", host},
-    {"OS", os},
-    {"KERNEL", kernel},
-    {"PKGS", pkgs},
-    {"SHELL", shell},
-    {"MODEL", model},
-    {"USER", user},
+    {"CPU", cpu},
     {"DE", de},
+    {"DISTRO", distro},
+    {"GPU", gpu},
+    {"HOST", host},
+    {"KERNEL", kernel},
+    {"MODEL", model},
+    {"OS", os},
+    {"PKGS", pkgs},
     {"RAM", ram},
-    {"UPTIME", uptime},
     {"RESOLUTION", resolution},
-    {"CPU", cpu}
+    {"SHELL", shell},
+    {"UPTIME", uptime},
+    {"USER", user}
   };
 
-  const char* default_config = R"(# Comments start with '#'
+  const std::string default_config = R"(# Comments start with '#'
 
 # Available variables:
-#   'HOST', 'OS', 'KERNEL', 'PKGS', 'SHELL', 'MODEL',
-#   'USER', 'DE', 'RAM', 'UPTIME', 'RESOLUTION', 'CPU'
+#   'CPU', 'DE', 'DISTRO', 'GPU', 'HOST', 'KERNEL', 'MODEL',
+#   'OS', 'PKGS', 'RAM', 'RESOLUTION', 'SHELL', 'UPTIME', 'USER'
 
 "\bold{USER}@{HOST}\reset"
 ""
-"\f_blue\boldDistro   \reset {OS}"
+"\f_blue\boldModel    \reset {MODEL}"
+"\f_blue\boldDistro   \reset {DISTRO}"
 "\f_blue\boldKernel   \reset {KERNEL}"
-"\f_blue\boldDE       \reset {DE}"
 "\f_blue\boldUptime   \reset {UPTIME}"
-"\f_blue\boldMemory   \reset {RAM}"
-"\f_blue\boldCPU      \reset {CPU}"
-"\f_blue\boldDisplay  \reset {RESOLUTION}"
 "\f_blue\boldPackages \reset {PKGS}"
 "\f_blue\boldShell    \reset {SHELL}"
+"\f_blue\boldDisplay  \reset {RESOLUTION}"
+"\f_blue\boldDE       \reset {DE}"
+"\f_blue\boldCPU      \reset {CPU}"
+"\f_blue\boldGPU      \reset {GPU}"
+"\f_blue\boldMemory   \reset {RAM}"
 ""
 "\b_black  \b_red  \b_green  \b_yellow  \b_blue  \b_magenta  \b_cyan  \b_white  \reset"
 )";

@@ -17,6 +17,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#pragma once
+#include <string>
+#include <vector>
+#include <sstream>
+#include <regex>
 
-std::string os();
+#include "utils.hpp"
+
+std::string gpu();

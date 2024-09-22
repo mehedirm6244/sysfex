@@ -7,9 +7,7 @@ project(
 )
 
 find_package(ICU COMPONENTS uc REQUIRED)
-find_package(X11 REQUIRED)
 
-include_directories(${X11_INCLUDE_DIR})
 include_directories(./includes)
 include_directories(./lib)
 add_executable(sysfex
@@ -18,8 +16,11 @@ add_executable(sysfex
   src/utils.cpp
   src/info.cpp
   src/image.cpp
+  src/main.cpp
   src/modules/cpu.cpp
   src/modules/de.cpp
+  src/modules/distro.cpp
+  src/modules/gpu.cpp
   src/modules/host.cpp
   src/modules/kernel.cpp
   src/modules/model.cpp
@@ -30,13 +31,13 @@ add_executable(sysfex
   src/modules/shell.cpp
   src/modules/uptime.cpp
   src/modules/user.cpp
-  src/shell_escape.cpp
-  includes/shell_escape.hpp
   includes/modules.hpp
   includes/info.hpp
   includes/config.hpp
   includes/modules/cpu.hpp
   includes/modules/de.hpp
+  includes/modules/distro.hpp
+  includes/modules/gpu.hpp
   includes/modules/host.hpp
   includes/modules/kernel.hpp
   includes/modules/model.hpp
@@ -49,6 +50,7 @@ add_executable(sysfex
   includes/modules/user.hpp
   includes/utils.hpp
   includes/image.hpp
+  includes/sysfex.hpp
 )
 
-target_link_libraries(sysfex ${X11_LIBRARIES} ICU::uc)
+target_link_libraries(sysfex ICU::uc)

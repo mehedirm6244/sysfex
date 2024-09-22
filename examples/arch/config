@@ -1,13 +1,13 @@
 # Comments start with '#'
 
 # Gap between ASCII/image and information
-gap = 5
+gap = 6
 
 # Path to ASCII
 # This path may point to an image as well
 # `viu` is required for this feature to work
 # Supported formats: '.png', '.jpg', '.jpeg', '.bmp', '.webp'
-ascii = <path-to-ascii>
+ascii = <YOUR_ASCII_HERE>
 
 # For if ASCII is image
 # The number of cells occupied by the image in X axis
