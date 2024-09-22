@@ -19,38 +19,63 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "modules/gpu.hpp"
 
+#include <sstream>
+#include <regex>
+
 std::string gpu() {
-  /* I'm sorry */
-  std::string raw_command = R"(lspci -mm |
-    awk -F '\"|\" \"|\\(' \
-      '/"Display|"3D|"VGA/ {
-        a[$0] = $1 " " $3 " " ($(NF-1) ~ /^$|^Device [[:xdigit:]]+$/ ? $4 : $(NF-1))
-      }
-      END { for (i in a) {
-        if (!seen[a[i]]++) {
-          sub("^[^ ]+ ", "", a[i]);
-          print a[i]
-        }
-      }
-    }
-  ')";
-
-  std::string output = sfUtils::get_output_of(raw_command.c_str());
-
-  /*Remove unnecessary patterns from output */
   std::vector<std::string> removables = {
-    "Integrated Graphics Controller", "Corporation"
+      "Integrated Graphics Controller", "Corporation"
   };
 
-  for (auto removable : removables) {
-    size_t pos = output.find(removable);
-    if (pos != std::string::npos) {
-      output.erase(pos, removable.length());
+  std::stringstream cmd_output = std::stringstream(sfUtils::get_output_of("lspci -mm"));
+  std::string line;
+
+  std::vector<std::string> gpus;
+  while (std::getline(cmd_output, line, '\n')) {
+    if (line.find("\"Display") != std::string::npos
+        || line.find("\"VGA") != std::string::npos || line.find("\"3D") != std::string::npos) {
+      std::vector<std::string> pieces;
+      std::regex rgx(R"("|" "|\()");
+      std::sregex_token_iterator iter(line.begin(), line.end(), rgx, -1);
+      std::sregex_token_iterator end;
+
+      for (; iter != end; iter++) {
+        if (*iter != " ") {
+          pieces.push_back(*iter);
+        }
+      }
+
+      std::string gpu;
+      gpu += pieces[2];
+      if (pieces[pieces.size() - 1].find("Device ")) {
+        gpu += pieces[pieces.size() - 1];
+      } else {
+        gpu += pieces[3];
+      }
+
+      for (const auto& removable: removables) {
+        size_t pos = gpu.find(removable);
+        if (pos != std::string::npos) {
+          gpu.erase(pos, removable.length());
+        }
+      }
+
+      gpus.push_back(gpu);
     }
   }
 
-  /* Remove leading, trailing and extra spaces from output */
-  output = sfUtils::trim_string_spaces(output);
+  if (gpus.size() > 1) {
+    std::stringstream output;
 
-  return output;
+    for (int i = 0; i < gpus.size(); i++) {
+      output << "(" << i + 1 << ") " << gpus[i];
+
+      if (i != gpus.size() - 1) {
+        output << ", ";
+      }
+    }
+    return output.str();
+  } else {
+    return gpus[0];
+  }
 }
