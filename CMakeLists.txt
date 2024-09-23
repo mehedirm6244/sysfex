@@ -18,6 +18,7 @@ add_executable(sysfex
   src/image.cpp
   src/main.cpp
   src/modules/cpu.cpp
+  src/modules/cpu_temp.cpp
   src/modules/de.cpp
   src/modules/distro.cpp
   src/modules/gpu.cpp
@@ -35,6 +36,7 @@ add_executable(sysfex
   includes/info.hpp
   includes/config.hpp
   includes/modules/cpu.hpp
+  includes/modules/cpu_temp.hpp
   includes/modules/de.hpp
   includes/modules/distro.hpp
   includes/modules/gpu.hpp

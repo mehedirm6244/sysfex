@@ -19,18 +19,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include "modules/cpu.hpp"
-#include "modules/cpu_temp.hpp"
-#include "modules/de.hpp"
-#include "modules/distro.hpp"
-#include "modules/gpu.hpp"
-#include "modules/host.hpp"
-#include "modules/kernel.hpp"
-#include "modules/model.hpp"
-#include "modules/os.hpp"
-#include "modules/pkgs.hpp"
-#include "modules/ram.hpp"
-#include "modules/resolution.hpp"
-#include "modules/shell.hpp"
-#include "modules/uptime.hpp"
-#include "modules/user.hpp"
+#include <string>
+#include <fstream>
+#include <iomanip>
+#include <sstream>
+#include <filesystem>
+
+std::string cpu_temp();
