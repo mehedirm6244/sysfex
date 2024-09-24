@@ -53,20 +53,15 @@ clear_screen = 0
 
   std::unordered_map<std::string, std::string> config;
 
-  void set_defaults() {
-    config = {
-      {"ascii",               ""   },
-      {"clear_screen",        "0"  },
-      {"gap",                 "5"  },
-      {"image_width",         "36" },
-      {"info_beside_ascii",   "1"  }
-    };
-  }
+  config = {
+    {"ascii", ""},
+    {"clear_screen", ""},
+    {"gap", "" },
+    {"image_width", "" },
+    {"info_beside_ascii", "" }
+  };
 
 public:
-  Config() {
-    set_defaults();
-  }
 
   static Config *the();
 

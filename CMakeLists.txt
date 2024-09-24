@@ -30,6 +30,7 @@ add_executable(sysfex
   src/modules/ram.cpp
   src/modules/resolution.cpp
   src/modules/shell.cpp
+  src/modules/swap.cpp
   src/modules/uptime.cpp
   src/modules/user.cpp
   includes/modules.hpp
@@ -48,6 +49,7 @@ add_executable(sysfex
   includes/modules/ram.hpp
   includes/modules/resolution.hpp
   includes/modules/shell.hpp
+  includes/modules/swap.hpp
   includes/modules/uptime.hpp
   includes/modules/user.hpp
   includes/utils.hpp

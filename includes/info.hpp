@@ -44,6 +44,7 @@ private:
     {"RAM", ram},
     {"RESOLUTION", resolution},
     {"SHELL", shell},
+    {"SWAP", swap},
     {"UPTIME", uptime},
     {"USER", user}
   };
@@ -52,7 +53,7 @@ private:
 
 # Available variables:
 #   'CPU', 'CPU_TEMP' 'DE', 'DISTRO', 'GPU', 'HOST', 'KERNEL', 'MODEL',
-#   'OS', 'PKGS', 'RAM', 'RESOLUTION', 'SHELL', 'UPTIME', 'USER'
+#   'OS', 'PKGS', 'RAM', 'RESOLUTION', 'SHELL', 'SWAP', 'UPTIME', 'USER'
 
 "\bold{USER}@{HOST}\reset"
 ""
