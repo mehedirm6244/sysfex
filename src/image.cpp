@@ -18,18 +18,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "image.hpp"
+#include "utils.hpp"
+#include <array>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
 
+enum { WIDTH, HEIGHT };
+
 bool sfImage::is_supported_image(const std::filesystem::path& image_path) {
-  std::string extension = image_path.extension();
-  std::vector<std::string> supported_extensions = {
+  const std::string& extension = image_path.extension();
+  constexpr std::array<std::string_view, 5> supported_extensions = {
     ".bmp", ".png", ".jpg", ".jpeg", ".webp"
   };
 
-  for (auto supported_extension : supported_extensions) {
+  for (const std::string_view supported_extension : supported_extensions) {
     if (extension == supported_extension) {
       return true;
     }
@@ -37,7 +41,7 @@ bool sfImage::is_supported_image(const std::filesystem::path& image_path) {
   return false;
 }
 
-std::pair<int, int> sfImage::get_img_resolution(const std::filesystem::path& image_path) {
+std::array<int, 2> sfImage::get_img_resolution(const std::filesystem::path& image_path) {
   int width, height, channels;
   unsigned char *data = stbi_load(image_path.c_str(), &width, &height, &channels, 0);
 
@@ -49,21 +53,20 @@ std::pair<int, int> sfImage::get_img_resolution(const std::filesystem::path& ima
   return { width, height };
 }
 
-size_t sfImage::img_height_when_width(const std::filesystem::path& image_path, size_t width) {
-  std::pair<int, int> res = get_img_resolution(image_path.c_str());
-  if (res.first == 0) {
+size_t sfImage::img_height_when_width(const std::filesystem::path& image_path, const size_t width) {
+  const std::array<int, 2> res = get_img_resolution(image_path.c_str());
+  if (res.at(WIDTH) == 0) {
     return 0;
   }
-  return (width * res.second) / (res.first * 2);
+  return (width * res.at(HEIGHT)) / (res.at(WIDTH) * 2);
 }
 
-void sfImage::preview_image(const std::filesystem::path& image_path, size_t width) {
+void sfImage::preview_image(const std::filesystem::path& image_path, const size_t width) {
   /* Check if `viu` is installed in the system */
-  if (std::system("command -v viu > /dev/null 2>&1")) {
+  if (!sfUtils::taur_exec({ "sh", "-c", "command", "-v", "viu", ">", "/dev/null", "2>&1" })) {
     /* Nothing */
     return;
   }
 
-  std::string cmd = "viu " + std::string(image_path) + " -w " + std::to_string(width);
-  std::system(cmd.c_str());
+  sfUtils::taur_exec({"viu", image_path, "-w", std::to_string(width)});
 }

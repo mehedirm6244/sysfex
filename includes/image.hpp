@@ -28,10 +28,10 @@ namespace sfImage {
 
   bool is_supported_image(const std::filesystem::path& image_path);
 
-  std::pair<int, int> get_img_resolution(const std::filesystem::path& image_path);
+  std::array<int, 2> get_img_resolution(const std::filesystem::path& image_path);
 
-  size_t img_height_when_width(const std::filesystem::path& image_path, size_t width);
+  size_t img_height_when_width(const std::filesystem::path& image_path, const size_t width);
 
-  void preview_image(const std::filesystem::path& image_path, size_t width);
+  void preview_image(const std::filesystem::path& image_path, const size_t width);
 
 }

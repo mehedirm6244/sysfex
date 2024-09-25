@@ -47,7 +47,7 @@ private:
     {"USER", user}
   };
 
-  const std::string default_config = R"(# Comments start with '#'
+  static constexpr std::string_view default_config = R"(# Comments start with '#'
 
 # Available variables:
 #   'CPU', 'DE', 'DISTRO', 'GPU', 'HOST', 'KERNEL', 'MODEL',
@@ -75,11 +75,11 @@ private:
 public:
   static Info *the();
 
-  void init(const std::string& dir);
+  void init(const std::string_view dir);
 
   const std::vector<std::string>& get_info();
 
-  void generate_config_file(const std::string& path);
+  void generate_config_file(const std::string_view path);
 
   size_t get_info_size();
 };

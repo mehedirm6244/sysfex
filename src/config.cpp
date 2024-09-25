@@ -25,27 +25,27 @@ Config *Config::the() {
   return &sysfex_config;
 }
 
-void Config::set_property(const std::string& key, const std::string& value) {
-  if (config.find(key) != config.end()) {
-    config[key] = value;
+void Config::set_property(const std::string_view key, const std::string_view value) {
+  if (config.find(key.data()) != config.end()) {
+    config[key.data()] = value;
   }
 }
 
-std::string Config::get_property(const std::string& key) {
-  if (config.find(key) != config.end()) {
-    return config[key];
+std::string Config::get_property(const std::string_view key) {
+  if (config.find(key.data()) != config.end()) {
+    return config[key.data()];
   }
   return "";
 }
 
-void Config::generate_config_file(const std::string& path) {
-  std::ofstream generated_file(path);
+void Config::generate_config_file(const std::string_view path) {
+  std::ofstream generated_file(path.data());
   generated_file << default_config;
   generated_file.close();
 }
 
-void Config::init(const std::string& dir) {
-  std::ifstream config_file(dir);
+void Config::init(const std::string_view dir) {
+  std::ifstream config_file(dir.data());
   if (!config_file.is_open()) {
     return;
   }
@@ -63,9 +63,9 @@ void Config::init(const std::string& dir) {
     }
 
     /* Find delimiter '=' and split key and value */
-    size_t delimiter = current_line.find('=');
-    std::string key = current_line.substr(0, delimiter);
-    std::string value = current_line.substr(delimiter + 1);
+    const size_t delimiter = current_line.find('=');
+    const std::string& key = current_line.substr(0, delimiter);
+    const std::string& value = current_line.substr(delimiter + 1);
     set_property(key, value);
   }
 }
