@@ -38,6 +38,5 @@ std::string model() {
   getline(product_version, model_version);
   product_version.close();
 
-  std::string output = model_name + " " + model_version;
-  return output;
+  return model_name + " " + model_version;
 }

@@ -34,23 +34,23 @@ std::string uptime() {
   int mins = static_cast<int>((uptime - days * 86400 - hours * 3600) / 60);
   int secs = static_cast<int>(uptime - days * 86400 - hours * 3600 - mins * 60);
 
-  std::ostringstream output;
+  std::string output;
 
   if (days) {
-    output << days << "day" << (days > 1 ? "s " : " ");
+    output += std::to_string(days) + "day" + (days > 1 ? "s " : " ");
   }
 
   if (hours) {
-    output << hours << "hour" << (hours > 1 ? "s " : " ");
+    output += std::to_string(hours) + "hour" + (hours > 1 ? "s " : " ");
   }
 
   if (mins) {
-    output << mins << "min" << (mins > 1 ? "s " : " ");
+    output += std::to_string(mins) + "min" + (mins > 1 ? "s " : " ");
   }
 
   if (secs) {
-    output << secs << "sec" << (secs > 1 ? "s" : "");
+    output += std::to_string(secs) + "sec" + (secs > 1 ? "s" : "");
   }
 
-  return output.str();
+  return output;
 }

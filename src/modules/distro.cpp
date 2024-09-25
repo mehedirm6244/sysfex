@@ -26,7 +26,7 @@ std::string distro() {
   }
 
   std::string output;
-  std::string pretty_name = "PRETTY_NAME=\"";
+  constexpr std::string_view pretty_name = "PRETTY_NAME=\"";
 
   while (std::getline(infile, output)) {
     if (output.find(pretty_name) != std::string::npos) {
