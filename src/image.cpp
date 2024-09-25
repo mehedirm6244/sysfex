@@ -63,7 +63,7 @@ size_t sfImage::img_height_when_width(const std::filesystem::path& image_path, c
 
 void sfImage::preview_image(const std::filesystem::path& image_path, const size_t width) {
   /* Check if `viu` is installed in the system */
-  if (!sfUtils::taur_exec({ "sh", "-c", "command", "-v", "viu", ">", "/dev/null", "2>&1" })) {
+  if (!sfUtils::taur_exec({ "sh", "-c", "command -v viu > /dev/null 2>&1" })) {
     /* Nothing */
     return;
   }

@@ -27,7 +27,7 @@ Report bugs: https://github.com/mehedirm6244/sysfex/issues\n\
   ", false);
 }
 
-void Sysfex::import_config() {
+void Sysfex::import_config(const bool init_config, const bool init_info) {
   const char* env = std::getenv("XDG_CONFIG_HOME");
   const std::filesystem::path& local_config = (env != nullptr) ?
     env : std::string("/home/") + std::getenv("USER") + "/.config";
@@ -47,18 +47,20 @@ void Sysfex::import_config() {
     Info::the()->generate_config_file(sysfex_local_info.string());
   }
   
-  Config::the()->init(sysfex_local_conf.string());
-  Info::the()->init(sysfex_local_info.string());
+  if (init_config)
+    Config::the()->init(sysfex_local_conf.string());
+  if (init_info)
+    Info::the()->init(sysfex_local_info.string());
 }
 
 void Sysfex::help() {
   std::cout << sfUtils::parse_string("\
 \\boldUsage:\\reset\n\
-  \\bold--about\\reset About Sysfex\n\
-  \\bold--help\\reset Show this page\n\
-  \\bold--ascii <path>\\reset Specify ASCII/image\n\
-  \\bold--config <path>\\reset Specify `config` file\n\
-  \\bold--info <path>\\reset Specify `info` file\n\
+  \\bold-b, --about\\reset About Sysfex\n\
+  \\bold-h, --help\\reset Show this page\n\
+  \\bold-a, --ascii <path>\\reset Specify ASCII/image\n\
+  \\bold-C, --config <path>\\reset Specify `config` file\n\
+  \\bold-i, --info <path>\\reset Specify `info` file\n\
   ", false);
 }
 

@@ -33,7 +33,7 @@ namespace Sysfex {
 
   void about();
 
-  void import_config();
+  void import_config(const bool init_config, const bool init_info);
 
   void help();
 
