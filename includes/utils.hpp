@@ -91,6 +91,6 @@ namespace sfUtils {
 
   std::string trim_string_spaces(std::string input);
 
-  bool        taur_exec(const std::vector<std::string> cmd_str);
+  bool        taur_exec(const std::vector<std::string_view> cmd_str);
 
 }

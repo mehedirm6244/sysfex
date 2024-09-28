@@ -68,5 +68,5 @@ void sfImage::preview_image(const std::filesystem::path& image_path, const size_
     return;
   }
 
-  sfUtils::taur_exec({"viu", image_path, "-w", std::to_string(width)});
+  sfUtils::taur_exec({"viu", image_path.string(), "-w", std::to_string(width)});
 }

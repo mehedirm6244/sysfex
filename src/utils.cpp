@@ -105,9 +105,8 @@ std::string sfUtils::parse_string(const std::string_view source, bool peel) {
 
 /**
  * remove all white spaces (' ', '\t', '\n') from start and end of input
- * inplace!
  * @param input
- * @Original https://github.com/lfreist/hwinfo/blob/main/include/hwinfo/utils/stringutils.h#L50
+ * @Original https://github.com/Toni500github/customfetch/blob/main/src/util.cpp#L177
  */
 std::string sfUtils::trim_string_spaces(std::string input) {
     if (input.empty())
@@ -144,11 +143,10 @@ std::string sfUtils::trim_string_spaces(std::string input) {
 
 /** Executes commands with execvp() and keep the program running without existing
  * @param cmd_str The command to execute
- * @param exitOnFailure Whether to call exit(1) on command failure.
  * @return true if the command successed, else false
  * @Original https://github.com/BurntRanch/TabAUR/blob/main/src/util.cpp#L484
  */
-bool sfUtils::taur_exec(const std::vector<std::string> cmd_str)
+bool sfUtils::taur_exec(const std::vector<std::string_view> cmd_str)
 {
     std::vector<const char*> cmd;
     for (const std::string_view str : cmd_str)
@@ -163,10 +161,10 @@ bool sfUtils::taur_exec(const std::vector<std::string> cmd_str)
     else if (pid == 0)
     {
         cmd.push_back(nullptr);
-        execvp(cmd[0], const_cast<char* const*>(cmd.data()));
+        execvp(cmd.at(0), const_cast<char* const*>(cmd.data()));
 
         // execvp() returns instead of exiting when failed
-        std::cerr << "An error has occurred: " << cmd[0] << ':' << strerror(errno);
+        std::cerr << "An error has occurred: " << cmd.at(0) << ':' << strerror(errno);
     }
     else if (pid > 0)
     {  // we wait for the command to finish then start executing the rest

@@ -57,7 +57,7 @@ void Info::init(const std::string_view dir) {
     }
 
     const size_t left_quote = current_line.find('"');
-    const size_t right_quote = current_line.find_last_of('"');
+    const size_t right_quote = current_line.rfind('"');
     if (left_quote == std::string::npos or left_quote == right_quote) {
       continue;
     }
