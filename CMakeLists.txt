@@ -18,6 +18,7 @@ add_executable(sysfex
   src/image.cpp
   src/main.cpp
   src/modules/cpu.cpp
+  src/modules/cpu_temp.cpp
   src/modules/de.cpp
   src/modules/distro.cpp
   src/modules/gpu.cpp
@@ -29,12 +30,14 @@ add_executable(sysfex
   src/modules/ram.cpp
   src/modules/resolution.cpp
   src/modules/shell.cpp
+  src/modules/swap.cpp
   src/modules/uptime.cpp
   src/modules/user.cpp
   includes/modules.hpp
   includes/info.hpp
   includes/config.hpp
   includes/modules/cpu.hpp
+  includes/modules/cpu_temp.hpp
   includes/modules/de.hpp
   includes/modules/distro.hpp
   includes/modules/gpu.hpp
@@ -46,6 +49,7 @@ add_executable(sysfex
   includes/modules/ram.hpp
   includes/modules/resolution.hpp
   includes/modules/shell.hpp
+  includes/modules/swap.hpp
   includes/modules/uptime.hpp
   includes/modules/user.hpp
   includes/utils.hpp

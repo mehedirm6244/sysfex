@@ -17,21 +17,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#pragma once
-
-#include "modules/cpu.hpp"
 #include "modules/cpu_temp.hpp"
-#include "modules/de.hpp"
-#include "modules/distro.hpp"
-#include "modules/gpu.hpp"
-#include "modules/host.hpp"
-#include "modules/kernel.hpp"
-#include "modules/model.hpp"
-#include "modules/os.hpp"
-#include "modules/pkgs.hpp"
-#include "modules/ram.hpp"
-#include "modules/resolution.hpp"
-#include "modules/shell.hpp"
-#include "modules/swap.hpp"
-#include "modules/uptime.hpp"
-#include "modules/user.hpp"
+
+std::string cpu_temp() {
+  const std::filesystem::path temp_file_path = "/sys/class/thermal/thermal_zone0/temp";
+  std::ifstream cpu_temp_file(temp_file_path);
+  if (!cpu_temp_file) {
+    return "Unavailable";
+  }
+
+  float temp;
+  cpu_temp_file >> temp;
+  temp /= 1000.0;
+  
+  std::ostringstream output;
+  output << std::fixed << std::setprecision(2) << temp << "°C";
+  return output.str();
+}

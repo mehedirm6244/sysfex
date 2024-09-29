@@ -32,6 +32,7 @@ class Info {
 private:
   const std::vector<std::pair<std::string, std::string(*)()>> printables = {
     {"CPU", cpu},
+    {"CPU_TEMP", cpu_temp},
     {"DE", de},
     {"DISTRO", distro},
     {"GPU", gpu},
@@ -43,6 +44,7 @@ private:
     {"RAM", ram},
     {"RESOLUTION", resolution},
     {"SHELL", shell},
+    {"SWAP", swap},
     {"UPTIME", uptime},
     {"USER", user}
   };
@@ -50,8 +52,8 @@ private:
   static constexpr std::string_view default_config = R"(# Comments start with '#'
 
 # Available variables:
-#   'CPU', 'DE', 'DISTRO', 'GPU', 'HOST', 'KERNEL', 'MODEL',
-#   'OS', 'PKGS', 'RAM', 'RESOLUTION', 'SHELL', 'UPTIME', 'USER'
+#   'CPU', 'CPU_TEMP' 'DE', 'DISTRO', 'GPU', 'HOST', 'KERNEL', 'MODEL',
+#   'OS', 'PKGS', 'RAM', 'RESOLUTION', 'SHELL', 'SWAP', 'UPTIME', 'USER'
 
 "\bold{USER}@{HOST}\reset"
 ""
