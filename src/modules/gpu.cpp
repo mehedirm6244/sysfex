@@ -18,9 +18,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "modules/gpu.hpp"
+#include <array>
 
 std::string gpu() {
-  std::vector<std::string> removables = {
+  constexpr std::array<std::string_view, 2> removables = {
     "Integrated Graphics Controller", "Corporation"
   };
 
@@ -51,7 +52,7 @@ std::string gpu() {
       }
 
       for (const auto& removable: removables) {
-        size_t pos = gpu.find(removable);
+        const size_t pos = gpu.find(removable);
         if (pos != std::string::npos) {
           gpu.erase(pos, removable.length());
         }

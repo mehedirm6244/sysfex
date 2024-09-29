@@ -18,42 +18,58 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "sysfex.hpp"
+#include <getopt.h>
 
-int main(int argc, const char *argv[]) {
-  Sysfex::import_config();
+int main(int argc, char *argv[]) {
+  bool init_config = true;
+  bool init_info = true;
 
-  for (int i = 1; i < argc; i++) {
-    if (strcmp(argv[i], "--about") == 0) {
-      Sysfex::about();
-      return 0;
-    }
-    if (strcmp(argv[i], "--help") == 0) {
-      Sysfex::help();
-      return 0;
-    }
+  int opt = 0;
+  int option_index = 0;
+  const char *optstring = "-bha:C:i:";
+  static const struct option opts[] = {
+    {"about",  no_argument,       0, 'b'},
+    {"help",   no_argument,       0, 'h'},
+    {"ascii",  required_argument, 0, 'a'},
+    {"config", required_argument, 0, 'C'},
+    {"info",   required_argument, 0, 'i'},
+    {0,0,0,0}
+  };
 
-    /* Flags requiring values should not be the last argument */
-    if (i != argc - 1) {
-      if (strcmp(argv[i], "--ascii") == 0) {
-        Config::the()->set_property("ascii", argv[++i]);
-      } else if (strcmp(argv[i], "--config") == 0) {
-        Config::the()->init(argv[++i]);
-      } else if (strcmp(argv[i], "--info") == 0) {
-        Info::the()->init(argv[++i]);
-      } else {
-        std::cerr << sfUtils::parse_string(
-          std::string("\\f_redInvalid flag: `") + argv[i] + "`\\reset\n",
-          false
-        );
+  while ((opt = getopt_long(argc, argv, optstring, opts, &option_index)) != -1) {
+    switch (opt) {
+      case 0:
+        break;
+      case '?':
+        std::cout << sfUtils::parse_string("\\f_redInvalid format\n\\reset", false);
+        Sysfex::help();
         return 1;
-      }
-    } else {
-      std::cout << sfUtils::parse_string("\\f_redInvalid format\n\\reset", false);
-      Sysfex::help();
-      return 1;
+
+      case 'b':
+        Sysfex::about();
+        return 0;
+
+      case 'h':
+        Sysfex::help();
+        return 0;
+
+      case 'a':
+        Config::the()->set_property("ascii", optarg);
+        break;
+
+      case 'i':
+        Info::the()->init(optarg);
+        init_info = false;
+        break;
+
+      case 'C':
+        Config::the()->init(optarg);
+        init_config = false;
+        break;
     }
   }
 
+  Sysfex::import_config(init_config, init_info);
   Sysfex::run();
   return 0;
 }

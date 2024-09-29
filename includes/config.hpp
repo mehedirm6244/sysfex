@@ -70,12 +70,12 @@ public:
 
   static Config *the();
 
-  void init(const std::string& dir);
+  void init(const std::string_view dir);
 
-  void set_property(const std::string& key, const std::string& value);
+  void set_property(const std::string_view key, const std::string_view value);
 
-  void generate_config_file(const std::string& path);
+  void generate_config_file(const std::string_view path);
 
-  std::string get_property(const std::string& key);
+  std::string get_property(const std::string_view key);
 
 };

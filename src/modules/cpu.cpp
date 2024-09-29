@@ -18,9 +18,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "modules/cpu.hpp"
+#include <array>
 
 std::string cpu() {
-  std::string model_name = "model name";
+  constexpr std::string_view model_name = "model name";
   std::string output;
 
   std::ifstream cpu_info("/proc/cpuinfo");
@@ -47,13 +48,13 @@ std::string cpu() {
   output = output.substr(model_name.length());
 
   /*Remove unnecessary patterns from output */
-  std::vector<std::string> removables = {
+  constexpr std::array<std::string_view, 13> removables = {
     "(TM)", "(tm)", "(R)", "(r)", "CPU", "(Processor)", "Technologies, Inc",
     "Core", "Dual-Core", "Quad-Core", "Six-Core", "Eight-Core"
   };
 
-  for (auto removable : removables) {
-    size_t pos = output.find(removable);
+  for (const std::string_view removable : removables) {
+    const size_t pos = output.find(removable);
     if (pos != std::string::npos) {
       output.erase(pos, removable.length());
     }

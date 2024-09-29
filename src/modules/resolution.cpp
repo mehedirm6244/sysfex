@@ -24,7 +24,7 @@ std::string resolution() {
 
   for (const auto& entry : std::filesystem::directory_iterator("/sys/class/drm")) {
     if (entry.is_directory()) {
-      std::filesystem::path modes_path = entry.path() / "modes";
+      const std::filesystem::path& modes_path = entry.path() / "modes";
       if (std::filesystem::exists(modes_path)) {
         std::ifstream modes_file(modes_path);
         if (modes_file.is_open()) {

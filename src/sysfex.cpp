@@ -27,37 +27,40 @@ Report bugs: https://github.com/mehedirm6244/sysfex/issues\n\
   ", false);
 }
 
-void Sysfex::import_config() {
-  const std::filesystem::path local_config = (std::getenv("XDG_CONFIG_HOME") != nullptr) ?
-    std::string(std::getenv("XDG_CONFIG_HOME")) : std::string("/home/") + std::getenv("USER") + "/.config";
-  const std::filesystem::path sysfex_conf_path = local_config / "sysfex";
-  const std::filesystem::path sysfex_local_conf = sysfex_conf_path / "config";
-  const std::filesystem::path sysfex_local_info = sysfex_conf_path / "info";
+void Sysfex::import_config(const bool init_config, const bool init_info) {
+  const char* env = std::getenv("XDG_CONFIG_HOME");
+  const std::filesystem::path& local_config = (env != nullptr) ?
+    env : std::string("/home/") + std::getenv("USER") + "/.config";
+  const std::filesystem::path& sysfex_conf_path = local_config / "sysfex";
+  const std::filesystem::path& sysfex_local_conf = sysfex_conf_path / "config";
+  const std::filesystem::path& sysfex_local_info = sysfex_conf_path / "info";
 
   if (!std::filesystem::exists(sysfex_conf_path)) {
     std::filesystem::create_directories(sysfex_conf_path);
   }
   
   if (!std::filesystem::exists(sysfex_local_conf)) {
-    Config::the()->generate_config_file(sysfex_local_conf);
+    Config::the()->generate_config_file(sysfex_local_conf.string());
   }
 
   if (!std::filesystem::exists(sysfex_local_info)) {
-    Info::the()->generate_config_file(sysfex_local_info);
+    Info::the()->generate_config_file(sysfex_local_info.string());
   }
   
-  Config::the()->init(sysfex_local_conf);
-  Info::the()->init(sysfex_local_info);
+  if (init_config)
+    Config::the()->init(sysfex_local_conf.string());
+  if (init_info)
+    Info::the()->init(sysfex_local_info.string());
 }
 
 void Sysfex::help() {
   std::cout << sfUtils::parse_string("\
 \\boldUsage:\\reset\n\
-  \\bold--about\\reset About Sysfex\n\
-  \\bold--help\\reset Show this page\n\
-  \\bold--ascii <path>\\reset Specify ASCII/image\n\
-  \\bold--config <path>\\reset Specify `config` file\n\
-  \\bold--info <path>\\reset Specify `info` file\n\
+  \\bold-b, --about\\reset About Sysfex\n\
+  \\bold-h, --help\\reset Show this page\n\
+  \\bold-a, --ascii <path>\\reset Specify ASCII/image\n\
+  \\bold-C, --config <path>\\reset Specify `config` file\n\
+  \\bold-i, --info <path>\\reset Specify `info` file\n\
   ", false);
 }
 
@@ -66,11 +69,11 @@ void Sysfex::run() {
   size_t line_count = 0;
 
   if (Config::the()->get_property("clear_screen") != "0") {
-    std::system("clear");
+    sfUtils::taur_exec({ "sh", "-c", "clear" });
   }
 
   /* Print ASCII if it exists */
-  std::filesystem::path ascii_path = Config::the()->get_property("ascii");
+  const std::filesystem::path& ascii_path = Config::the()->get_property("ascii");
   if (std::filesystem::exists(ascii_path)) {
     if (sfImage::is_supported_image(ascii_path)) {
       longest_line_width = std::stoi(Config::the()->get_property("image_width"));
@@ -82,7 +85,7 @@ void Sysfex::run() {
       std::string current_line;
 
       while (std::getline(ascii_file, current_line)) {
-        size_t current_line_width = sfUtils::get_string_display_width(current_line);
+        const size_t current_line_width = sfUtils::get_string_display_width(current_line);
         longest_line_width = std::max(longest_line_width, current_line_width);
         std::cout << sfUtils::parse_string(current_line, false) << '\n';
         line_count++;
@@ -115,7 +118,7 @@ void Sysfex::run() {
 
   if (line_count > Info::the()->get_info_size() and
       Config::the()->get_property("info_beside_ascii") == "1") {
-    size_t offset = line_count - Info::the()->get_info_size() - 1;
+    const size_t offset = line_count - Info::the()->get_info_size() - 1;
     std::cout << "\033[" << offset << "B";
   }
 }

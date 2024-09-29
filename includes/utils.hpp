@@ -21,8 +21,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <iostream>
 #include <string>
+#include <vector>
 #include <memory>
-#include <cctype> // for std::isspace
 #include <unordered_map>
 #include <unicode/uchriter.h>
 #include <unicode/uchar.h>
@@ -83,12 +83,14 @@ static std::unordered_map<std::string, std::string> COLOR_VALUES = {
 
 namespace sfUtils {
 
-  size_t get_string_display_width(const std::string& line);
+  size_t get_string_display_width(const std::string_view line);
 
-  std::string get_output_of(const char *command);
+  std::string get_output_of(const std::string_view command);
 
-  std::string parse_string(const std::string &source, bool peel);
+  std::string parse_string(const std::string_view source, bool peel);
 
-  std::string trim_string_spaces(const std::string& source);
-  
+  std::string trim_string_spaces(std::string input);
+
+  bool        taur_exec(const std::vector<std::string_view> cmd_str);
+
 }

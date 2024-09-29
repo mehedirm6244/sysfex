@@ -33,18 +33,18 @@ size_t Info::get_info_size() {
   return infos.size();
 }
 
-void Info::generate_config_file(const std::string& path) {
-  std::ofstream generated_file(path);
+void Info::generate_config_file(const std::string_view path) {
+  std::ofstream generated_file(path.data());
   generated_file << default_config;
   generated_file.close();
 }
 
-void Info::init(const std::string& dir) {
+void Info::init(const std::string_view dir) {
   if (!std::filesystem::exists(dir)) {
     return;
   }
 
-  std::ifstream infile(dir);
+  std::ifstream infile(dir.data());
   if (!infile.is_open()) {
     return;
   }
@@ -56,19 +56,19 @@ void Info::init(const std::string& dir) {
       continue;
     }
 
-    size_t left_quote = current_line.find('"');
-    size_t right_quote = current_line.find_last_of('"');
+    const size_t left_quote = current_line.find('"');
+    const size_t right_quote = current_line.rfind('"');
     if (left_quote == std::string::npos or left_quote == right_quote) {
       continue;
     }
     current_line = current_line.substr(left_quote + 1, right_quote - left_quote - 1);
 
     for (auto &pair : printables) {
-      std::string placeholder = "{" + pair.first + "}";
+      const std::string& placeholder = "{" + pair.first + "}";
       size_t pos = current_line.find(placeholder);
       while (pos != std::string::npos) {
-        std::string info = pair.second();
-        size_t info_length = info.length();
+        const std::string& info = pair.second();
+        const size_t info_length = info.length();
         current_line.replace(pos, placeholder.length(), info);
         pos = current_line.find(placeholder, pos + info_length);
       }
