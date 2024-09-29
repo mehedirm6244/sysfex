@@ -51,9 +51,7 @@ info_beside_ascii = 1
 clear_screen = 0
 )";
 
-  std::unordered_map<std::string, std::string> config;
-
-  config = {
+  std::unordered_map<std::string, std::string> config = {
     {"ascii", ""},
     {"clear_screen", ""},
     {"gap", "" },
