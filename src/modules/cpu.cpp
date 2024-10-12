@@ -18,41 +18,40 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "modules/cpu.hpp"
+#include "utils.hpp"
+
 #include <array>
+#include <algorithm>
+#include <fstream>
+#include <cctype> // for std::isspace
+#include <string_view>
 
 std::string cpu() {
   constexpr std::string_view model_name = "model name";
-  std::string output;
-
   std::ifstream cpu_info("/proc/cpuinfo");
-  if (!cpu_info.is_open()) {
+
+  if (!cpu_info) {
     return "Unknown";
   }
 
-  while (cpu_info.good()) {
-    std::string current_line;
-    std::getline(cpu_info, current_line);
-
+  std::string output, current_line;
+  while (std::getline(cpu_info, current_line)) {
     if (current_line.find(model_name) != std::string::npos) {
       output = current_line;
       break;
     }
   }
-  cpu_info.close();
 
   if (output.empty()) {
     return "Unknown";
   }
 
-  /* Erase "model name" from output */
-  output = output.substr(model_name.length());
-
-  /*Remove unnecessary patterns from output */
-  constexpr std::array<std::string_view, 13> removables = {
-    "(TM)", "(tm)", "(R)", "(r)", "CPU", "(Processor)", "Technologies, Inc",
-    "Core", "Dual-Core", "Quad-Core", "Six-Core", "Eight-Core"
+  constexpr std::array<std::string_view, 14> removables = {
+    "model name", "(TM)", "(tm)", "(R)", "(r)", "CPU", "(Processor)",
+    "Technologies, Inc", "Core", "Dual-Core", "Quad-Core", "Six-Core", "Eight-Core"
   };
 
+  /* Remove unnecessary patterns from output */
   for (const std::string_view removable : removables) {
     const size_t pos = output.find(removable);
     if (pos != std::string::npos) {
@@ -60,12 +59,12 @@ std::string cpu() {
     }
   }
 
-  /* Trim leading spaces and colon */
+  /* Trim leading whitespaces and colon */
   output.erase(output.begin(), std::find_if(output.begin(), output.end(), [](unsigned char ch) {
-    return !std::isspace(ch) && ch != ':';
+    return !std::isspace(ch) and ch != ':';
   }));
 
-  /* Trim trailing and extra spaces */
+  /* Trim trailing and excess whitespaces */
   output = sfUtils::trim_string_spaces(output);
 
   return output;

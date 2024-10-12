@@ -17,18 +17,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#include "utils.hpp"
 #include "modules/kernel.hpp"
+#include "utils.hpp"
+
+#include <fstream>
 
 std::string kernel() {
   std::ifstream release_file("/proc/sys/kernel/osrelease");
-  if (!release_file.is_open()) {
-    return sfUtils::get_output_of("uname -r"); // Fallback
-  }
-
   std::string output;
-  release_file >> output;
-  release_file.close();
+
+  if (release_file) {
+    release_file >> output;
+  } else {
+    output = sfUtils::get_output_of("uname -r");
+  }
 
   return output;
 }

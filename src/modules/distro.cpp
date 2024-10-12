@@ -19,27 +19,29 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "modules/distro.hpp"
 
+#include <fstream>
+#include <string_view>
+
 std::string distro() {
-  std::ifstream infile("/etc/os-release");
-  if (!infile.is_open()) {
+  std::ifstream osrelease_file("/etc/os-release");
+  if (!osrelease_file) {
     return "Unknown";
   }
 
-  std::string output;
-  constexpr std::string_view pretty_name = "PRETTY_NAME=\"";
+  std::string line;
+  constexpr std::string_view pretty_name_prefix = "PRETTY_NAME=\"";
 
-  while (std::getline(infile, output)) {
-    if (output.find(pretty_name) != std::string::npos) {
+  while (std::getline(osrelease_file, line)) {
+    if (line.find(pretty_name_prefix) != std::string::npos) {
       break;
     }
   }
-  infile.close();
 
-  if (output.empty()) {
+  if (line.empty()) {
     return "Unknown";
   }
 
-  /* Remove "PRETTY_NAME" from output */
-  output = output.substr(pretty_name.length(), output.length() - (pretty_name.length() + 1));
-  return output;
+  /* Remove "PRETTY_NAME" from line */
+  line = line.substr(pretty_name_prefix.length(), line.length() - (pretty_name_prefix.length() + 1));
+  return line;
 }

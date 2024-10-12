@@ -18,6 +18,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "modules/resolution.hpp"
+#include "utils.hpp"
+
+#include <fstream>
+#include <filesystem>
+#include <algorithm>
 
 std::string resolution() {
   std::string output;
@@ -27,11 +32,11 @@ std::string resolution() {
       const std::filesystem::path& modes_path = entry.path() / "modes";
       if (std::filesystem::exists(modes_path)) {
         std::ifstream modes_file(modes_path);
-        if (modes_file.is_open()) {
+        if (modes_file) {
           std::string line;
           if (getline(modes_file, line)) {
             std::string single_resolution = line.substr(0, line.find(' '));
-            output += single_resolution;
+            output += single_resolution += " ";
           }
           modes_file.close();
         }
@@ -39,9 +44,7 @@ std::string resolution() {
     }
   }
 
-  output.erase(output.begin(), std::find_if(output.begin(), output.end(), [](unsigned char ch) {
-    return !std::isspace(ch);
-  }));
+  output = sfUtils::trim_string_spaces(output);
 
-  return (output.empty()) ? "Unknown" : output;
+  return output.empty() ? "Unknown" : output;
 }

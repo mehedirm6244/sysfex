@@ -19,36 +19,42 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "modules/ram.hpp"
 
-std::string ram() {
-  int free_mem = 0;
-  int total_mem = 0;
-  int used_mem;
-  int used_mem_perc;
+#include <fstream>
+#include <sstream>
 
+std::string ram() {
   std::ifstream meminfo("/proc/meminfo");
-  if (!meminfo.is_open()) {
-    return "Unknown";
+  std::ostringstream output;
+
+  if (!meminfo) {
+    output << "Unknown";
+    return output.str();
   }
 
+  int free_mem_kb = 0;
+  int total_mem_kb = 0;
   std::string key;
+
   while (meminfo >> key) {
     if (key == "MemTotal:") {
-      meminfo >> total_mem;
+      meminfo >> total_mem_kb;
     } else if (key == "MemAvailable:") {
-      meminfo >> free_mem;
+      meminfo >> free_mem_kb;
     }
 
-    if (free_mem and total_mem) {
+    if (free_mem_kb and total_mem_kb) {
       break;
     }
   }
-  meminfo.close();
 
-  used_mem = total_mem - free_mem;
-  used_mem_perc = (used_mem * 100) / total_mem;
+  if (!total_mem_kb) {
+    output << "Unknown"; // Avoid division by zero
+    return output.str();
+  }
 
-  std::ostringstream output;
+  int used_mem_kb = total_mem_kb - free_mem_kb;
+  int used_mem_perc = (used_mem_kb * 100) / total_mem_kb;
 
-  output << std::to_string((used_mem) / 1024) << "MiB used " << "(" << std::to_string(used_mem_perc) << "%)";
+  output << used_mem_kb / 1024 << "MiB used " << "(" << used_mem_perc << "%)";
   return output.str();
 }

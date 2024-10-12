@@ -18,6 +18,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "config.hpp"
+#include "utils.hpp"
+
+#include <algorithm>
+#include <filesystem>
+#include <fstream>
 
 Config sysfex_config;
 
@@ -32,10 +37,7 @@ void Config::set_property(const std::string_view key, const std::string_view val
 }
 
 std::string Config::get_property(const std::string_view key) {
-  if (config.find(key.data()) != config.end()) {
-    return config[key.data()];
-  }
-  return "";
+  return (config.find(key.data()) != config.end()) ? config[key.data()] : "";
 }
 
 void Config::generate_config_file(const std::string_view path) {
@@ -46,15 +48,19 @@ void Config::generate_config_file(const std::string_view path) {
 
 void Config::init(const std::string_view dir) {
   std::ifstream config_file(dir.data());
-  if (!config_file.is_open()) {
+  if (!config_file) {
     return;
   }
 
   std::string current_line;
   while (std::getline(config_file, current_line)) {
-    /* Trim spaces */
+    /*
+      Remove all spaces from the current line
+      Do not use sfUtils::trim_string_spaces() here
+      as it will remove excess (not all) whitespaces only
+    */
     current_line.erase(
-      std::remove_if(current_line.begin(), current_line.end(), isspace),
+      std::remove_if(current_line.begin(), current_line.end(), ::isspace),
       current_line.end()
     );
 
@@ -62,10 +68,13 @@ void Config::init(const std::string_view dir) {
       continue;
     }
 
-    /* Find delimiter '=' and split key and value */
-    const size_t delimiter = current_line.find('=');
-    const std::string& key = current_line.substr(0, delimiter);
-    const std::string& value = current_line.substr(delimiter + 1);
+    const size_t delimiter_pos = current_line.find('=');
+    if (delimiter_pos == std::string_view::npos) {
+      continue;
+    }
+
+    std::string key = current_line.substr(0, delimiter_pos);
+    std::string value = current_line.substr(delimiter_pos + 1);
     set_property(key, value);
   }
 }

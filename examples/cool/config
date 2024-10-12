@@ -1,21 +1,20 @@
 # Comments start with '#'
 
 # Gap between ASCII/image and information
-gap = 6
+gap = 5
 
 # Path to ASCII
 # This path may point to an image as well
-# `viu` is required for this feature to work
-# Supported formats: '.png', '.jpg', '.jpeg', '.bmp', '.webp'
-ascii = <YOUR_ASCII_HERE>
+# `viu` is required for image to work
+ascii = <path-to-ascii>
 
 # For if ASCII is image
 # The number of cells occupied by the image in X axis
 image_width = 36
 
-# Print text beside ASCII
+# Print information beside ASCII
 # If disabled, information will be printed below the ASCII
 info_beside_ascii = 1
 
-# Clear screen before executing Sysfex
+# Clear terminal window before executing Sysfex
 clear_screen = 0

@@ -18,7 +18,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "modules/gpu.hpp"
+#include "utils.hpp"
+
+#include <vector>
 #include <array>
+#include <sstream>
+#include <regex>
+#include <string_view>
 
 std::string gpu() {
   constexpr std::array<std::string_view, 2> removables = {
@@ -31,7 +37,8 @@ std::string gpu() {
   std::vector<std::string> gpus;
   while (std::getline(cmd_output, line, '\n')) {
     if (line.find("\"Display") != std::string::npos
-        or line.find("\"VGA") != std::string::npos or line.find("\"3D") != std::string::npos) {
+      or line.find("\"VGA") != std::string::npos
+      or line.find("\"3D") != std::string::npos) {
       std::vector<std::string> pieces;
       std::regex rgx(R"("|" "|\()");
       std::sregex_token_iterator iter(line.begin(), line.end(), rgx, -1);

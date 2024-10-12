@@ -21,35 +21,41 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <array>
 #include <cstring>
+#include <iostream>
+#include <memory>
+#include <unicode/uchriter.h>
+#include <unicode/uchar.h>
 #include <unistd.h>
 #include <sys/wait.h>
 
-/* Execute a system command and return its output as std::string (only stdout) */
-// http://stackoverflow.com/questions/478898/ddg#478960
+/*
+  Execute a system command and return its output as std::string (only stdout)
+  http://stackoverflow.com/questions/478898/ddg#478960
+*/
 std::string sfUtils::get_output_of(const std::string_view command) {
-    std::array<char, 1024> buffer;
-    std::string            result;
-    std::unique_ptr<FILE, void(*)(FILE*)> pipe(popen(command.data(), "r"),
-    [](FILE *f) -> void
-    {
-        // wrapper to ignore the return value from pclose() is needed with newer versions of gnu g++
-        std::ignore = pclose(f);
-    });
+  std::array<char, 1024> buffer;
+  std::string result;
+  std::unique_ptr<FILE, void(*)(FILE*)> pipe(popen(command.data(), "r"),
+    [](FILE *f) -> void {
+    /* Wrapper to ignore the return value from pclose() is needed with newer versions of gnu g++ */
+    std::ignore = pclose(f);
+  });
 
-    if (!pipe) {
-        std::cerr << "popen() failed: " << std::strerror(errno);
-        return "";
-    }
+  if (!pipe) {
+    std::cerr << "popen() failed: " << std::strerror(errno);
+    return "";
+  }
 
-    result.reserve(buffer.size());
-    while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr)
-        result += buffer.data();
+  result.reserve(buffer.size());
+  while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
+    result += buffer.data();
+  }
 
-    // why there is a '\n' at the end??
-    if (!result.empty() && result.back() == '\n')
-        result.pop_back();
+  if (!result.empty() and result.back() == '\n') {
+    result.pop_back();
+  }
 
-    return result;
+  return result;
 }
 
 /* Compute the display width of a string considering wchars */
@@ -65,7 +71,7 @@ size_t sfUtils::get_string_display_width(const std::string_view line) {
     UChar32 ch = char_iterator.next32();
     int width = u_getIntPropertyValue(ch, UCHAR_EAST_ASIAN_WIDTH);
 
-    if (width == U_EA_FULLWIDTH || width == U_EA_WIDE) {
+    if (width == U_EA_FULLWIDTH or width == U_EA_WIDE) {
       string_display_width += 2;
     } else {
       string_display_width++;
@@ -103,77 +109,64 @@ std::string sfUtils::parse_string(const std::string_view source, bool peel) {
   return parsed_string;
 }
 
-/**
- * remove all white spaces (' ', '\t', '\n') from start and end of input
- * @param input
- * @Original https://github.com/Toni500github/customfetch/blob/main/src/util.cpp#L177
- */
-std::string sfUtils::trim_string_spaces(std::string input) {
-    if (input.empty())
-    {
-        return input;
+/* Remove all whitespaces (' ', '\t', '\n') from a string */
+std::string sfUtils::trim_string_spaces(std::string source) {
+  std::string result;
+  bool in_spaces = false;
+
+  for (char ch : source) {
+    if (std::isspace(ch)) {
+      if (!in_spaces) {
+        result += ' '; // Add only one space
+        in_spaces = true;
+      }
+    } else {
+      result += ch;
+      in_spaces = false;
     }
+  }
 
-    // optimization for input size == 1
-    if (input.size() == 1)
-    {
-        if (input[0] == ' ' || input[0] == '\t' || input[0] == '\n')
-        {
-            return "";
-        }
-        else
-        {
-            return input;
-        }
-    }
+  /* Trim leading spaces */
+  size_t start = result.find_first_not_of(" ");
+  result = (start == std::string::npos) ? "" : result.substr(start);
 
-    // https://stackoverflow.com/a/25385766
-    constexpr std::string_view ws = " \t\n\r\f\v";
-    
-    size_t pos = input.find_last_not_of(ws);
-    if (pos != std::string::npos)
-        input.erase(pos + 1);
+  // Trim trailing spaces
+  size_t end = result.find_last_not_of(" ");
+  result = (end == std::string::npos) ? "" : result.substr(0, end + 1);
 
-    pos = input.find_first_not_of(ws);
-    if (pos != std::string::npos)
-        input.erase(0, pos);
-
-    return input;
+  return result;
 }
 
-/** Executes commands with execvp() and keep the program running without existing
- * @param cmd_str The command to execute
- * @return true if the command successed, else false
- * @Original https://github.com/BurntRanch/TabAUR/blob/main/src/util.cpp#L484
- */
-bool sfUtils::taur_exec(const std::vector<std::string_view> cmd_str)
-{
-    std::vector<const char*> cmd;
-    for (const std::string_view str : cmd_str)
-        cmd.push_back(str.data());
+/*
+  Executes commands with execvp() and keep the program running without existing
+  @param cmd_str The command to execute
+  @return true if the command successed, else false
+  @Original https://github.com/BurntRanch/TabAUR/blob/main/src/util.cpp#L484
+*/
+bool sfUtils::taur_exec(const std::vector<std::string_view> cmd_str) {
+  std::vector<const char*> cmd;
+  for (const std::string_view str : cmd_str) {
+    cmd.push_back(str.data());
+  }
 
-    int pid = fork();
+  int pid = fork();
 
-    if (pid < 0)
-    {
-        std::cerr << "fork() failed: " << strerror(errno);
+  if (pid < 0) {
+    std::cerr << "fork() failed: " << strerror(errno);
+  } else if (pid == 0) {
+    cmd.push_back(nullptr);
+    execvp(cmd.at(0), const_cast<char* const*>(cmd.data()));
+
+    /* execvp() returns instead of exiting when failed */
+    std::cerr << "An error has occurred: " << cmd.at(0) << ':' << strerror(errno);
+  } else if (pid > 0) { // Wait for the command to finish then start executing the rest
+    int status;
+    waitpid(pid, &status, 0); // Wait for the child to finish
+
+    if (WIFEXITED(status) and WEXITSTATUS(status) == 0) {
+      return true;
     }
-    else if (pid == 0)
-    {
-        cmd.push_back(nullptr);
-        execvp(cmd.at(0), const_cast<char* const*>(cmd.data()));
+  }
 
-        // execvp() returns instead of exiting when failed
-        std::cerr << "An error has occurred: " << cmd.at(0) << ':' << strerror(errno);
-    }
-    else if (pid > 0)
-    {  // we wait for the command to finish then start executing the rest
-        int status;
-        waitpid(pid, &status, 0);  // wait for the child to finish
-
-        if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
-            return true;
-    }
-
-    return false;
+  return false;
 }

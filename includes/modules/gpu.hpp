@@ -17,11 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#include <string>
-#include <vector>
-#include <sstream>
-#include <regex>
+#pragma once
 
-#include "utils.hpp"
+#include <string>
 
 std::string gpu();

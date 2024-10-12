@@ -19,6 +19,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "modules/user.hpp"
 
+#include <cstdlib>
+
 std::string user() {
   return std::getenv("USER");
 }

@@ -19,10 +19,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include <fstream>
 #include <string>
-#include <filesystem>
-#include <algorithm>
-#include <cctype> // for std::isspace
 
 std::string resolution();

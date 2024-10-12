@@ -19,54 +19,27 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "image.hpp"
 #include "utils.hpp"
+
+#include <utility>
 #include <array>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-
-enum { WIDTH, HEIGHT };
-
-bool sfImage::is_supported_image(const std::filesystem::path& image_path) {
-  const std::string& extension = image_path.extension();
-  constexpr std::array<std::string_view, 5> supported_extensions = {
-    ".bmp", ".png", ".jpg", ".jpeg", ".webp"
-  };
-
-  for (const std::string_view supported_extension : supported_extensions) {
-    if (extension == supported_extension) {
-      return true;
-    }
-  }
-  return false;
-}
-
-std::array<int, 2> sfImage::get_img_resolution(const std::filesystem::path& image_path) {
-  int width, height, channels;
+size_t sfImage::img_height_when_width(const std::filesystem::path& image_path, const size_t fixed_width) {
+  int width = 0, height = 0, channels;
   unsigned char *data = stbi_load(image_path.c_str(), &width, &height, &channels, 0);
 
-  if (!data) {
-    return { 0, 0 };
-  }
-
   stbi_image_free(data);
-  return { width, height };
-}
 
-size_t sfImage::img_height_when_width(const std::filesystem::path& image_path, const size_t width) {
-  const std::array<int, 2> res = get_img_resolution(image_path.c_str());
-  if (res.at(WIDTH) == 0) {
-    return 0;
-  }
-  return (width * res.at(HEIGHT)) / (res.at(WIDTH) * 2);
+  return (width > 0) ? (fixed_width * height) / (width * 2) : 0;
 }
 
 void sfImage::preview_image(const std::filesystem::path& image_path, const size_t width) {
   /* Check if `viu` is installed in the system */
-  if (!sfUtils::taur_exec({ "sh", "-c", "command -v viu > /dev/null 2>&1" })) {
-    /* Nothing */
-    return;
+  if (sfUtils::taur_exec({ "sh", "-c", "command -v viu > /dev/null 2>&1" })) {
+    sfUtils::taur_exec({"viu", image_path.string(), "-w", std::to_string(width)});
   }
 
-  sfUtils::taur_exec({"viu", image_path.string(), "-w", std::to_string(width)});
+  return;
 }

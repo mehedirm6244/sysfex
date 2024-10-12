@@ -19,16 +19,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "modules/host.hpp"
 
-std::string host() {
-  std::ifstream infile("/proc/sys/kernel/hostname");
+#include <fstream>
 
-  if (!infile.is_open()) {
+std::string host() {
+  std::ifstream hostname_file("/proc/sys/kernel/hostname");
+
+  if (!hostname_file) {
     return "Unknown";
   }
 
-  std::string output;
-  infile >> output;
-  infile.close();
+  std::string hostname;
+  hostname_file >> hostname;
 
-  return output;
+  return hostname;
 }

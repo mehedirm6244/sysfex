@@ -17,8 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#include "utils.hpp"
 #include "modules/os.hpp"
+#include "utils.hpp"
 
 std::string os() {
   return sfUtils::get_output_of("uname -o");

@@ -19,15 +19,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "modules/de.hpp"
 
-std::string de() {
-  const char *desktop_session;
+#include <array>
+#include <cstdlib>
 
-  if ((desktop_session = std::getenv("XDG_CURRENT_DESKTOP")) or
-      (desktop_session = std::getenv("DESKTOP_SESSION")) or
-      (desktop_session = std::getenv("XDG_SESSION_DESKTOP")) or
-      (desktop_session = std::getenv("CURRENT_DESKTOP")) or
-      (desktop_session = std::getenv("SESSION_DESKTOP"))) {
-    return desktop_session;
+std::string de() {
+  constexpr std::array<const char*, 5> env_vars = {
+    "XDG_CURRENT_DESKTOP",
+    "DESKTOP_SESSION",
+    "XDG_SESSION_DESKTOP",
+    "CURRENT_DESKTOP",
+    "SESSION_DESKTOP"
+  };
+
+  for (const char* var : env_vars) {
+    if (const char *desktop_session = std::getenv(var)) {
+      return std::string(desktop_session);
+    }
   }
 
   return "Unknown";

@@ -19,15 +19,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "modules/uptime.hpp"
 
+#include <sstream>
+#include <fstream>
+
 std::string uptime() {
   std::ifstream infile("/proc/uptime");
-  if (!infile.is_open()) {
+  if (!infile) {
     return "Unknown";
   }
 
   double uptime;
   infile >> uptime;
-  infile.close();
 
   int days = static_cast<int>(uptime / 86400);
   int hours = static_cast<int>((uptime - days * 86400) / 3600);

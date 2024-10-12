@@ -20,11 +20,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #pragma once
 
 #include <string>
-#include <vector>
-#include <algorithm>
-#include <fstream>
-#include <cctype> // for std::isspace
-
-#include "utils.hpp"
 
 std::string cpu();

@@ -1,8 +1,8 @@
 # Comments start with '#'
 
 # Available variables:
-#   'CPU', 'DE', 'DISTRO', 'GPU', 'HOST', 'KERNEL', 'MODEL',
-#   'OS', 'PKGS', 'RAM', 'RESOLUTION', 'SHELL', 'UPTIME', 'USER'
+#   'CPU', 'CPU_TEMP' 'DE', 'DISTRO', 'GPU', 'HOST', 'KERNEL', 'MODEL',
+#   'OS', 'PKGS', 'RAM', 'RESOLUTION', 'SHELL', 'SWAP', 'UPTIME', 'USER'
 
 "\bold{USER}@{HOST}\reset"
 ""
@@ -12,10 +12,13 @@
 "\f_blue\boldUptime   \reset {UPTIME}"
 "\f_blue\boldPackages \reset {PKGS}"
 "\f_blue\boldShell    \reset {SHELL}"
-"\f_blue\boldDisplay  \reset {RESOLUTION}"
 "\f_blue\boldDE       \reset {DE}"
+""
+"\f_blue\boldDisplay  \reset {RESOLUTION}"
 "\f_blue\boldCPU      \reset {CPU}"
+"\f_blue\boldCPU Temp \reset {CPU_TEMP}"
 "\f_blue\boldGPU      \reset {GPU}"
 "\f_blue\boldMemory   \reset {RAM}"
+"\f_blue\boldSwap     \reset {SWAP}"
 ""
 "\b_black  \b_red  \b_green  \b_yellow  \b_blue  \b_magenta  \b_cyan  \b_white  \reset"

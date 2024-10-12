@@ -19,24 +19,27 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "modules/model.hpp"
 
+#include <fstream>
+#include <sstream>
+
 std::string model() {
-  std::ifstream product_name("/sys/devices/virtual/dmi/id/product_name");
-  if (!product_name.is_open()) {
-    return "Unknown";
+  std::ifstream product_name_file("/sys/devices/virtual/dmi/id/product_name");
+  std::ifstream product_version_file("/sys/devices/virtual/dmi/id/product_version");
+  std::stringstream model_info;
+
+  if (product_name_file) {
+    std::string product_name;
+    std::getline(product_name_file, product_name);
+    model_info << product_name;
+  } else {
+    model_info << "Unknown";
   }
 
-  std::string model_name;
-  getline(product_name, model_name);
-  product_name.close();
-
-  std::ifstream product_version("/sys/devices/virtual/dmi/id/product_version");
-  if (!product_version.is_open()) {
-    return "";
+  if (product_version_file) {
+    std::string product_version;
+    std::getline(product_version_file, product_version);
+    model_info << " " << product_version;
   }
 
-  std::string model_version;
-  getline(product_version, model_version);
-  product_version.close();
-
-  return model_name + " " + model_version;
+  return model_info.str();
 }

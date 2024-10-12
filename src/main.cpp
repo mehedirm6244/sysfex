@@ -18,7 +18,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "sysfex.hpp"
+#include "config.hpp"
+#include "info.hpp"
+
 #include <getopt.h>
+#include <vector>
 
 int main(int argc, char *argv[]) {
   bool init_config = true;
@@ -33,15 +37,16 @@ int main(int argc, char *argv[]) {
     {"ascii",  required_argument, 0, 'a'},
     {"config", required_argument, 0, 'C'},
     {"info",   required_argument, 0, 'i'},
-    {0,0,0,0}
+    {0, 0, 0, 0}
   };
+
+  std::vector<std::pair<std::string, std::string>> updated_properties;
 
   while ((opt = getopt_long(argc, argv, optstring, opts, &option_index)) != -1) {
     switch (opt) {
       case 0:
         break;
       case '?':
-        std::cout << sfUtils::parse_string("\\f_redInvalid format\n\\reset", false);
         Sysfex::help();
         return 1;
 
@@ -54,7 +59,7 @@ int main(int argc, char *argv[]) {
         return 0;
 
       case 'a':
-        Config::the()->set_property("ascii", optarg);
+        updated_properties.push_back({"ascii", optarg});
         break;
 
       case 'i':
@@ -70,6 +75,10 @@ int main(int argc, char *argv[]) {
   }
 
   Sysfex::import_config(init_config, init_info);
+  for (const auto &property : updated_properties) {
+    Config::the()->set_property(property.first, property.second);
+  }
+
   Sysfex::run();
   return 0;
 }

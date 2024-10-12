@@ -19,15 +19,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include <iostream>
 #include <string>
 #include <vector>
-#include <memory>
 #include <unordered_map>
-#include <unicode/uchriter.h>
-#include <unicode/uchar.h>
+#include <string_view>
 
-static std::unordered_map<std::string, std::string> COLOR_VALUES = {
+static std::unordered_map<std::string_view, std::string_view> COLOR_VALUES = {
   {"\\b_black",     "\033[40m"  },
   {"\\b_red",       "\033[41m"  },
   {"\\b_green",     "\033[42m"  },
@@ -91,6 +88,6 @@ namespace sfUtils {
 
   std::string trim_string_spaces(std::string input);
 
-  bool        taur_exec(const std::vector<std::string_view> cmd_str);
+  bool taur_exec(const std::vector<std::string_view> cmd_str);
 
 }

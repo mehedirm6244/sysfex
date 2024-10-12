@@ -18,19 +18,37 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "sysfex.hpp"
+#include "utils.hpp"
+#include "image.hpp"
+#include "config.hpp"
+#include "info.hpp"
+
+#include <iostream>
+#include <cstring>
+#include <fstream>
+#include <filesystem>
+#include <string_view>
 
 void Sysfex::about() {
-  std::cout << sfUtils::parse_string("\
-\\boldSysfex\\reset is just another system information fetching tool written in C++.\n\
-\
-Report bugs: https://github.com/mehedirm6244/sysfex/issues\n\
-  ", false);
+  constexpr std::string_view about_text = R"(
+███████╗██╗   ██╗███████╗███████╗███████╗██╗  ██╗
+██╔════╝╚██╗ ██╔╝██╔════╝██╔════╝██╔════╝╚██╗██╔╝
+███████╗ ╚████╔╝ ███████╗█████╗  █████╗   ╚███╔╝ 
+╚════██║  ╚██╔╝  ╚════██║██╔══╝  ██╔══╝   ██╔██╗ 
+███████║   ██║   ███████║██║     ███████╗██╔╝ ██╗
+╚══════╝   ╚═╝   ╚══════╝╚═╝     ╚══════╝╚═╝  ╚═╝
+                                                 
+\boldSysfex\reset is just another system information fetching tool written in C++.
+Report bugs: \f_green\underlinehttps://github.com/mehedirm6244/sysfex/issues\reset
+  )";
+
+  std::cout << sfUtils::parse_string(about_text, false);
 }
 
 void Sysfex::import_config(const bool init_config, const bool init_info) {
   const char* env = std::getenv("XDG_CONFIG_HOME");
   const std::filesystem::path& local_config = (env != nullptr) ?
-    env : std::string("/home/") + std::getenv("USER") + "/.config";
+    env : std::filesystem::path(std::getenv("HOME")) / ".config";
   const std::filesystem::path& sysfex_conf_path = local_config / "sysfex";
   const std::filesystem::path& sysfex_local_conf = sysfex_conf_path / "config";
   const std::filesystem::path& sysfex_local_info = sysfex_conf_path / "info";
@@ -47,40 +65,44 @@ void Sysfex::import_config(const bool init_config, const bool init_info) {
     Info::the()->generate_config_file(sysfex_local_info.string());
   }
   
-  if (init_config)
+  if (init_config) {
     Config::the()->init(sysfex_local_conf.string());
-  if (init_info)
+  }
+  
+  if (init_info) {
     Info::the()->init(sysfex_local_info.string());
+  }
 }
 
 void Sysfex::help() {
-  std::cout << sfUtils::parse_string("\
-\\boldUsage:\\reset\n\
-  \\bold-b, --about\\reset About Sysfex\n\
-  \\bold-h, --help\\reset Show this page\n\
-  \\bold-a, --ascii <path>\\reset Specify ASCII/image\n\
-  \\bold-C, --config <path>\\reset Specify `config` file\n\
-  \\bold-i, --info <path>\\reset Specify `info` file\n\
-  ", false);
+  constexpr std::string_view help_text = R"(\boldUsage:\reset
+  \bold-b, --about\reset          About Sysfex
+  \bold-h, --help\reset           Show this page
+  \bold-a, --ascii  <path>\reset  Specify ASCII/image
+  \bold-C, --config <path>\reset  Specify `config` file
+  \bold-i, --info   <path>\reset  Specify `info` file
+  )";
+
+  std::cout << sfUtils::parse_string(help_text, false);
 }
 
 void Sysfex::run() {
-  size_t longest_line_width = 0;
-  size_t line_count = 0;
-
   if (Config::the()->get_property("clear_screen") != "0") {
     sfUtils::taur_exec({ "sh", "-c", "clear" });
   }
 
-  /* Print ASCII if it exists */
-  const std::filesystem::path& ascii_path = Config::the()->get_property("ascii");
-  if (std::filesystem::exists(ascii_path)) {
-    if (sfImage::is_supported_image(ascii_path)) {
-      longest_line_width = std::stoi(Config::the()->get_property("image_width"));
-      line_count = sfImage::img_height_when_width(ascii_path, longest_line_width);
+  const std::filesystem::path ascii_path = Config::the()->get_property("ascii");
+  size_t longest_line_width = std::stoi(Config::the()->get_property("image_width"));
+  size_t line_count = sfImage::img_height_when_width(ascii_path, longest_line_width);
 
+  if (std::filesystem::exists(ascii_path)) {
+    if (line_count != 0) {
+      /* It must be an image */
       sfImage::preview_image(ascii_path, longest_line_width);
     } else {
+      /* Treat it as an ASCII file */
+      longest_line_width = 0;
+      line_count = 0;
       std::ifstream ascii_file(ascii_path);
       std::string current_line;
 
@@ -97,15 +119,15 @@ void Sysfex::run() {
     Config::the()->set_property("gap", "0");
   }
 
-  /* Print information beside ASCII */
-
-  if (Config::the()->get_property("info_beside_ascii") == "1") {
+  /* Handle the case where information is printed beside ASCII */
+  bool info_beside_ascii = (Config::the()->get_property("info_beside_ascii") == "1");
+  if (info_beside_ascii) {
     /* TO FIX: If ASCII is bigger than terminal window */
     std::cout << "\033[" << line_count << "A";
   }
   
   for (const auto& current_info : Info::the()->get_info()) {
-    if (Config::the()->get_property("info_beside_ascii") == "1") {
+    if (info_beside_ascii) {
       size_t offset = longest_line_width + stoi(Config::the()->get_property("gap"));
       if (std::filesystem::exists(ascii_path)) {
         offset++;
@@ -116,8 +138,7 @@ void Sysfex::run() {
     std::cout << sfUtils::parse_string(current_info, false) << '\n';
   }
 
-  if (line_count > Info::the()->get_info_size() and
-      Config::the()->get_property("info_beside_ascii") == "1") {
+  if (line_count > Info::the()->get_info_size() and info_beside_ascii) {
     const size_t offset = line_count - Info::the()->get_info_size() - 1;
     std::cout << "\033[" << offset << "B";
   }

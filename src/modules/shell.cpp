@@ -19,6 +19,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "modules/shell.hpp"
 
+#include <cstdlib>
+
 std::string shell() {
   return std::getenv("SHELL");
 }

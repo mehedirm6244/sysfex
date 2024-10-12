@@ -19,9 +19,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "modules/cpu_temp.hpp"
 
+#include <fstream>
+#include <iomanip>
+#include <sstream>
+
 std::string cpu_temp() {
-  const std::filesystem::path temp_file_path = "/sys/class/thermal/thermal_zone0/temp";
-  std::ifstream cpu_temp_file(temp_file_path);
+  std::ifstream cpu_temp_file("/sys/class/thermal/thermal_zone0/temp");
+
   if (!cpu_temp_file) {
     return "Unavailable";
   }
@@ -32,5 +36,6 @@ std::string cpu_temp() {
   
   std::ostringstream output;
   output << std::fixed << std::setprecision(2) << temp << "°C";
+  
   return output.str();
 }

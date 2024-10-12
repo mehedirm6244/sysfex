@@ -20,15 +20,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #pragma once
 
 #include <filesystem>
-#include <vector>
 #include <string>
-#include <utility>
 
 namespace sfImage {
-
-  bool is_supported_image(const std::filesystem::path& image_path);
-
-  std::array<int, 2> get_img_resolution(const std::filesystem::path& image_path);
 
   size_t img_height_when_width(const std::filesystem::path& image_path, const size_t width);
 

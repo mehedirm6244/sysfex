@@ -19,36 +19,43 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "modules/swap.hpp"
 
-std::string swap() {
-  int free_swap = 0;
-  int total_swap = 0;
-  int used_swap;
-  int used_swap_perc;
+#include <fstream>
+#include <sstream>
 
+std::string swap() {
   std::ifstream meminfo("/proc/meminfo");
-  if (!meminfo.is_open()) {
-    return "Unknown";
+  std::ostringstream output;
+
+  if (!meminfo) {
+    output << "Unknown";
+    return output.str();
   }
 
+  int free_swap_kb = 0;
+  int total_swap_kb = 0;
   std::string key;
+
   while (meminfo >> key) {
     if (key == "SwapTotal:") {
-      meminfo >> total_swap;
+      meminfo >> total_swap_kb;
     } else if (key == "SwapFree:") {
-      meminfo >> free_swap;
+      meminfo >> free_swap_kb;
     }
 
-    if (free_swap and total_swap) {
+    if (free_swap_kb and total_swap_kb) {
       break;
     }
   }
-  meminfo.close();
+  
+  if (!total_swap_kb) {
+    output << "Unknown"; // Avoid division by zero
+    return output.str();
+  }
 
-  used_swap = total_swap - free_swap;
-  used_swap_perc = (used_swap * 100) / total_swap;
+  int used_swap_kb = total_swap_kb - free_swap_kb;
+  int used_swap_perc = (used_swap_kb * 100) / total_swap_kb;
 
-  std::ostringstream output;
-
-  output << std::to_string((used_swap) / 1024) << "MiB used " << "(" << std::to_string(used_swap_perc) << "%)";
+  output << used_swap_kb / 1024 << "MiB used" << " (" << used_swap_perc << "%)";
+  
   return output.str();
 }

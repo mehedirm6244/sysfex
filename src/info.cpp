@@ -19,6 +19,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "info.hpp"
 
+#include <algorithm>
+#include <filesystem>
+#include <fstream>
+
 Info sysfex_info;
 
 Info *Info::the() {
@@ -64,7 +68,7 @@ void Info::init(const std::string_view dir) {
     current_line = current_line.substr(left_quote + 1, right_quote - left_quote - 1);
 
     for (auto &pair : printables) {
-      const std::string& placeholder = "{" + pair.first + "}";
+      const std::string& placeholder = "{" + std::string(pair.first) + "}";
       size_t pos = current_line.find(placeholder);
       while (pos != std::string::npos) {
         const std::string& info = pair.second();

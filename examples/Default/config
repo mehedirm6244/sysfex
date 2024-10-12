@@ -1,0 +1,20 @@
+# Comments start with '#'
+
+# Gap between ASCII/image and information
+gap = 5
+
+# Path to ASCII
+# This path may point to an image as well
+# `viu` is required for image to work
+ascii = <YOUR_ASCII_HERE>
+
+# For if ASCII is image
+# The number of cells occupied by the image in X axis
+image_width = 36
+
+# Print information beside ASCII
+# If disabled, information will be printed below the ASCII
+info_beside_ascii = 1
+
+# Clear terminal window before executing Sysfex
+clear_screen = 0

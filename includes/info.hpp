@@ -19,18 +19,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #pragma once
 
+#include <array>
 #include <vector>
 #include <string>
-#include <algorithm>
-#include <filesystem>
-#include <fstream>
+#include <string_view>
 
 #include "modules.hpp"
 
 class Info {
   
 private:
-  const std::vector<std::pair<std::string, std::string(*)()>> printables = {
+  const std::array<std::pair<std::string_view, std::string(*)()>, 16> printables = {{
     {"CPU", cpu},
     {"CPU_TEMP", cpu_temp},
     {"DE", de},
@@ -47,7 +46,7 @@ private:
     {"SWAP", swap},
     {"UPTIME", uptime},
     {"USER", user}
-  };
+  }};
 
   static constexpr std::string_view default_config = R"(# Comments start with '#'
 
@@ -58,16 +57,20 @@ private:
 "\bold{USER}@{HOST}\reset"
 ""
 "\f_blue\boldModel    \reset {MODEL}"
+"\f_blue\boldUptime   \reset {UPTIME}"
+""
 "\f_blue\boldDistro   \reset {DISTRO}"
 "\f_blue\boldKernel   \reset {KERNEL}"
-"\f_blue\boldUptime   \reset {UPTIME}"
-"\f_blue\boldPackages \reset {PKGS}"
 "\f_blue\boldShell    \reset {SHELL}"
-"\f_blue\boldDisplay  \reset {RESOLUTION}"
 "\f_blue\boldDE       \reset {DE}"
+"\f_blue\boldPackages \reset {PKGS}"
+""
+"\f_blue\boldDisplay  \reset {RESOLUTION}"
 "\f_blue\boldCPU      \reset {CPU}"
+"\f_blue\boldCPU Temp \reset {CPU_TEMP}"
 "\f_blue\boldGPU      \reset {GPU}"
 "\f_blue\boldMemory   \reset {RAM}"
+"\f_blue\boldSwap     \reset {SWAP}"
 ""
 "\b_black  \b_red  \b_green  \b_yellow  \b_blue  \b_magenta  \b_cyan  \b_white  \reset"
 )";
