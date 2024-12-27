@@ -78,5 +78,29 @@ std::string pkgs() {
     output += sfUtils::get_output_of("xbps-query -l | wc -l") + " (xbps) ";
   }
 
+  /* pip */
+  if (std::filesystem::exists("/bin/pip")
+    or std::filesystem::exists("/usr/bin/pip")) {
+    output += sfUtils::get_output_of("pip list --user --format=freeze | wc -l") + " (pip) ";
+  }
+
+  /* pipx */
+  if (std::filesystem::exists(std::filesystem::path(std::getenv("HOME")) / ".local/bin/pipx")
+    or std::filesystem::exists("/usr/bin/pipx")
+    or std::filesystem::exists("/bin/pipx")) {
+    output += sfUtils::get_output_of("pipx list --short | wc -l") + " (pipx) ";
+  }
+
+  /* go */
+  if (std::filesystem::exists("/bin/go")
+    or std::filesystem::exists("/usr/bin/go")) {
+    output += sfUtils::get_output_of("ls $(go env GOPATH)/bin | wc -l") + " (go) ";
+  }
+
+  /* cargo */
+  if (std::filesystem::exists(std::filesystem::path(std::getenv("HOME")) / ".cargo/bin/cargo")) {
+    output += sfUtils::get_output_of("cargo install --list | awk '/^\\w/ {print $1}' | wc -l") + " (cargo) ";
+  }
+
   return output;
 }
