@@ -17,8 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#include "config.hpp"
-#include "utils.hpp"
+#include "../includes/config.hpp"
+#include "../includes/utils.hpp"
 
 #include <algorithm>
 #include <filesystem>
@@ -26,11 +26,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 Config sysfex_config;
 
-Config *Config::the() {
-  return &sysfex_config;
-}
+Config *Config::the() { return &sysfex_config; }
 
-void Config::set_property(const std::string_view key, const std::string_view value) {
+void Config::set_property(const std::string_view key,
+                          const std::string_view value) {
   if (config.find(key.data()) != config.end()) {
     config[key.data()] = value;
   }
@@ -60,9 +59,8 @@ void Config::init(const std::string_view dir) {
       as it will remove excess (not all) whitespaces only
     */
     current_line.erase(
-      std::remove_if(current_line.begin(), current_line.end(), ::isspace),
-      current_line.end()
-    );
+        std::remove_if(current_line.begin(), current_line.end(), ::isspace),
+        current_line.end());
 
     if (current_line.empty() or current_line[0] == '#') {
       continue;

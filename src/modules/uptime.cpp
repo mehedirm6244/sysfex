@@ -17,10 +17,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#include "modules/uptime.hpp"
+#include "../../includes/modules/uptime.hpp"
 
-#include <sstream>
 #include <fstream>
+#include <sstream>
 
 std::string uptime() {
   std::ifstream infile("/proc/uptime");

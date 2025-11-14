@@ -17,9 +17,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#include "sysfex.hpp"
-#include "config.hpp"
-#include "info.hpp"
+#include "../includes/config.hpp"
+#include "../includes/info.hpp"
+#include "../includes/sysfex.hpp"
 
 #include <getopt.h>
 #include <vector>
@@ -31,46 +31,45 @@ int main(int argc, char *argv[]) {
   int opt = 0;
   int option_index = 0;
   const char *optstring = "-bha:C:i:";
-  static const struct option opts[] = {
-    {"about",  no_argument,       0, 'b'},
-    {"help",   no_argument,       0, 'h'},
-    {"ascii",  required_argument, 0, 'a'},
-    {"config", required_argument, 0, 'C'},
-    {"info",   required_argument, 0, 'i'},
-    {0, 0, 0, 0}
-  };
+  static const struct option opts[] = {{"about", no_argument, 0, 'b'},
+                                       {"help", no_argument, 0, 'h'},
+                                       {"ascii", required_argument, 0, 'a'},
+                                       {"config", required_argument, 0, 'C'},
+                                       {"info", required_argument, 0, 'i'},
+                                       {0, 0, 0, 0}};
 
   std::vector<std::pair<std::string, std::string>> updated_properties;
 
-  while ((opt = getopt_long(argc, argv, optstring, opts, &option_index)) != -1) {
+  while ((opt = getopt_long(argc, argv, optstring, opts, &option_index)) !=
+         -1) {
     switch (opt) {
-      case 0:
-        break;
-      case '?':
-        Sysfex::help();
-        return 1;
+    case 0:
+      break;
+    case '?':
+      Sysfex::help();
+      return 1;
 
-      case 'b':
-        Sysfex::about();
-        return 0;
+    case 'b':
+      Sysfex::about();
+      return 0;
 
-      case 'h':
-        Sysfex::help();
-        return 0;
+    case 'h':
+      Sysfex::help();
+      return 0;
 
-      case 'a':
-        updated_properties.push_back({"ascii", optarg});
-        break;
+    case 'a':
+      updated_properties.push_back({"ascii", optarg});
+      break;
 
-      case 'i':
-        Info::the()->init(optarg);
-        init_info = false;
-        break;
+    case 'i':
+      Info::the()->init(optarg);
+      init_info = false;
+      break;
 
-      case 'C':
-        Config::the()->init(optarg);
-        init_config = false;
-        break;
+    case 'C':
+      Config::the()->init(optarg);
+      init_config = false;
+      break;
     }
   }
 

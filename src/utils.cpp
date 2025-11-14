@@ -17,16 +17,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#include "utils.hpp"
+#include "../includes/utils.hpp"
 
 #include <array>
 #include <cstring>
 #include <iostream>
 #include <memory>
-#include <unicode/uchriter.h>
-#include <unicode/uchar.h>
-#include <unistd.h>
 #include <sys/wait.h>
+#include <unicode/uchar.h>
+#include <unicode/uchriter.h>
+#include <unistd.h>
 
 /*
   Execute a system command and return its output as std::string (only stdout)
@@ -35,11 +35,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 std::string sfUtils::get_output_of(const std::string_view command) {
   std::array<char, 1024> buffer;
   std::string result;
-  std::unique_ptr<FILE, void(*)(FILE*)> pipe(popen(command.data(), "r"),
-    [](FILE *f) -> void {
-    /* Wrapper to ignore the return value from pclose() is needed with newer versions of gnu g++ */
-    std::ignore = pclose(f);
-  });
+  std::unique_ptr<FILE, void (*)(FILE *)> pipe(popen(command.data(), "r"),
+                                               [](FILE *f) -> void {
+                                                 /* Wrapper to ignore the return
+                                                  * value from pclose() is
+                                                  * needed with newer versions
+                                                  * of gnu g++ */
+                                                 std::ignore = pclose(f);
+                                               });
 
   if (!pipe) {
     std::cerr << "popen() failed: " << std::strerror(errno);
@@ -65,7 +68,8 @@ size_t sfUtils::get_string_display_width(const std::string_view line) {
 
   icu::UnicodeString unicode_string(peeled_line.c_str());
   const UChar *unicode_buffer = unicode_string.getTerminatedBuffer();
-  icu::UCharCharacterIterator char_iterator(unicode_buffer, u_strlen(unicode_buffer));
+  icu::UCharCharacterIterator char_iterator(unicode_buffer,
+                                            u_strlen(unicode_buffer));
 
   while (char_iterator.hasNext()) {
     UChar32 ch = char_iterator.next32();
@@ -85,7 +89,7 @@ std::string sfUtils::parse_string(const std::string_view source, bool peel) {
   std::string parsed_string;
   std::string tmp_buf;
 
-  for (auto ch: source) {
+  for (auto ch : source) {
     if (!tmp_buf.empty() and ch == '\\' and tmp_buf.back() != '\\') {
       parsed_string += tmp_buf;
       tmp_buf = "";
@@ -144,7 +148,7 @@ std::string sfUtils::trim_string_spaces(std::string source) {
   @Original https://github.com/BurntRanch/TabAUR/blob/main/src/util.cpp#L484
 */
 bool sfUtils::taur_exec(const std::vector<std::string_view> cmd_str) {
-  std::vector<const char*> cmd;
+  std::vector<const char *> cmd;
   for (const std::string_view str : cmd_str) {
     cmd.push_back(str.data());
   }
@@ -155,11 +159,13 @@ bool sfUtils::taur_exec(const std::vector<std::string_view> cmd_str) {
     std::cerr << "fork() failed: " << strerror(errno);
   } else if (pid == 0) {
     cmd.push_back(nullptr);
-    execvp(cmd.at(0), const_cast<char* const*>(cmd.data()));
+    execvp(cmd.at(0), const_cast<char *const *>(cmd.data()));
 
     /* execvp() returns instead of exiting when failed */
-    std::cerr << "An error has occurred: " << cmd.at(0) << ':' << strerror(errno);
-  } else if (pid > 0) { // Wait for the command to finish then start executing the rest
+    std::cerr << "An error has occurred: " << cmd.at(0) << ':'
+              << strerror(errno);
+  } else if (pid > 0) { // Wait for the command to finish then start executing
+                        // the rest
     int status;
     waitpid(pid, &status, 0); // Wait for the child to finish
 

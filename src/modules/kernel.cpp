@@ -17,8 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#include "modules/kernel.hpp"
-#include "utils.hpp"
+#include "../../includes/modules/kernel.hpp"
+#include "../../includes/utils.hpp"
 
 #include <fstream>
 

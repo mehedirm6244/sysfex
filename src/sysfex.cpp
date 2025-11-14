@@ -17,16 +17,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#include "sysfex.hpp"
-#include "utils.hpp"
-#include "image.hpp"
+#include "../includes/sysfex.hpp"
 #include "config.hpp"
+#include "image.hpp"
 #include "info.hpp"
+#include "utils.hpp"
 
-#include <iostream>
 #include <cstring>
-#include <fstream>
 #include <filesystem>
+#include <fstream>
+#include <iostream>
 #include <string_view>
 
 void Sysfex::about() {
@@ -46,17 +46,18 @@ Report bugs: \f_green\underlinehttps://github.com/mehedirm6244/sysfex/issues\res
 }
 
 void Sysfex::import_config(const bool init_config, const bool init_info) {
-  const char* env = std::getenv("XDG_CONFIG_HOME");
-  const std::filesystem::path& local_config = (env != nullptr) ?
-    env : std::filesystem::path(std::getenv("HOME")) / ".config";
-  const std::filesystem::path& sysfex_conf_path = local_config / "sysfex";
-  const std::filesystem::path& sysfex_local_conf = sysfex_conf_path / "config";
-  const std::filesystem::path& sysfex_local_info = sysfex_conf_path / "info";
+  const char *env = std::getenv("XDG_CONFIG_HOME");
+  const std::filesystem::path &local_config =
+      (env != nullptr) ? env
+                       : std::filesystem::path(std::getenv("HOME")) / ".config";
+  const std::filesystem::path &sysfex_conf_path = local_config / "sysfex";
+  const std::filesystem::path &sysfex_local_conf = sysfex_conf_path / "config";
+  const std::filesystem::path &sysfex_local_info = sysfex_conf_path / "info";
 
   if (!std::filesystem::exists(sysfex_conf_path)) {
     std::filesystem::create_directories(sysfex_conf_path);
   }
-  
+
   if (!std::filesystem::exists(sysfex_local_conf)) {
     Config::the()->generate_config_file(sysfex_local_conf.string());
   }
@@ -64,11 +65,11 @@ void Sysfex::import_config(const bool init_config, const bool init_info) {
   if (!std::filesystem::exists(sysfex_local_info)) {
     Info::the()->generate_config_file(sysfex_local_info.string());
   }
-  
+
   if (init_config) {
     Config::the()->init(sysfex_local_conf.string());
   }
-  
+
   if (init_info) {
     Info::the()->init(sysfex_local_info.string());
   }
@@ -88,12 +89,14 @@ void Sysfex::help() {
 
 void Sysfex::run() {
   if (Config::the()->get_property("clear_screen") != "0") {
-    sfUtils::taur_exec({ "sh", "-c", "clear" });
+    sfUtils::taur_exec({"sh", "-c", "clear"});
   }
 
   const std::filesystem::path ascii_path = Config::the()->get_property("ascii");
-  size_t longest_line_width = std::stoi(Config::the()->get_property("image_width"));
-  size_t line_count = sfImage::img_height_when_width(ascii_path, longest_line_width);
+  size_t longest_line_width =
+      std::stoi(Config::the()->get_property("image_width"));
+  size_t line_count =
+      sfImage::img_height_when_width(ascii_path, longest_line_width);
 
   if (std::filesystem::exists(ascii_path)) {
     if (line_count != 0) {
@@ -107,7 +110,8 @@ void Sysfex::run() {
       std::string current_line;
 
       while (std::getline(ascii_file, current_line)) {
-        const size_t current_line_width = sfUtils::get_string_display_width(current_line);
+        const size_t current_line_width =
+            sfUtils::get_string_display_width(current_line);
         longest_line_width = std::max(longest_line_width, current_line_width);
         std::cout << sfUtils::parse_string(current_line, false) << '\n';
         line_count++;
@@ -120,15 +124,17 @@ void Sysfex::run() {
   }
 
   /* Handle the case where information is printed beside ASCII */
-  bool info_beside_ascii = (Config::the()->get_property("info_beside_ascii") == "1");
+  bool info_beside_ascii =
+      (Config::the()->get_property("info_beside_ascii") == "1");
   if (info_beside_ascii) {
     /* TO FIX: If ASCII is bigger than terminal window */
     std::cout << "\033[" << line_count << "A";
   }
-  
-  for (const auto& current_info : Info::the()->get_info()) {
+
+  for (const auto &current_info : Info::the()->get_info()) {
     if (info_beside_ascii) {
-      size_t offset = longest_line_width + stoi(Config::the()->get_property("gap"));
+      size_t offset =
+          longest_line_width + stoi(Config::the()->get_property("gap"));
       if (std::filesystem::exists(ascii_path)) {
         offset++;
       }

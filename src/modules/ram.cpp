@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#include "modules/ram.hpp"
+#include "../../includes/modules/ram.hpp"
 
 #include <fstream>
 #include <sstream>

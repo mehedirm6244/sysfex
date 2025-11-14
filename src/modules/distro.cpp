@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#include "modules/distro.hpp"
+#include "../../includes/modules/distro.hpp"
 
 #include <fstream>
 #include <string_view>
@@ -42,6 +42,7 @@ std::string distro() {
   }
 
   /* Remove "PRETTY_NAME" from line */
-  line = line.substr(pretty_name_prefix.length(), line.length() - (pretty_name_prefix.length() + 1));
+  line = line.substr(pretty_name_prefix.length(),
+                     line.length() - (pretty_name_prefix.length() + 1));
   return line;
 }

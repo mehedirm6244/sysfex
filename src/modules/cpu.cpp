@@ -17,13 +17,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#include "modules/cpu.hpp"
-#include "utils.hpp"
+#include "../../includes/modules/cpu.hpp"
+#include "../../includes/utils.hpp"
 
-#include <array>
 #include <algorithm>
-#include <fstream>
+#include <array>
 #include <cctype> // for std::isspace
+#include <fstream>
 #include <string_view>
 
 std::string cpu() {
@@ -47,9 +47,10 @@ std::string cpu() {
   }
 
   constexpr std::array<std::string_view, 14> removables = {
-    "model name", "(TM)", "(tm)", "(R)", "(r)", "CPU", "(Processor)",
-    "Technologies, Inc", "Core", "Dual-Core", "Quad-Core", "Six-Core", "Eight-Core"
-  };
+      "model name", "(TM)",      "(tm)",        "(R)",
+      "(r)",        "CPU",       "(Processor)", "Technologies, Inc",
+      "Core",       "Dual-Core", "Quad-Core",   "Six-Core",
+      "Eight-Core"};
 
   /* Remove unnecessary patterns from output */
   for (const std::string_view removable : removables) {
@@ -60,9 +61,10 @@ std::string cpu() {
   }
 
   /* Trim leading whitespaces and colon */
-  output.erase(output.begin(), std::find_if(output.begin(), output.end(), [](unsigned char ch) {
-    return !std::isspace(ch) and ch != ':';
-  }));
+  output.erase(output.begin(),
+               std::find_if(output.begin(), output.end(), [](unsigned char ch) {
+                 return !std::isspace(ch) and ch != ':';
+               }));
 
   /* Trim trailing and excess whitespaces */
   output = sfUtils::trim_string_spaces(output);

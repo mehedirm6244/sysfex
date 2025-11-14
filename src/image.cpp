@@ -17,28 +17,32 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#include "image.hpp"
-#include "utils.hpp"
+#include "../includes/image.hpp"
+#include "../includes/utils.hpp"
 
-#include <utility>
 #include <array>
+#include <utility>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
+#include "../lib/stb_image.h"
 
-size_t sfImage::img_height_when_width(const std::filesystem::path& image_path, const size_t fixed_width) {
+size_t sfImage::img_height_when_width(const std::filesystem::path &image_path,
+                                      const size_t fixed_width) {
   int width = 0, height = 0, channels;
-  unsigned char *data = stbi_load(image_path.c_str(), &width, &height, &channels, 0);
+  unsigned char *data =
+      stbi_load(image_path.c_str(), &width, &height, &channels, 0);
 
   stbi_image_free(data);
 
   return (width > 0) ? (fixed_width * height) / (width * 2) : 0;
 }
 
-void sfImage::preview_image(const std::filesystem::path& image_path, const size_t width) {
+void sfImage::preview_image(const std::filesystem::path &image_path,
+                            const size_t width) {
   /* Check if `viu` is installed in the system */
-  if (sfUtils::taur_exec({ "sh", "-c", "command -v viu > /dev/null 2>&1" })) {
-    sfUtils::taur_exec({"viu", image_path.string(), "-w", std::to_string(width)});
+  if (sfUtils::taur_exec({"sh", "-c", "command -v viu > /dev/null 2>&1"})) {
+    sfUtils::taur_exec(
+        {"viu", image_path.string(), "-w", std::to_string(width)});
   }
 
   return;

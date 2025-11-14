@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#include "modules/cpu_temp.hpp"
+#include "../../includes/modules/cpu_temp.hpp"
 
 #include <fstream>
 #include <iomanip>
@@ -33,9 +33,9 @@ std::string cpu_temp() {
   float temp;
   cpu_temp_file >> temp;
   temp /= 1000.0;
-  
+
   std::ostringstream output;
   output << std::fixed << std::setprecision(2) << temp << "°C";
-  
+
   return output.str();
 }

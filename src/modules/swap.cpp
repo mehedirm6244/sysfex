@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#include "modules/swap.hpp"
+#include "../../includes/modules/swap.hpp"
 
 #include <fstream>
 #include <sstream>
@@ -46,7 +46,7 @@ std::string swap() {
       break;
     }
   }
-  
+
   if (!total_swap_kb) {
     output << "Unknown"; // Avoid division by zero
     return output.str();
@@ -56,6 +56,6 @@ std::string swap() {
   int used_swap_perc = (used_swap_kb * 100) / total_swap_kb;
 
   output << used_swap_kb / 1024 << "MiB used" << " (" << used_swap_perc << "%)";
-  
+
   return output.str();
 }

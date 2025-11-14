@@ -17,21 +17,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#include "modules/de.hpp"
+#include "../../includes/modules/de.hpp"
 
 #include <array>
 #include <cstdlib>
 
 std::string de() {
-  constexpr std::array<const char*, 5> env_vars = {
-    "XDG_CURRENT_DESKTOP",
-    "DESKTOP_SESSION",
-    "XDG_SESSION_DESKTOP",
-    "CURRENT_DESKTOP",
-    "SESSION_DESKTOP"
-  };
+  constexpr std::array<const char *, 5> env_vars = {
+      "XDG_CURRENT_DESKTOP", "DESKTOP_SESSION", "XDG_SESSION_DESKTOP",
+      "CURRENT_DESKTOP", "SESSION_DESKTOP"};
 
-  for (const char* var : env_vars) {
+  for (const char *var : env_vars) {
     if (const char *desktop_session = std::getenv(var)) {
       return std::string(desktop_session);
     }

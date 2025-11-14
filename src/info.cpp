@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#include "info.hpp"
+#include "../includes/info.hpp"
 
 #include <algorithm>
 #include <filesystem>
@@ -25,17 +25,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 Info sysfex_info;
 
-Info *Info::the() {
-  return &sysfex_info;
-}
+Info *Info::the() { return &sysfex_info; }
 
-const std::vector<std::string>& Info::get_info() {
-  return infos;
-}
+const std::vector<std::string> &Info::get_info() { return infos; }
 
-size_t Info::get_info_size() {
-  return infos.size();
-}
+size_t Info::get_info_size() { return infos.size(); }
 
 void Info::generate_config_file(const std::string_view path) {
   std::ofstream generated_file(path.data());
@@ -52,7 +46,7 @@ void Info::init(const std::string_view dir) {
   if (!infile.is_open()) {
     return;
   }
-  
+
   std::string current_line;
   while (std::getline(infile, current_line)) {
     /* Ignore comments and empty lines */
@@ -65,13 +59,14 @@ void Info::init(const std::string_view dir) {
     if (left_quote == std::string::npos or left_quote == right_quote) {
       continue;
     }
-    current_line = current_line.substr(left_quote + 1, right_quote - left_quote - 1);
+    current_line =
+        current_line.substr(left_quote + 1, right_quote - left_quote - 1);
 
     for (auto &pair : printables) {
-      const std::string& placeholder = "{" + std::string(pair.first) + "}";
+      const std::string &placeholder = "{" + std::string(pair.first) + "}";
       size_t pos = current_line.find(placeholder);
       while (pos != std::string::npos) {
-        const std::string& info = pair.second();
+        const std::string &info = pair.second();
         const size_t info_length = info.length();
         current_line.replace(pos, placeholder.length(), info);
         pos = current_line.find(placeholder, pos + info_length);

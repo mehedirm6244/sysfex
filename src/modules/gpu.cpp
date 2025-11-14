@@ -17,28 +17,28 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#include "modules/gpu.hpp"
-#include "utils.hpp"
+#include "../../includes/modules/gpu.hpp"
+#include "../../includes/utils.hpp"
 
-#include <vector>
 #include <array>
-#include <sstream>
 #include <regex>
+#include <sstream>
 #include <string_view>
+#include <vector>
 
 std::string gpu() {
   constexpr std::array<std::string_view, 2> removables = {
-    "Integrated Graphics Controller", "Corporation"
-  };
+      "Integrated Graphics Controller", "Corporation"};
 
-  std::stringstream cmd_output = std::stringstream(sfUtils::get_output_of("lspci -mm"));
+  std::stringstream cmd_output =
+      std::stringstream(sfUtils::get_output_of("lspci -mm"));
   std::string line;
 
   std::vector<std::string> gpus;
   while (std::getline(cmd_output, line, '\n')) {
-    if (line.find("\"Display") != std::string::npos
-      or line.find("\"VGA") != std::string::npos
-      or line.find("\"3D") != std::string::npos) {
+    if (line.find("\"Display") != std::string::npos or
+        line.find("\"VGA") != std::string::npos or
+        line.find("\"3D") != std::string::npos) {
       std::vector<std::string> pieces;
       std::regex rgx(R"("|" "|\()");
       std::sregex_token_iterator iter(line.begin(), line.end(), rgx, -1);
@@ -58,7 +58,7 @@ std::string gpu() {
         gpu += pieces[3];
       }
 
-      for (const auto& removable: removables) {
+      for (const auto &removable : removables) {
         const size_t pos = gpu.find(removable);
         if (pos != std::string::npos) {
           gpu.erase(pos, removable.length());

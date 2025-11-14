@@ -17,19 +17,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#include "modules/resolution.hpp"
-#include "utils.hpp"
+#include "../../includes/modules/resolution.hpp"
+#include "../../includes/utils.hpp"
 
-#include <fstream>
-#include <filesystem>
 #include <algorithm>
+#include <filesystem>
+#include <fstream>
 
 std::string resolution() {
   std::string output;
 
-  for (const auto& entry : std::filesystem::directory_iterator("/sys/class/drm")) {
+  for (const auto &entry :
+       std::filesystem::directory_iterator("/sys/class/drm")) {
     if (entry.is_directory()) {
-      const std::filesystem::path& modes_path = entry.path() / "modes";
+      const std::filesystem::path &modes_path = entry.path() / "modes";
       if (std::filesystem::exists(modes_path)) {
         std::ifstream modes_file(modes_path);
         if (modes_file) {

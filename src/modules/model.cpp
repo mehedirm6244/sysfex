@@ -17,14 +17,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-#include "modules/model.hpp"
+#include "../../includes/modules/model.hpp"
 
 #include <fstream>
 #include <sstream>
 
 std::string model() {
   std::ifstream product_name_file("/sys/devices/virtual/dmi/id/product_name");
-  std::ifstream product_version_file("/sys/devices/virtual/dmi/id/product_version");
+  std::ifstream product_version_file(
+      "/sys/devices/virtual/dmi/id/product_version");
   std::stringstream model_info;
 
   if (product_name_file) {
